@@ -66,6 +66,7 @@ export default {
     border-radius: 0.3em;
     box-shadow: 0 0 0 1px hsla(0, 0%, 100%, 0.3) inset, 0 0.5em 1em rgba(0, 0, 0, 0.6);
     text-shadow: 0 1px 1px hsla(0, 0%, 100%, 0.3);
+    animation: show 1s ease fill-mode;
 }
 
 .main::before {
@@ -81,6 +82,14 @@ export default {
     -webkit-filter: blur(10px);
     filter: blur(10px);
 }
+@keyframes show {
+    from {
+        opacity: 0;
+    }
+    to {
+        width: 1;
+    }
+}
 @keyframes typing {
     from {
         width: 0;
@@ -91,14 +100,6 @@ export default {
 }
 
 @keyframes hidden-border {
-    from {
-        border-color: rgba(0, 0, 0, 1);
-    }
-    to {
-        border-color: rgba(0, 0, 0, 0);
-    }
-}
-@keyframes hidden-border2 {
     from {
         border-color: rgba(0, 0, 0, 1);
     }
