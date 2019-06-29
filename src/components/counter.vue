@@ -1,21 +1,36 @@
 <template>
-    <counter :initNum="100">
-        <label for="checkbox">
-            <radio value="1" id="checkbox" />禁用
-        </label>
-    </counter>
+    <div class="counter-warp">
+        <p>Vuex counter：{{ num }}</p>
+        <p>
+            <button @click="increment">+</button>
+            <button @click="decrement">-</button>
+        </p>
+        <div>
+            <slot></slot>
+        </div>
+        <picker @change="bindPickerChange" :value="index" :range="array">
+            <view class="picker">当前选择：{{array[index]}}</view>
+        </picker>
+        <radio-group class="radio-group" @change="radioChange">
+            <label v-for="(item, index) in items" :key="item.name">
+                <radio :value="item.name" :checked="item.checked" />
+                {{item.value}}
+            </label>
+        </radio-group>
+    </div>
 </template>
 
 <script>
-// Use Vuex
-import store from './store'
-import card from '@/components/card'
-import Counter from '@/components/counter'
-
 export default {
-    components: { card, Counter },
+    props: {
+        initNum: {
+            type: Number,
+            default: 0
+        }
+    },
     data() {
         return {
+            num: this.initNum,
             index: 0,
             array: ['A', 'B', 'C'],
             items: [
@@ -28,17 +43,12 @@ export default {
             ]
         }
     },
-    computed: {
-        count() {
-            return store.state.count
-        }
-    },
     methods: {
         increment() {
-            store.commit('increment')
+            this.num += 1
         },
         decrement() {
-            store.commit('decrement')
+            this.num -= 1
         },
         bindPickerChange(e) {
             console.log(e)
