@@ -1,7 +1,7 @@
 <template>
     <div>
         <i-panel title="无标题输入框">
-            <i-input :value="value1" title="窝居深圳" placeholder="搜索好房" @change="handleChange" />
+            <i-input :value="value1" title="窝居深圳" placeholder="搜索好房" @change="handleChange" maxlength="200" />
             <i-icon type="search" />
         </i-panel>
     </div>
