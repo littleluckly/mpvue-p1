@@ -1,0 +1,22 @@
+{
+  "editor.tabSize": 4,
+  "files.associations": {
+    "*.vue": "vue"
+  },
+  "eslint.autoFixOnSave": true,
+  "eslint.options": {
+    "extensions": [
+      ".js",
+      ".vue"
+    ]
+  },
+  "autoimport.useSemiColon": false,
+  "javascript.format.insertSpaceAfterSemicolonInForStatements": false,
+  "prettier.semi": false,
+  "vetur.format.defaultFormatterOptions": {
+    "prettier": {
+      // Prettier option here
+      "semi": false
+    }
+  }
+}
