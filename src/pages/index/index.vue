@@ -1,126 +1,131 @@
 <template>
-  <div @click="clickHandle">
-
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />
-
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
-      </div>
-    </div>
-
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
-
-    <form class="form-container">
-      <input type="text" class="form-control" :value="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
-
-    <div class="all">
-        <div class="left">
-        </div>
-        <div class="right">
+    <div class="welcome">
+        <div class="main">
+            <div @click="linkToCounter">
+                <p class="quote">“向蜗居在深圳的奋斗者致敬!”</p>
+                <p class="author" style="text-align:right;">———鲁迅</p>
+            </div>
         </div>
     </div>
-  </div>
 </template>
 
 <script>
 import card from '@/components/card'
-
+import globalStore from '../../../stores/index'
 export default {
-  data () {
-    return {
-      motto: 'Hello miniprograme',
-      userInfo: {
-        nickName: 'mpvue',
-        avatarUrl: 'http://mpvue.com/assets/logo.png'
-      }
-    }
-  },
-
-  components: {
-    card
-  },
-
-  methods: {
-    bindViewTap () {
-      const url = '../logs/main'
-      if (mpvuePlatform === 'wx') {
-        mpvue.switchTab({ url })
-      } else {
-        mpvue.navigateTo({ url })
-      }
+    data() {
+        return {
+            motto: 'Hello miniprograme',
+            userInfo: {
+                nickName: 'mpvue',
+                avatarUrl: 'http://mpvue.com/assets/logo.png'
+            }
+        }
     },
-    clickHandle (ev) {
-      console.log('clickHandle:', ev)
-      // throw {message: 'custom test'}
-    }
-  },
+    computed: {
+        count() {
+            return globalStore.state.count
+        }
+    },
+    components: {
+        card
+    },
 
-  created () {
-    // let app = getApp()
-  }
+    methods: {
+        clickHandle(ev) {
+            console.log('clickHandle:', ev)
+            // throw {message: 'custom test'}
+        },
+        linkToCounter() {
+            const url = '../counter/main?id=1'
+            mpvue.switchTab({ url })
+        }
+    },
+
+    created() {
+        // let app = getApp()
+    }
 }
 </script>
-
-<style scoped>
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+ 
+ <style>
+.welcome {
+    height: 100vh;
+    background: url('https://img.tukuppt.com/bg_grid/00/06/38/oOn0Y9E4ID.jpg!/fh/350') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+.main {
+    padding: 1em;
+    background: hsla(0, 0%, 100%, 0.25) border-box;
+    /*隐藏多余的模糊元素*/
+    overflow: hidden;
+    border-radius: 0.3em;
+    box-shadow: 0 0 0 1px hsla(0, 0%, 100%, 0.3) inset, 0 0.5em 1em rgba(0, 0, 0, 0.6);
+    text-shadow: 0 1px 1px hsla(0, 0%, 100%, 0.3);
 }
 
-.userinfo-nickname {
-  color: #aaa;
+.main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /*设置负值的外边距是为了消除边缘模糊消失*/
+    margin: -30px;
+    z-index: -1;
+    -webkit-filter: blur(10px);
+    filter: blur(10px);
+}
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
 }
 
-.usermotto {
-  margin-top: 150px;
+@keyframes hidden-border {
+    from {
+        border-color: rgba(0, 0, 0, 1);
+    }
+    to {
+        border-color: rgba(0, 0, 0, 0);
+    }
+}
+@keyframes hidden-border2 {
+    from {
+        border-color: rgba(0, 0, 0, 1);
+    }
+    to {
+        border-color: rgba(0, 0, 0, 0);
+    }
 }
 
-.form-control {
-  display: block;
-  padding: 0 12px;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
+.quote {
+    font-size: 18px;
+    font-family: Consolas;
+    border-right: 2px solid;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typing 5s steps(16, end), hidden-border 0.5s ease-in 4.6s forwards;
 }
-.all{
-  width:7.5rem;
-  height:1rem;
-  background-color:blue;
-}
-.all:after{
-  display:block;
-  content:'';
-  clear:both;
-}
-.left{
-  float:left;
-  width:3rem;
-  height:1rem;
-  background-color:red;
-}
-
-.right{
-  float:left;
-  width:4.5rem;
-  height:1rem;
-  background-color:green;
+.author {
+    display: inline-block;
+    float: right;
+    font-size: 18px;
+    font-family: Consolas;
+    /* border-right: 2px solid; */
+    width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typing 2s steps(16, end) 5s forwards;
+    /* animation-fill-mode: forwards; */
 }
 </style>

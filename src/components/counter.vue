@@ -1,5 +1,6 @@
 <template>
     <div class="counter-warp">
+        <div>来自vuex：{{count}}</div>
         <p>Vuex counter：{{ num }}</p>
         <p>
             <button @click="increment">+</button>
@@ -21,11 +22,17 @@
 </template>
 
 <script>
+import globalStore from '../../stores/index'
 export default {
     props: {
         initNum: {
             type: Number,
             default: 0
+        }
+    },
+    computed: {
+        count() {
+            return globalStore.state.count
         }
     },
     data() {

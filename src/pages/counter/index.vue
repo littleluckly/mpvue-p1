@@ -1,9 +1,10 @@
 <template>
-    <counter :initNum="100">
-        <label for="checkbox">
-            <radio value="1" id="checkbox" />禁用
-        </label>
-    </counter>
+    <div>
+        <counter :initNum="100">
+            <i-button type="primary">这是一个按钮</i-button>
+        </counter>
+        <i-button @click="toWelcome" type="info">to welcom</i-button>
+    </div>
 </template>
 
 <script>
@@ -46,7 +47,14 @@ export default {
         },
         radioChange(e) {
             console.log('radio发生change事件，携带value值为：', e.target.value)
+        },
+        toWelcome() {
+            const url = '../index/main'
+            mpvue.navigateTo({ url })
         }
+    },
+    mounted() {
+        console.log(this.$root.$mp.query)
     }
 }
 </script>
