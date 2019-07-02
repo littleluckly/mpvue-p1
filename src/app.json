@@ -1,6 +1,5 @@
 {
   "pages": [
-    "pages/welcome/main",
     "pages/index/main",
     "pages/jobs/main",
     "pages/friends/main"
