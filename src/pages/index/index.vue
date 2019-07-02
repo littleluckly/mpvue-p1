@@ -2,8 +2,8 @@
     <div class="homepage">
         <div class="topWrap">
             <span class="logoText" :style="{backgroundImage:'url('+loggoText+')'}" @click="linkToWelcome"></span>
-            <div class="searchInput">
-                <i-input :value="value1" placeholder="搜索好房" @change="handleChange" maxlength="200" />
+            <div class="searchInputWrap">
+                <i-input i-class="searchInput" :value="value1" placeholder="搜索好房" @change="handleChange" maxlength="200" />
             </div>
             <i-icon class="searchIcon" type="search" size="18" />
         </div>
@@ -104,11 +104,15 @@ export default {
         height: 60px;
         align-items: center;
         background: #5cadff;
-        .searchInput {
+
+        .searchInputWrap {
             flex: 1;
-            height: 40px;
+            height: 35px;
             overflow: hidden;
             border-radius: 7px;
+            .searchInput {
+                transform: translateY(-5px);
+            }
         }
         .searchIcon {
             position: relative;
@@ -120,6 +124,7 @@ export default {
             height: 40px;
             width: 70px;
             background-size: contain;
+            background-position: left 4px;
         }
     }
 
@@ -149,6 +154,7 @@ export default {
             .dailyItem {
                 width: 33%;
                 margin-right: 10px;
+                padding-bottom: 6px;
                 height: 120px;
                 background: #f2f2f2;
                 &:last-child {
