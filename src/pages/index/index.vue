@@ -11,45 +11,35 @@
         <div class="dailyRecommend">
             <p class="dailyTitle">- 今日优选 -</p>
             <div class="dailyItemWrap">
-                <div class="dailyItem">
-                    <img src="https://pic1.ajkimg.com/display/58ajk/b094d6112bda9a33b1537b3192cb2450/240x180.jpg" />
-                    <p class="houseLayout">一房一厅</p>
-                    <p class="rent">1500元/月</p>
-                </div>
-                <div class="dailyItem">
-                    <img src="https://pic1.ajkimg.com/display/58ajk/674ddbe8a7feb2e7e824fadb2a1d378f/240x180.jpg" />
-                    <p class="houseLayout">一房一厅</p>
-                    <p class="rent">1500元/月</p>
-                </div>
-                <div class="dailyItem">
-                    <img src="https://pic1.ajkimg.com/display/58ajk/dad4e4b1319f5efb4b6228b089dc9847/240x180.jpg" />
-                    <p class="houseLayout">一房一厅</p>
-                    <p class="rent">1500元/月</p>
+                <div v-for="(item, idx) in dailyList" :key="idx" class="dailyItem">
+                    <img :src="item.thumbImg" />
+                    <p class="houseLayout">{{item.houseLayout}}</p>
+                    <p class="rent">{{item.rent}}元/月</p>
                 </div>
             </div>
         </div>
         <div class="listWrap">
             <div class="resultWrap">
                 <p class="listTitle">精选好房</p>
-                <div class="listItemWrap">
+                <div v-for="(item,idx) in list" :key="item.address+idx" class="listItem" @click="showHouseDetail(item)">
                     <div class="thumbImg">
-                        <img src="https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg" alt />
+                        <img :src="item.thumbImg" alt />
                     </div>
                     <div class="itemDesc">
                         <p class="mainDesc">
-                            <span class="layout">1室</span>
+                            <span class="layout">{{item.layout}}</span>
                             <span class="divider">|</span>
-                            <span class="area">16平</span>
+                            <span class="area">{{item.area}}</span>
                             <span class="divider">|</span>
-                            <span class="address">龙岗</span>
+                            <span class="address">{{item.location}}</span>
                         </p>
-                        <p class="houseName">博兴公寓</p>
+                        <p class="houseName">{{item.houseName}}</p>
                         <p class="priceDesc">
-                            <span class="price">1300</span>
+                            <span class="price">{{item.price}}</span>
                             <span class="unit">元/月</span>
-                            <span class="type">合租</span>
+                            <span class="type">{{item.type}}</span>
                         </p>
-                        <p>龙岗坂田街道和平岗27号</p>
+                        <p>{{item.address}}</p>
                     </div>
                 </div>
             </div>
@@ -68,7 +58,59 @@ export default {
         return {
             value1: '',
             scrollTop: 0,
-            loggoText: loggoText
+            loggoText: loggoText,
+            dailyList: [
+                {
+                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/b094d6112bda9a33b1537b3192cb2450/240x180.jpg',
+                    houseLayout: '一房一厅',
+                    rent: '1800'
+                },
+                {
+                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/674ddbe8a7feb2e7e824fadb2a1d378f/240x180.jpg',
+                    houseLayout: '两房一厅',
+                    rent: '800'
+                },
+                {
+                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/dad4e4b1319f5efb4b6228b089dc9847/240x180.jpg',
+                    houseLayout: '单间',
+                    rent: '670'
+                }
+            ],
+            list: [
+                {
+                    id: 1,
+                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg',
+                    layout: '单间',
+                    area: '16平',
+                    location: '龙岗',
+                    houseName: '博兴公寓',
+                    price: 1300,
+                    type: '整租',
+                    address: '龙岗坂田街道和平岗27号'
+                },
+                {
+                    id: 2,
+                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg',
+                    layout: '单间',
+                    area: '19平',
+                    location: '龙华',
+                    houseName: '小苹果',
+                    price: 800,
+                    type: '整租',
+                    address: '龙华新区陶吓新村'
+                },
+                {
+                    id: 3,
+                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg',
+                    layout: '单间',
+                    area: '12平',
+                    location: '龙华',
+                    houseName: '天安云谷',
+                    price: 750,
+                    type: '合租',
+                    address: '龙岗区坂田街道天安云谷产业园2期2栋'
+                }
+            ]
         }
     },
     computed: {
@@ -83,6 +125,9 @@ export default {
         },
         linkToWelcome() {
             wx.navigateTo({ url: '../welcome/main' })
+        },
+        showHouseDetail(item) {
+            wx.navigateTo({ url: `../houseDetail/main?id=${item.id}` })
         }
     },
     mounted() {
@@ -183,10 +228,11 @@ export default {
             font-weight: bold;
             margin-bottom: 10px;
         }
-        .listItemWrap {
+        .listItem {
             display: flex;
             justify-content: center;
-            height: 160px;
+            margin-bottom: 10px;
+            // height: 165px;
             .thumbImg {
                 width: 33%;
                 margin-right: 20px;

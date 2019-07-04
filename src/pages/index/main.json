@@ -1,9 +1,4 @@
 {
-  "window": {
-    "navigationBarBackgroundColor": "#5cadff",
-    "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "租房"
-  },
   "navigationBarBackgroundColor": "#5cadff",
   "navigationBarTextStyle": "white",
   "navigationBarTitleText": "租房",

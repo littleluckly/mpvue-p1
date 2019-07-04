@@ -29,7 +29,7 @@ export default {
 
     methods: {
         linkToCounter() {
-            const url = '../index/main?id=1'
+            const url = '../index/main'
             mpvue.switchTab({ url })
         }
     },
