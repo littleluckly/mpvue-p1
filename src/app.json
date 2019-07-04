@@ -6,9 +6,9 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle": "black"
+    "navigationBarBackgroundColor": "#5cadff",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "蜗居深圳"
   },
   "tabBar": {
     "color": "#999",
