@@ -8,3 +8,4 @@
 iview的输入框的数据绑定value="{{ value1 }}"报错|改用:value="value1"|
 iview的输入框在模拟器中无法输入|设置maxLength属性|[CSDN](https://blog.csdn.net/qq_36761787/article/details/87265300#commentBox)
 新增页面一定要在app.json中的pages属性中注册||
+顶部的状态栏/导航条/标题等属性的配置，只有在app.json中才需要添加"window"||
