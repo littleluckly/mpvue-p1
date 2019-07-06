@@ -1,10 +1,4 @@
-{
-  "window": {
-    "navigationBarBackgroundColor": "#5cadff",
-    "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "详情",
-    "usingComponents": {}
-  },
+{ 
   "navigationBarBackgroundColor": "#5cadff",
   "navigationBarTextStyle": "white",
   "navigationBarTitleText": "蜗居深圳",

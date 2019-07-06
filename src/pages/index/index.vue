@@ -127,7 +127,7 @@ export default {
             wx.navigateTo({ url: '../welcome/main' })
         },
         showHouseDetail(item) {
-            wx.navigateTo({ url: `../houseDetail/main?id=${item.id}` })
+            wx.navigateTo({ url: `../houseDetail/main?` })
         }
     },
     mounted() {

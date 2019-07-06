@@ -2,7 +2,9 @@
   "pages": [
     "pages/index/main",
     "pages/jobs/main",
-    "pages/friends/main"
+    "pages/friends/main",
+    "pages/houseDetail/main",
+    "pages/welcome/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
