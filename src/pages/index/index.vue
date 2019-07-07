@@ -1,11 +1,14 @@
 <template>
     <div class="homepage">
         <div class="topWrap">
-            <span class="logoText" :style="{backgroundImage:'url('+loggoText+')'}" @click="linkToWelcome"></span>
+            <!-- <span class="logoText" :style="{backgroundImage:'url('+loggoText+')'}" @click="linkToWelcome"></span> -->
+            
+            <!-- <span class="logoText" style="backgroundImage:url(/static/images/logo_text.png)" @click="linkToWelcome"></span> -->
+            <span @click="linkToWelcome" class="logoText"><img src="/static/images/logo_text.png" alt=""></span>
             <div class="searchInputWrap">
-                <i-input i-class="searchInput" :value="value1" placeholder="搜索好房" @change="handleChange" maxlength="200" />
+                <i-input i-class="searchInput" v-model="searchVal" placeholder="搜索好房" @change="handleChange" maxlength="200" />
             </div>
-            <i-icon class="searchIcon" type="search" size="18" />
+            <span @click="handleSearch" class="searchIcon"><i-icon type="search" size="18" /></span>
         </div>
 
         <div class="dailyRecommend">
@@ -39,7 +42,7 @@
                             <span class="unit">元/月</span>
                             <span class="type">{{item.type}}</span>
                         </p>
-                        <p>{{item.address}}</p>
+                        <p class="address">{{item.address}}</p>
                     </div>
                 </div>
             </div>
@@ -56,7 +59,7 @@ import loggoText from '../../../static/images/logo_text.png'
 export default {
     data() {
         return {
-            value1: '',
+            searchVal: '',
             scrollTop: 0,
             loggoText: loggoText,
             dailyList: [
@@ -119,15 +122,19 @@ export default {
         }
     },
     methods: {
-        handleChange(e) {
+        handleChange({target:{detail:{value}}}) {
             // console.log(e, 1)
-            console.log(e)
+            console.log(value)
+            this.searchVal = value
         },
         linkToWelcome() {
             wx.navigateTo({ url: '../welcome/main' })
         },
         showHouseDetail(item) {
-            wx.navigateTo({ url: `../houseDetail/main?` })
+            wx.navigateTo({ url: `../houseDetail/main?id=${item.id}` })
+        },
+        handleSearch(){
+            console.log('搜索',this.searchVal)
         }
     },
     mounted() {
@@ -157,12 +164,16 @@ export default {
             border-radius: 7px;
             .searchInput {
                 transform: translateY(-5px);
+                padding-right: 10px;
             }
         }
         .searchIcon {
             position: relative;
-            left: -20px;
+            left: -30px;
             top: 0;
+            line-height:38px;
+            padding:0 5px;
+
         }
         .logoText {
             display: inline-block;
@@ -170,6 +181,10 @@ export default {
             width: 70px;
             background-size: contain;
             background-position: left 4px;
+            img{
+                width: 100%;
+                height: 100%;
+            }
         }
     }
 
@@ -234,7 +249,7 @@ export default {
             margin-bottom: 10px;
             // height: 165px;
             .thumbImg {
-                width: 33%;
+                width: 112px;
                 margin-right: 20px;
                 img {
                     width: 100%;
@@ -244,10 +259,12 @@ export default {
             .itemDesc {
                 flex: 1;
                 color: #666;
+                // 配合.address文字超长省略
+                overflow: hidden;
                 .mainDesc {
                     font-size: 16px;
                     color: #333;
-                    margin-bottom: 6px;
+                    margin-bottom: 2px;
                     .divider {
                         padding: 0 8px;
                         color: #999;
@@ -266,6 +283,11 @@ export default {
                         margin-right: 10px;
                         color: #eb5f00;
                     }
+                }
+                .address{
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
             }
         }
