@@ -1,0 +1,7 @@
+{
+  "navigationBarBackgroundColor": "#CFE5F3",
+  "navigationBarTitleText": "收藏",
+  "usingComponents": {
+    "i-button": "../../../static/iview/button/index"
+  }
+}

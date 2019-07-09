@@ -4,7 +4,10 @@
     "pages/jobs/main",
     "pages/personal/main",
     "pages/houseDetail/main",
-    "pages/welcome/main"
+    "pages/welcome/main",
+    "pages/collection/main",
+    "pages/focus/main",
+    "pages/history/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

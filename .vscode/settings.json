@@ -1,22 +1,33 @@
 {
+  "workbench.colorTheme": "Atom One Dark",
+  // vscode默认启用了根据文件类型自动设置tabsize的选项
+  "editor.detectIndentation": false,
+  // #每次保存的时候自动格式化
+  "editor.formatOnSave": true,
+  "editor.fontSize": 18,
   "editor.tabSize": 4,
   "files.associations": {
     "*.vue": "vue"
   },
-  "eslint.autoFixOnSave": true,
   "eslint.options": {
-    "extensions": [
-      ".js",
-      ".vue"
-    ]
+    "extensions": [".js", ".vue"]
   },
-  "autoimport.useSemiColon": false,
+  "eslint.validate": [
+    "javascript",
+    {
+      "language": "vue",
+      "autoFix": true
+    },
+    "html",
+    "vue"
+  ],
   "javascript.format.insertSpaceAfterSemicolonInForStatements": false,
   "prettier.semi": false,
   "vetur.format.defaultFormatterOptions": {
     "prettier": {
-      // Prettier option here
-      "semi": false
+      "semi": false,
+      "indent": 4
     }
-  }
+  },
+  "vetur.format.defaultFormatter.less": "prettier"
 }
