@@ -2,7 +2,7 @@
   "pages": [
     "pages/index/main",
     "pages/jobs/main",
-    "pages/friends/main",
+    "pages/personal/main",
     "pages/houseDetail/main",
     "pages/welcome/main"
   ],
@@ -29,8 +29,8 @@
       "iconPath": "static/tabs/jobs.png",
       "selectedIconPath": "static/tabs/jobs_active.png"
     }, {
-      "text": "交友",
-      "pagePath": "pages/friends/main",
+      "text": "个人中心",
+      "pagePath": "pages/personal/main",
       "iconPath": "static/tabs/friends.png",
       "selectedIconPath": "static/tabs/friends_active.png"
     }],
