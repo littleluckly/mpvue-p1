@@ -29,5 +29,6 @@
       "indent": 4
     }
   },
+  "vetur.format.options.tabSize": 4,
   "vetur.format.defaultFormatter.less": "prettier"
 }
