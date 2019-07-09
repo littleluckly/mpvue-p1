@@ -1,14 +1,19 @@
 <template>
     <div class="personal">
         <div class="userInfo">
-            <div class="avtar">头像</div>
-            <div class="info"></div>
+            <div class="avatar">
+                <img v-if="userInfo.avatar" src="" alt="">
+                <img v-else src="/static/images/personal-center.png" alt="">
+            </div>
+            <div class="info">
+                <p>八块腹肌的坏蛋</p>
+            </div>
         </div>
         <div class="content">
             <ul>
-                <li><span class="itemIcon"><i-icon type="tasklist_fill" size="24"/></span> 收藏</li>
-                <li><span class="itemIcon"><i-icon type="like_fill"  size="24"/></span>关注</li>
-                <li><span class="itemIcon"><i-icon type="accessory"  size="24"/></span>历史记录</li> 
+                <li class="item"><span class="itemIcon"><img src="/static/images/collect.png" alt=""></span><span>收藏</span></li>
+                <li class="item"><span style="color:#bfbfbf;" class="itemIcon"><i-icon type="like_fill"  size="24"/></span><span>关注</span></li>
+                <li class="item"><span class="itemIcon"><img src="/static/images/history.png" alt=""></span><span>历史记录</span></li> 
             </ul>
         </div>
         <div class="footer">
@@ -21,7 +26,9 @@
 export default {
     data() {
         return {
-            value1: ''
+            userInfo:{
+                avatar:''
+            }
         }
     },
     computed: {},
@@ -44,10 +51,46 @@ page{
 .userInfo{
     margin-bottom: 10px;
     background: #fff;
+    display: flex;
+    padding: 20px 10px;
+    .avatar{
+        width: 50px;
+        height:50px;
+        border: 1px solid #bfbfbf;
+        border-radius: 30px;
+        padding:5px;
+        margin-right: 10px;
+        img{
+            height: 100%;
+            width: 100%;
+        }
+    }
+    .info{
+        flex: 1;
+    }
 }
 .content{
     margin-bottom: 10px;
     background: #fff;
+    .item{
+        padding: 10px;
+        line-height: 28px;
+            border-bottom: 1px solid #f2f2f2;
+        .itemIcon{
+            display: inline-block;
+            margin-right: 8px;
+            height: 20px;
+            width: 20px;
+            img{
+                width: 100%;
+                height: 100%;
+                vertical-align:top;
+                margin-top:4px;
+
+            }
+            // background-image: url('~static/images/history.png')
+        }
+    }
 }
 .footer{
     background: #fff;

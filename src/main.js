@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App'
-
+import './icons/index.js' // icon
 Vue.config.productionTip = false
 App.mpType = 'app'
 

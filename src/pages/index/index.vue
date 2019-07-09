@@ -50,10 +50,8 @@
     </div>
 </template>
 
-<script>
-// Use Vuex
-import store from './store'
-import Counter from '@/components/counter'
+<script> 
+import store from './store' 
 import loggoText from '../../../static/images/logo_text.png'
 
 export default {
