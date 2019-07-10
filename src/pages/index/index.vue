@@ -94,44 +94,6 @@ export default {
                     houseLayout: "单间",
                     rent: "670"
                 }
-            ],
-            list: [
-                {
-                    id: 1,
-                    thumbImg:
-                        "https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg",
-                    layout: "单间",
-                    area: "16平",
-                    location: "龙岗",
-                    houseName: "博兴公寓",
-                    price: 1300,
-                    type: "整租",
-                    address: "龙岗坂田街道和平岗27号"
-                },
-                {
-                    id: 2,
-                    thumbImg:
-                        "https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg",
-                    layout: "单间",
-                    area: "19平",
-                    location: "龙华",
-                    houseName: "小苹果",
-                    price: 800,
-                    type: "整租",
-                    address: "龙华新区陶吓新村"
-                },
-                {
-                    id: 3,
-                    thumbImg:
-                        "https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg",
-                    layout: "单间",
-                    area: "12平",
-                    location: "龙华",
-                    houseName: "天安云谷",
-                    price: 750,
-                    type: "合租",
-                    address: "龙岗区坂田街道天安云谷产业园2期2栋"
-                }
             ]
         }
     },
