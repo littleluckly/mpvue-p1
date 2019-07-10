@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import globalStore from "../../../stores/index"
+// import globalStore from "../../../stores/index"
 export default {
     data() {
         return {
@@ -25,9 +25,9 @@ export default {
         }
     },
     computed: {
-        count() {
-            return globalStore.state.count
-        }
+        // count() {
+        //     return globalStore.state.count
+        // }
     },
 
     methods: {

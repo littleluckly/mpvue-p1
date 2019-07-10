@@ -2,13 +2,23 @@
     <div class="homepage">
         <div class="topWrap">
             <!-- <span class="logoText" :style="{backgroundImage:'url('+loggoText+')'}" @click="linkToWelcome"></span> -->
-            
+
             <!-- <span class="logoText" style="backgroundImage:url(/static/images/logo_text.png)" @click="linkToWelcome"></span> -->
-            <span @click="linkToWelcome" class="logoText"><img src="/static/images/logo_text.png" alt=""></span>
+            <span @click="linkToWelcome" class="logoText">
+                <img src="/static/images/logo_text.png" alt />
+            </span>
             <div class="searchInputWrap">
-                <i-input i-class="searchInput" v-model="searchVal" placeholder="搜索好房" @change="handleChange" maxlength="200" />
+                <i-input
+                    i-class="searchInput"
+                    v-model="searchVal"
+                    placeholder="搜索好房"
+                    @change="handleChange"
+                    maxlength="200"
+                />
             </div>
-            <span @click="handleSearch" class="searchIcon"><i-icon type="search" size="18" /></span>
+            <span @click="handleSearch" class="searchIcon">
+                <i-icon type="search" size="18" />
+            </span>
         </div>
 
         <div class="dailyRecommend">
@@ -24,7 +34,12 @@
         <div class="listWrap">
             <div class="resultWrap">
                 <p class="listTitle">精选好房</p>
-                <div v-for="(item,idx) in list" :key="item.address+idx" class="listItem" @click="showHouseDetail(item)">
+                <div
+                    v-for="(item,idx) in homepageList"
+                    :key="item.address+idx"
+                    class="listItem"
+                    @click="showHouseDetail(item)"
+                >
                     <div class="thumbImg">
                         <img :src="item.thumbImg" alt />
                     </div>
@@ -36,7 +51,7 @@
                             <span class="divider">|</span>
                             <span class="address">{{item.location}}</span>
                         </p>
-                        <p class="houseName">{{item.houseName}}</p>
+                        <p class="houseName">{{item.house_name}}</p>
                         <p class="priceDesc">
                             <span class="price">{{item.price}}</span>
                             <span class="unit">元/月</span>
@@ -50,97 +65,107 @@
     </div>
 </template>
 
-<script> 
-import store from './store' 
-import loggoText from '../../../static/images/logo_text.png'
+<script>
+import store from "@/stores/index"
+import loggoText from "../../../static/images/logo_text.png"
 
 export default {
     data() {
         return {
-            searchVal: '',
+            searchVal: "",
             scrollTop: 0,
             loggoText: loggoText,
             dailyList: [
                 {
-                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/b094d6112bda9a33b1537b3192cb2450/240x180.jpg',
-                    houseLayout: '一房一厅',
-                    rent: '1800'
+                    thumbImg:
+                        "https://pic1.ajkimg.com/display/58ajk/b094d6112bda9a33b1537b3192cb2450/240x180.jpg",
+                    houseLayout: "一房一厅",
+                    rent: "1800"
                 },
                 {
-                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/674ddbe8a7feb2e7e824fadb2a1d378f/240x180.jpg',
-                    houseLayout: '两房一厅',
-                    rent: '800'
+                    thumbImg:
+                        "https://pic1.ajkimg.com/display/58ajk/674ddbe8a7feb2e7e824fadb2a1d378f/240x180.jpg",
+                    houseLayout: "两房一厅",
+                    rent: "800"
                 },
                 {
-                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/dad4e4b1319f5efb4b6228b089dc9847/240x180.jpg',
-                    houseLayout: '单间',
-                    rent: '670'
+                    thumbImg:
+                        "https://pic1.ajkimg.com/display/58ajk/dad4e4b1319f5efb4b6228b089dc9847/240x180.jpg",
+                    houseLayout: "单间",
+                    rent: "670"
                 }
             ],
             list: [
                 {
                     id: 1,
-                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg',
-                    layout: '单间',
-                    area: '16平',
-                    location: '龙岗',
-                    houseName: '博兴公寓',
+                    thumbImg:
+                        "https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg",
+                    layout: "单间",
+                    area: "16平",
+                    location: "龙岗",
+                    houseName: "博兴公寓",
                     price: 1300,
-                    type: '整租',
-                    address: '龙岗坂田街道和平岗27号'
+                    type: "整租",
+                    address: "龙岗坂田街道和平岗27号"
                 },
                 {
                     id: 2,
-                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg',
-                    layout: '单间',
-                    area: '19平',
-                    location: '龙华',
-                    houseName: '小苹果',
+                    thumbImg:
+                        "https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg",
+                    layout: "单间",
+                    area: "19平",
+                    location: "龙华",
+                    houseName: "小苹果",
                     price: 800,
-                    type: '整租',
-                    address: '龙华新区陶吓新村'
+                    type: "整租",
+                    address: "龙华新区陶吓新村"
                 },
                 {
                     id: 3,
-                    thumbImg: 'https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg',
-                    layout: '单间',
-                    area: '12平',
-                    location: '龙华',
-                    houseName: '天安云谷',
+                    thumbImg:
+                        "https://pic1.ajkimg.com/display/58ajk/4e03e814e16370e2de565b32d6177687/240x180.jpg",
+                    layout: "单间",
+                    area: "12平",
+                    location: "龙华",
+                    houseName: "天安云谷",
                     price: 750,
-                    type: '合租',
-                    address: '龙岗区坂田街道天安云谷产业园2期2栋'
+                    type: "合租",
+                    address: "龙岗区坂田街道天安云谷产业园2期2栋"
                 }
             ]
         }
     },
     computed: {
-        count() {
-            return store.state.count
+        homepageList() {
+            return store.state.homepageList
         }
     },
     methods: {
-        handleChange({target:{detail:{value}}}) {
-            // console.log(e, 1)
+        // fetchHomepageList:store.,
+        handleChange({
+            target: {
+                detail: { value }
+            }
+        }) {
             console.log(value)
             this.searchVal = value
         },
         linkToWelcome() {
-            wx.navigateTo({ url: '../welcome/main' })
+            wx.navigateTo({ url: "../welcome/main" })
         },
         showHouseDetail(item) {
             wx.navigateTo({ url: `../houseDetail/main?id=${item.id}` })
         },
-        handleSearch(){
-            console.log('搜索',this.searchVal)
+        handleSearch() {
+            console.log("搜索", this.searchVal)
         }
     },
     mounted() {
-        console.log(this.$root.$mp.query)
+        store.dispatch("fetchHomepageList")
     },
     //页面滚动执行方式
     onPageScroll(event) {
-        console.log('scroll')
+        console.log("scroll")
         this.scrollTop = event.scrollTop
     }
 }
@@ -169,9 +194,8 @@ export default {
             position: relative;
             left: -30px;
             top: 0;
-            line-height:38px;
-            padding:0 5px;
-
+            line-height: 38px;
+            padding: 0 5px;
         }
         .logoText {
             display: inline-block;
@@ -179,7 +203,7 @@ export default {
             width: 70px;
             background-size: contain;
             background-position: left 4px;
-            img{
+            img {
                 width: 100%;
                 height: 100%;
             }
@@ -282,7 +306,7 @@ export default {
                         color: #eb5f00;
                     }
                 }
-                .address{
+                .address {
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
