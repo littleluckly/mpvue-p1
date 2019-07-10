@@ -1,23 +1,26 @@
 <template>
     <div class="welcome">
         <div class="main">
-            <div @click="linkToCounter">
+            <div class="slogan" @click="linkToCounter">
                 <p class="quote">“向蜗居在深圳的奋斗者致敬!”</p>
                 <p class="author" style="text-align:right;">———鲁迅</p>
+                <p class="wave1"></p>
+                <p class="wave2"></p>
+                <p class="wave3"></p>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import globalStore from '../../../stores/index'
+import globalStore from "../../../stores/index"
 export default {
     data() {
         return {
-            motto: 'Hello miniprograme',
+            motto: "Hello miniprograme",
             userInfo: {
-                nickName: 'mpvue',
-                avatarUrl: 'http://mpvue.com/assets/logo.png'
+                nickName: "mpvue",
+                avatarUrl: "http://mpvue.com/assets/logo.png"
             }
         }
     },
@@ -29,7 +32,7 @@ export default {
 
     methods: {
         linkToCounter() {
-            const url = '../index/main'
+            const url = "../index/main"
             mpvue.switchTab({ url })
         }
     },
@@ -40,10 +43,11 @@ export default {
 }
 </script>
  
- <style>
+ <style lang="less">
 .welcome {
     height: 100vh;
-    background: url('https://img.tukuppt.com/bg_grid/00/06/38/oOn0Y9E4ID.jpg!/fh/350') no-repeat center center;
+    background: url("https://img.tukuppt.com/bg_grid/00/06/38/oOn0Y9E4ID.jpg!/fh/350")
+        no-repeat center center;
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -51,29 +55,95 @@ export default {
 }
 
 .main {
+    position: relative;
+    height: 60px;
+
     padding: 1em;
     background: hsla(0, 0%, 100%, 0.25) border-box;
     /*隐藏多余的模糊元素*/
     overflow: hidden;
     border-radius: 0.3em;
-    box-shadow: 0 0 0 1px hsla(0, 0%, 100%, 0.3) inset, 0 0.5em 1em rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 0 1px hsla(0, 0%, 100%, 0.3) inset,
+        0 0.5em 1em rgba(0, 0, 0, 0.6);
     text-shadow: 0 1px 1px hsla(0, 0%, 100%, 0.3);
     animation: show 1s ease fill-mode;
-}
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        /*设置负值的外边距是为了消除边缘模糊消失*/
+        margin: -30px;
+        z-index: -1;
+        -webkit-filter: blur(10px);
+        filter: blur(10px);
+    }
 
-.main::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    /*设置负值的外边距是为了消除边缘模糊消失*/
-    margin: -30px;
-    z-index: -1;
-    -webkit-filter: blur(10px);
-    filter: blur(10px);
+    .quote {
+        font-size: 18px;
+        font-family: Consolas;
+        border-right: 2px solid;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        animation: typing 5s steps(16, end),
+            hidden-border 0.5s ease-in 4.6s forwards;
+    }
+    .author {
+        float: right;
+        font-size: 18px;
+        font-family: Consolas;
+        width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        animation: typing 2s steps(16, end) 5s forwards;
+    }
+    .wave1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: auto;
+        right: 0;
+        bottom: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        opacity: 0;
+        background: rgba(56, 151, 228, 0.5);
+        animation: wave 0.8s ease-in-out 6s infinite;
+    }
+    .wave2 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: auto;
+        right: 0;
+        bottom: 0;
+        width: 60px;
+        height: 30px;
+        border-radius: 50%;
+        opacity: 0;
+        background: rgba(56, 151, 228, 0.5);
+        animation: wave 1.6s ease-in-out 6.15s infinite;
+    }
+    .wave3 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin: auto;
+        right: 0;
+        bottom: 0;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        opacity: 0;
+        background: rgba(56, 151, 228, 0.5);
+        animation: wave 2.4s ease-in-out 6.3s infinite;
+    }
 }
+// animation: name duration timing-function delay iteration-count direction;
 @keyframes show {
     from {
         opacity: 0;
@@ -100,25 +170,15 @@ export default {
     }
 }
 
-.quote {
-    font-size: 18px;
-    font-family: Consolas;
-    border-right: 2px solid;
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    animation: typing 5s steps(16, end), hidden-border 0.5s ease-in 4.6s forwards;
-}
-.author {
-    display: inline-block;
-    float: right;
-    font-size: 18px;
-    font-family: Consolas;
-    /* border-right: 2px solid; */
-    width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    animation: typing 2s steps(16, end) 5s forwards;
-    /* animation-fill-mode: forwards; */
+@keyframes wave {
+    0% {
+        width: 30px;
+        height: 30px;
+        opacity: 1;
+    }
+    100% {
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>
