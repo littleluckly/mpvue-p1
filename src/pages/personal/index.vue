@@ -3,7 +3,7 @@
         <div class="userInfo">
             <div class="avatar">
                 <img v-if="userInfo.avatar" src alt />
-                <img v-else src="/static/images/personal-center.png" alt />
+                <img v-else src="/static/images/personal.png" alt />
             </div>
             <div class="info">
                 <p>八块腹肌的坏蛋</p>
@@ -12,20 +12,22 @@
         <div class="content">
             <ul>
                 <li class="item" @click="navigateTo('collection')">
-                    <span class="itemIcon">
-                        <img src="/static/images/collect.png" alt />
+                    <span class="itemIcon" style="color:#bfbfbf;">
+                        <!-- <img src="/static/images/collect.png" alt /> -->
+                        <i-icon type="collection" size="24" />
                     </span>
                     <span>收藏</span>
                 </li>
                 <li class="item" @click="navigateTo('focus')">
-                    <span style="color:#bfbfbf;" class="itemIcon">
+                    <span class="itemIcon" style="color:#bfbfbf;">
                         <i-icon type="like_fill" size="24" />
                     </span>
                     <span>关注</span>
                 </li>
                 <li class="item" @click="navigateTo('history')">
-                    <span class="itemIcon">
-                        <img src="/static/images/history.png" alt />
+                    <span class="itemIcon" style="color:#bfbfbf;">
+                        <i-icon type="time" size="24" />
+                        <!-- <img src="/static/images/history.png" alt /> -->
                     </span>
                     <span>历史记录</span>
                 </li>

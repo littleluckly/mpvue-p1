@@ -1,7 +1,13 @@
 <template>
     <div>
         <div class="pictureArea">
-            <swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
+            <swiper
+                class="swiper"
+                :indicator-dots="indicatorDots"
+                :autoplay="autoplay"
+                :interval="interval"
+                :duration="duration"
+            >
                 <block v-for="(item, index) in imgList" :key="index">
                     <swiper-item>
                         <image :src="item.src" class="slide-image" mode="aspectFill" />
@@ -13,7 +19,9 @@
                 <p class="statics">
                     <span>更新：2019-07-05</span>
                     <span>浏览：1次</span>
-                    <span>收藏</span>
+                    <span>
+                        <i-icon style="color:#bfbfbf;" type="collection" size="24" />收藏
+                    </span>
                 </p>
             </div>
         </div>
@@ -40,7 +48,7 @@
                 <div class="infoItem">
                     <p class="label">面积：</p>
                     <p class="value">22平方</p>
-                </div> 
+                </div>
                 <div class="infoItem">
                     <p class="label">楼层：</p>
                     <p class="value">2层/总30层</p>
@@ -48,7 +56,7 @@
                 <div class="infoItem">
                     <p class="label">付款：</p>
                     <p class="value">押一付一</p>
-                </div> 
+                </div>
             </div>
         </div>
     </div>
@@ -62,13 +70,28 @@ export default {
             autoplay: true,
             interval: 3000,
             duration: 500,
-            value1: '',
+            value1: "",
             imgList: [
-                { src: 'https://pic5.58cdn.com.cn/anjuke_58/cc29706ea6857b65dab56f9f67add4c6?w=640&h=480&crop=1' },
-                { src: 'https://pic6.58cdn.com.cn/anjuke_58/599bef62e817176cfe7fd42014da45ca?w=640&h=480&crop=1' },
-                { src: 'https://pic5.58cdn.com.cn/anjuke_58/22eec5a3cf94ff9593e17b9c5124ba84?w=640&h=480&crop=1' },
-                { src: 'https://pic6.58cdn.com.cn/anjuke_58/0dc0ee4030643470a6247063823ab639?w=640&h=480&crop=1' },
-                { src: 'https://pic4.58cdn.com.cn/anjuke_58/749a8fafd17d5a7791bcda127ee8a4f2?w=640&h=480&crop=1' }
+                {
+                    src:
+                        "https://pic5.58cdn.com.cn/anjuke_58/cc29706ea6857b65dab56f9f67add4c6?w=640&h=480&crop=1"
+                },
+                {
+                    src:
+                        "https://pic6.58cdn.com.cn/anjuke_58/599bef62e817176cfe7fd42014da45ca?w=640&h=480&crop=1"
+                },
+                {
+                    src:
+                        "https://pic5.58cdn.com.cn/anjuke_58/22eec5a3cf94ff9593e17b9c5124ba84?w=640&h=480&crop=1"
+                },
+                {
+                    src:
+                        "https://pic6.58cdn.com.cn/anjuke_58/0dc0ee4030643470a6247063823ab639?w=640&h=480&crop=1"
+                },
+                {
+                    src:
+                        "https://pic4.58cdn.com.cn/anjuke_58/749a8fafd17d5a7791bcda127ee8a4f2?w=640&h=480&crop=1"
+                }
             ]
         }
     },
@@ -97,6 +120,7 @@ page {
         display: flex;
         justify-content: space-between;
         padding: 10px;
+        color: #666;
     }
 }
 .baseInfo {
@@ -122,11 +146,11 @@ page {
         }
     }
     .info {
-        padding: 20px 0; 
+        padding: 20px 0;
         .infoItem {
-            display: flex; 
-            vertical-align: top; 
-            box-sizing: border-box; 
+            display: flex;
+            vertical-align: top;
+            box-sizing: border-box;
             .label {
                 color: #666;
                 width: 50px;

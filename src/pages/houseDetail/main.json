@@ -1,6 +1,8 @@
-{ 
+{
   "navigationBarBackgroundColor": "#5cadff",
   "navigationBarTextStyle": "white",
   "navigationBarTitleText": "蜗居深圳",
-  "usingComponents": {}
+  "usingComponents": {
+    "i-icon": "../../../static/iview/icon/index"
+  }
 }

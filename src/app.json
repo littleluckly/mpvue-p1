@@ -29,16 +29,16 @@
         "selectedIconPath": "static/tabs/home_active.png"
       },
       {
-        "text": "工作机会",
+        "text": "小产权房",
         "pagePath": "pages/jobs/main",
-        "iconPath": "static/tabs/jobs.png",
-        "selectedIconPath": "static/tabs/jobs_active.png"
+        "iconPath": "static/tabs/house.png",
+        "selectedIconPath": "static/tabs/house_active.png"
       },
       {
         "text": "个人中心",
         "pagePath": "pages/personal/main",
-        "iconPath": "static/tabs/friends.png",
-        "selectedIconPath": "static/tabs/friends_active.png"
+        "iconPath": "static/images/personal.png",
+        "selectedIconPath": "static/tabs/personal_active.png"
       }
     ],
     "position": "bottom"
