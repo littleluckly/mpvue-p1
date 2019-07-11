@@ -1,8 +1,8 @@
 {
   "pages": [
     "pages/index/main",
+    "pages/smallHouse/main",
     "pages/welcome/main",
-    "pages/jobs/main",
     "pages/personal/main",
     "pages/houseDetail/main",
     "pages/collection/main",
@@ -30,7 +30,7 @@
       },
       {
         "text": "小产权房",
-        "pagePath": "pages/jobs/main",
+        "pagePath": "pages/smallHouse/main",
         "iconPath": "static/tabs/house.png",
         "selectedIconPath": "static/tabs/house_active.png"
       },

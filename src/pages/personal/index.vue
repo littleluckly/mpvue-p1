@@ -57,10 +57,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-page {
-    padding: 10px;
-    background: #f2f2f2;
-}
 .personal {
     height: 100vh;
     padding: 5px;
