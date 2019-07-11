@@ -15,23 +15,23 @@
                 <span>专业购房全攻略</span>
             </div>
             <div class="baikeType">
-                <div class="item">
+                <div class="item" @click="linkTo('intro')">
                     <i-icon type="feedback" size="28" class="icon"></i-icon>
                     <p>定义</p>
                 </div>
-                <div class="item">
+                <div class="item" @click="linkTo('questionAndAnswer')">
                     <i-icon type="interactive" size="28" class="icon"></i-icon>
                     <p>问答</p>
                 </div>
-                <div class="item">
+                <div class="item" @click="linkTo('news')">
                     <i-icon type="barrage" size="28" class="icon"></i-icon>
                     <p>资讯</p>
                 </div>
-                <div class="item">
+                <div class="item" @click="linkTo('loan')">
                     <i-icon type="financial_fill" size="28" class="icon"></i-icon>
                     <p>贷款</p>
                 </div>
-                <div class="item">
+                <div class="item" @click="linkTo('policy')">
                     <i-icon type="document" size="28" class="icon"></i-icon>
                     <p>政策</p>
                 </div>
@@ -63,6 +63,11 @@ export default {
             logs = mpvue.getStorageSync("logs") || []
         }
         this.logs = logs.map(log => formatTime(new Date(log)))
+    },
+    methods: {
+        linkTo(type) {
+            wx.navigateTo({ url: `./${type}/main` })
+        }
     }
 }
 </script>
