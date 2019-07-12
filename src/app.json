@@ -1,9 +1,8 @@
 {
   "pages": [
-    "pages/index/main",
     "pages/smallHouse/main",
+    "pages/index/main",
     "pages/smallHouse/intro/main",
-    "pages/smallHouse/loan/main",
     "pages/smallHouse/news/main",
     "pages/smallHouse/policy/main",
     "pages/smallHouse/questionAndAnswer/main",
