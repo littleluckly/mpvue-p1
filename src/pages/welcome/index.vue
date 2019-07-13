@@ -1,6 +1,6 @@
 <template>
     <div class="welcome">
-        <p class="title">奋斗者,您好!</p>
+        <p class="title" v-bind:style="{ top: top + 'px' }">奋斗者,您好</p>
         <div class="main">
             <div class="slogan" @click="linkToCounter">
                 <p class="quote">“向蜗居在深圳的奋斗者致敬!”</p>
@@ -22,24 +22,21 @@ export default {
             userInfo: {
                 nickName: "mpvue",
                 avatarUrl: "http://mpvue.com/assets/logo.png"
-            }
+            },
+            top: 0
         }
     },
-    computed: {
-        // count() {
-        //     return globalStore.state.count
-        // }
+    created() {
+        // 获取右上角胶囊按钮的位置信息,
+        const position = wx.getMenuButtonBoundingClientRect()
+        const { top } = position
+        this.top = Math.ceil(top)
     },
-
     methods: {
         linkToCounter() {
             const url = "../index/main"
             mpvue.switchTab({ url })
         }
-    },
-
-    created() {
-        // let app = getApp()
     }
 }
 </script>
@@ -56,7 +53,7 @@ export default {
     .title {
         position: absolute;
         padding: 0 10px;
-        top: 40px;
+        // top: 40px;
         left: 0;
     }
 }
@@ -82,7 +79,7 @@ export default {
         bottom: 0;
         left: 0;
         /*设置负值的外边距是为了消除边缘模糊消失*/
-        margin: -30px;
+        // margin: -30px;
         z-index: -1;
         -webkit-filter: blur(10px);
         filter: blur(10px);
