@@ -1,5 +1,17 @@
 <template>
     <div class="smallHouse">
+        <div class="searchInputWrap">
+            <i-input
+                i-class="searchInput"
+                v-model="searchVal"
+                placeholder="搜索好房"
+                @change="handleChange"
+                maxlength="200"
+            />
+            <span @click="handleSearch" class="searchIcon">
+                <i-icon type="search" size="18" />
+            </span>
+        </div>
         <div class="swiperWrap">
             <swiper
                 v-if="imgUrls.length > 0"
@@ -16,75 +28,142 @@
                 </block>
             </swiper>
         </div>
-        <div class="baike">
-            <div class="baikeTitle">
-                <span>小产权房知识百科</span>
-                <span>购房答疑</span>
-            </div>
-            <div class="baikeType">
-                <div class="item" @click="linkTo('intro')">
-                    <i-icon type="feedback" size="28" class="icon"></i-icon>
-                    <p>小产权简介</p>
+        <div class="baikeWrap">
+            <div class="baike">
+                <div class="baikeTitle">
+                    <span>小产权房知识百科</span>
+                    <span>购房答疑</span>
                 </div>
-                <div class="item" @click="linkTo('questionAndAnswer')">
-                    <i-icon type="interactive" size="28" class="icon"></i-icon>
-                    <p>问答</p>
-                </div>
-                <div class="item" @click="linkTo('news')">
-                    <i-icon type="barrage" size="28" class="icon"></i-icon>
-                    <p>资讯</p>
-                </div>
-                <div class="item" @click="linkTo('policy')">
-                    <i-icon type="document" size="28" class="icon"></i-icon>
-                    <p>政策</p>
+                <div class="baikeType">
+                    <div class="item" @click="linkTo('intro')">
+                        <i-icon type="feedback" size="28" class="icon"></i-icon>
+                        <p>小产权简介</p>
+                    </div>
+                    <div class="item" @click="linkTo('questionAndAnswer')">
+                        <i-icon type="interactive" size="28" class="icon"></i-icon>
+                        <p>问答</p>
+                    </div>
+                    <div class="item" @click="linkTo('news')">
+                        <i-icon type="barrage" size="28" class="icon"></i-icon>
+                        <p>资讯</p>
+                    </div>
+                    <div class="item" @click="linkTo('policy')">
+                        <i-icon type="document" size="28" class="icon"></i-icon>
+                        <p>政策</p>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="listWrap">
-            <div class="title">猜你喜欢</div>
-            <!-- <div class="itemWrap"> -->
-            <div class="item">
-                <div class="thumb">
-                    <img
-                        src="http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5"
-                        alt
-                    />
-                </div>
-                <div class="info">
-                    <p class="name">华侨新苑</p>
-                    <p class="price">
-                        <span class="type">村委楼</span>
-                        <span>55万</span>
-                    </p>
-                    <p class="layoutWrap">
-                        <span class="layout">三室</span>
-                        <span class="area">99m</span>
-                    </p>
-                    <p class="tags">
-                        <span>带花园</span>
-                        <span>停车场</span>
-                        <span>停车场</span>
-                        <span>停车场</span>
-                        <span>停车场</span>
-                    </p>
-                </div>
+            <div class="list">
+                <div class="title">猜你喜欢</div>
+                <SaleListItem
+                    v-for="(item,idx) in smallHouseList"
+                    :key="item.name+idx"
+                    :data="item"
+                />
+                <!-- <div v-for="(item,idx) in smallHouseList" :key="item.name+idx" class="item">
+                    <div class="thumb">
+                        <img :src="item.src" alt />
+                    </div>
+                    <div class="info">
+                        <p class="name">{{item.name}}</p>
+                        <p class="price">
+                            <span class="type">{{item.type}}</span>
+                            <span>{{item.price}}万</span>
+                        </p>
+                        <p class="layoutWrap">
+                            <span class="layout">{{item.layout}}</span>
+                            <span class="area">{{item.area}}m</span>
+                        </p>
+                        <p class="tags">
+                            <i-tag
+                                v-for="tag in item.tags"
+                                :key="tag"
+                                class="i-tags"
+                                type="border"
+                                color="red"
+                            >{{tag}}</i-tag>
+                        </p>
+                    </div>
+                </div>-->
             </div>
-            <!-- </div> -->
         </div>
     </div>
 </template>
 
 <script>
 import { formatTime } from "@/utils/index"
-
+import SaleListItem from "@/components/SaleListItem"
 export default {
+    components: {
+        SaleListItem
+    },
     data() {
         return {
+            searchVal: "",
             indicatorDots: true,
             autoplay: true,
             interval: 3000,
             duration: 1000,
             logs: [],
+            smallHouseList: [
+                {
+                    src:
+                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
+                    name: "华侨新苑",
+                    type: "村委楼",
+                    price: 55,
+                    layout: "三室",
+                    decoraction: "简装",
+                    area: 99,
+                    tags: ["带花园", "停车场", "使用率高"]
+                },
+                {
+                    src:
+                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
+                    name: "大富豪花园",
+                    type: "村委楼",
+                    price: 125,
+                    layout: "三室",
+                    decoraction: "精装",
+                    area: 112,
+                    tags: ["使用率高", "高品质"]
+                },
+                {
+                    src:
+                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
+                    name: "宝安花园",
+                    type: "村委楼",
+                    price: 155,
+                    layout: "三室",
+                    decoraction: "毛坯",
+                    area: 112,
+                    tags: ["使用率高", "高品质"]
+                },
+                {
+                    src:
+                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
+                    name: "宝安花园",
+                    type: "村委楼",
+                    price: 130,
+                    layout: "三室",
+                    decoraction: "毛坯",
+                    area: 112,
+                    tags: ["使用率高", "高品质"]
+                },
+                {
+                    src:
+                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
+                    name: "宝安花园",
+                    type: "村委楼",
+                    price: 130,
+                    layout: "三室",
+                    decoraction: "毛坯",
+                    area: 112,
+                    tags: ["使用率高", "高品质"]
+                }
+            ],
             imgUrls: [
                 {
                     src:
@@ -132,16 +211,47 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .smallHouse {
     height: 100vh;
-    padding: 5px;
+    padding: 0;
     background: #f2f2f2;
     font-size: 14px;
+    .searchInputWrap {
+        position: relative;
+        padding: 5px 10px;
+        height: 110px;
+        background: #5cadff;
+        .i-input {
+            height: 30px;
+        }
+        .searchInput {
+            height: 30px;
+            padding: 0 15px;
+            border-radius: 30px;
+            // position: fixed;
+            // right: 10px;
+            // left: 10px;
+            // position: -webkit-sticky;
+            // position: sticky;
+            // top: 0;
+            // z-index: 10;
+        }
+        .searchIcon {
+            padding: 10px;
+            position: absolute;
+            right: 5px;
+            top: 0;
+        }
+    }
     .swiperWrap {
+        margin-top: -75px;
         margin-bottom: 10px;
-        background: #fff;
+        // background: #fff;
+        padding: 0 10px;
+        position: relative;
         .swiperItem {
+            border-radius: 10px;
             position: relative;
             img {
                 width: 100%;
@@ -161,104 +271,56 @@ export default {
             }
         }
     }
-    .baike {
-        padding: 10px;
-        background: #fff;
+    .baikeWrap {
+        padding: 0 10px;
         margin-bottom: 10px;
-        .baikeTitle {
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f3f3f3;
-            span:first-child {
-                font-size: 18px;
-                font-weight: bold;
-                margin-right: 10px;
-            }
-            span:last-child {
-                font-size: 12px;
-                color: #666;
-            }
-        }
-        .baikeType {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            .item {
-                flex-grow: 1;
-                text-align: center;
-                border-right: 1px solid #f2f2f2;
-                &:last-child {
-                    border-color: transparent;
+        .baike {
+            padding: 10px;
+            background: #fff;
+            .baikeTitle {
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #f3f3f3;
+                span:first-child {
+                    font-size: 18px;
+                    font-weight: bold;
+                    margin-right: 10px;
                 }
-                .icon {
+                span:last-child {
+                    font-size: 12px;
                     color: #666;
+                }
+            }
+            .baikeType {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .item {
+                    flex-grow: 1;
+                    text-align: center;
+                    border-right: 1px solid #f2f2f2;
+                    &:last-child {
+                        border-color: transparent;
+                    }
+                    .icon {
+                        color: #666;
+                    }
                 }
             }
         }
     }
     .listWrap {
-        padding: 10px;
-        background: #ffffff;
-        .title {
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f3f3f3;
-            font-weight: bold;
-            font-size: 16px;
-            color: #333;
-        }
-        .item {
-            display: flex;
-            .thumb {
-                margin-right: 10px;
-                width: 120px;
-                img {
-                    width: 100%;
-                    height: 85px;
-                }
-            }
-            .info {
-                flex: 1;
-                overflow: hidden;
-                .price {
-                    display: flex;
-                    justify-content: space-between;
-                    color: #eb5f00;
-                    font-size: 22px;
-                    .type {
-                        font-size: 14px;
-                        color: #333;
-                        vertical-align: bottom;
-                        margin-top: 7px;
-                    }
-                }
-                .layoutWrap {
-                    display: flex;
-                    justify-content: space-between;
-                    color: #666;
-                    margin-bottom: 5px;
-                    .area {
-                        position: relative;
-                        &::after {
-                            content: "2";
-                            transform: scale(0.5);
-                            position: absolute;
-                            top: -2px;
-                        }
-                    }
-                }
-                .tags {
-                    font-size: 12px;
-                    color: #fff;
-                    overflow-x: auto;
-                    white-space: nowrap;
-                    span {
-                        margin-right: 10px;
-                        background: #1296db;
-                        border-radius: 5px;
-                        padding: 2px 5px;
-                    }
-                }
+        padding: 0 10px;
+        .list {
+            padding: 10px;
+            background: #ffffff;
+            .title {
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #f3f3f3;
+                font-weight: bold;
+                font-size: 16px;
+                color: #333;
             }
         }
     }
