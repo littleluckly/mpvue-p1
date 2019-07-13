@@ -1,50 +1,49 @@
 {
-  "pages": [
-    "pages/smallHouse/main",
-    "pages/index/main",
-    "pages/smallHouse/intro/main",
-    "pages/smallHouse/news/main",
-    "pages/smallHouse/policy/main",
-    "pages/smallHouse/questionAndAnswer/main",
-    "pages/welcome/main",
-    "pages/personal/main",
-    "pages/houseDetail/main",
-    "pages/collection/main",
-    "pages/focus/main",
-    "pages/history/main"
-  ],
-  "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#5cadff",
-    "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "蜗居深圳"
-  },
-  "tabBar": {
-    "color": "#999",
-    "backgroundColor": "#fafafa",
-    "selectedColor": "#333",
-    "borderStyle": "white",
-
-    "list": [
-      {
-        "text": "租房",
-        "pagePath": "pages/index/main",
-        "iconPath": "static/tabs/home.png",
-        "selectedIconPath": "static/tabs/home_active.png"
-      },
-      {
-        "text": "小产权房",
-        "pagePath": "pages/smallHouse/main",
-        "iconPath": "static/tabs/house.png",
-        "selectedIconPath": "static/tabs/house_active.png"
-      },
-      {
-        "text": "个人中心",
-        "pagePath": "pages/personal/main",
-        "iconPath": "static/images/personal.png",
-        "selectedIconPath": "static/tabs/personal_active.png"
-      }
+    "pages": [
+        "pages/index/main",
+        "pages/smallHouse/main",
+        "pages/smallHouse/intro/main",
+        "pages/smallHouse/news/main",
+        "pages/smallHouse/policy/main",
+        "pages/smallHouse/questionAndAnswer/main",
+        "pages/welcome/main",
+        "pages/personal/main",
+        "pages/houseDetail/main",
+        "pages/collection/main",
+        "pages/focus/main",
+        "pages/history/main"
     ],
-    "position": "bottom"
-  }
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#5cadff",
+        "navigationBarTextStyle": "white",
+        "navigationBarTitleText": "蜗居深圳"
+    },
+    "tabBar": {
+        "color": "#999",
+        "backgroundColor": "#fafafa",
+        "selectedColor": "#333",
+        "borderStyle": "white",
+        "list": [
+            {
+                "text": "租房",
+                "pagePath": "pages/index/main",
+                "iconPath": "static/tabs/home.png",
+                "selectedIconPath": "static/tabs/home_active.png"
+            },
+            {
+                "text": "小产权房",
+                "pagePath": "pages/smallHouse/main",
+                "iconPath": "static/tabs/house.png",
+                "selectedIconPath": "static/tabs/house_active.png"
+            },
+            {
+                "text": "个人中心",
+                "pagePath": "pages/personal/main",
+                "iconPath": "static/images/personal.png",
+                "selectedIconPath": "static/tabs/personal_active.png"
+            }
+        ],
+        "position": "bottom"
+    }
 }

@@ -20,7 +20,7 @@
                     <span>更新：2019-07-05</span>
                     <span>浏览：1次</span>
                     <span>
-                        <i-icon style="color:#bfbfbf;" type="collection" size="24" />收藏
+                        <i-icon class="icon" type="collection" size="24" />收藏
                     </span>
                 </p>
             </div>
@@ -102,8 +102,9 @@ export default {
 </script>
 
 <style lang="less">
+@import "../../style/common";
 page {
-    background: #f2f2f2;
+    background: @graylightBg;
     font-size: 14px;
 }
 .clear {
@@ -121,6 +122,9 @@ page {
         justify-content: space-between;
         padding: 10px;
         color: #666;
+        .icon {
+            color: @grayIcon;
+        }
     }
 }
 .baseInfo {
@@ -140,7 +144,7 @@ page {
                 color: #999;
             }
             .value {
-                color: #eb5f00;
+                color: @primary;
                 font-size: 16px;
             }
         }

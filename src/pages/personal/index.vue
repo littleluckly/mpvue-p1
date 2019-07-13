@@ -12,22 +12,20 @@
         <div class="content">
             <ul>
                 <li class="item" @click="navigateTo('collection')">
-                    <span class="itemIcon" style="color:#bfbfbf;">
-                        <!-- <img src="/static/images/collect.png" alt /> -->
+                    <span class="itemIcon">
                         <i-icon type="collection" size="24" />
                     </span>
                     <span>收藏</span>
                 </li>
                 <li class="item" @click="navigateTo('focus')">
-                    <span class="itemIcon" style="color:#bfbfbf;">
+                    <span class="itemIcon">
                         <i-icon type="like_fill" size="24" />
                     </span>
                     <span>关注</span>
                 </li>
                 <li class="item" @click="navigateTo('history')">
-                    <span class="itemIcon" style="color:#bfbfbf;">
+                    <span class="itemIcon">
                         <i-icon type="time" size="24" />
-                        <!-- <img src="/static/images/history.png" alt /> -->
                     </span>
                     <span>历史记录</span>
                 </li>
@@ -57,10 +55,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "../../style/common";
 .personal {
     height: 100vh;
     padding: 5px;
-    background: #f2f2f2;
+    background: @graylightBg;
     font-size: 14px;
 }
 .userInfo {
@@ -71,7 +70,7 @@ export default {
     .avatar {
         width: 50px;
         height: 50px;
-        border: 1px solid #bfbfbf;
+        border: 1px solid @grayIcon;
         border-radius: 30px;
         padding: 5px;
         margin-right: 10px;
@@ -90,19 +89,19 @@ export default {
     .item {
         padding: 10px;
         line-height: 28px;
-        border-bottom: 1px solid #f2f2f2;
+        border-bottom: 1px solid @graylightBg;
         .itemIcon {
             display: inline-block;
             margin-right: 8px;
             height: 20px;
             width: 20px;
+            color: @grayIcon;
             img {
                 width: 100%;
                 height: 100%;
                 vertical-align: top;
                 margin-top: 4px;
             }
-            // background-image: url('~static/images/history.png')
         }
     }
 }

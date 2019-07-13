@@ -212,10 +212,11 @@ export default {
 </script>
 
 <style lang="less">
+@import "../../style/common";
 .smallHouse {
     height: 100vh;
     padding: 0;
-    background: #f2f2f2;
+    background: @graylightBg;
     font-size: 14px;
     .searchInputWrap {
         position: relative;
@@ -298,7 +299,7 @@ export default {
                 .item {
                     flex-grow: 1;
                     text-align: center;
-                    border-right: 1px solid #f2f2f2;
+                    border-right: 1px solid @graylightBg;
                     &:last-child {
                         border-color: transparent;
                     }

@@ -12,7 +12,7 @@
             <p class="layoutWrap">
                 <span class="decoraction">{{data.decoraction}}</span>
                 <span class="layout">{{data.layout}}</span>
-                <span class="area">{{data.area}}m</span>
+                <span class="area">{{data.area}}</span>
             </p>
             <p class="tags">
                 <i-tag
@@ -37,11 +37,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import "../style/common";
 .item {
     display: flex;
     margin-bottom: 8px;
     padding-bottom: 5px;
-    border-bottom: 1px dashed #f2f2f2;
+    border-bottom: 1px dashed @graylightBg;
     &:last-child {
         border-color: transparent;
     }
@@ -62,7 +63,7 @@ export default {
         .price {
             display: flex;
             justify-content: space-between;
-            color: #eb5f00;
+            color: @primary;
             font-size: 22px;
             .type {
                 font-size: 14px;
@@ -77,15 +78,7 @@ export default {
             color: #666;
             margin-bottom: 5px;
             .area {
-                position: relative;
-                padding-right: 6px;
-                &::after {
-                    content: "2";
-                    transform: scale(0.7);
-                    position: absolute;
-                    right: 0;
-                    top: -2px;
-                }
+                .square;
             }
         }
         .tags {

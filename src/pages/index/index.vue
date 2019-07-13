@@ -45,10 +45,11 @@
                     </div>
                     <div class="itemDesc">
                         <p class="mainDesc">
-                            <span class="layout">{{item.layout}}</span>
-                            <span class="divider">|</span>
-                            <span class="area">{{item.area}}</span>
-                            <span class="divider">|</span>
+                            <span class="layout sperator">{{item.layout}}</span>
+                            <span class="area sperator">
+                                <span>{{item.area}}</span>
+                                <span class="square"></span>
+                            </span>
                             <span class="address">{{item.location}}</span>
                         </p>
                         <p class="houseName">{{item.house_name}}</p>
@@ -134,6 +135,7 @@ export default {
 </script>
 
 <style lang="less">
+@import "../../style/common";
 .homepage {
     font-size: 14px;
     .topWrap {
@@ -200,7 +202,7 @@ export default {
                 margin-right: 10px;
                 padding-bottom: 6px;
                 height: 120px;
-                background: #f2f2f2;
+                background: @graylightBg;
                 &:last-child {
                     margin-right: 0;
                 }
@@ -249,10 +251,6 @@ export default {
                     font-size: 16px;
                     color: #333;
                     margin-bottom: 2px;
-                    .divider {
-                        padding: 0 8px;
-                        color: #999;
-                    }
                 }
                 .houseName {
                     margin-bottom: 1px;
@@ -260,18 +258,16 @@ export default {
                 .priceDesc {
                     .price {
                         font-size: 18px;
-                        color: #eb5f00;
+                        color: @primary;
                         line-height: 15px;
                     }
                     .unit {
                         margin-right: 10px;
-                        color: #eb5f00;
+                        color: @primary;
                     }
                 }
                 .address {
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
+                    .textOverflow;
                 }
             }
         }
