@@ -1,5 +1,6 @@
 <template>
     <div class="welcome">
+        <p class="title">奋斗者,您好!</p>
         <div class="main">
             <div class="slogan" @click="linkToCounter">
                 <p class="quote">“向蜗居在深圳的奋斗者致敬!”</p>
@@ -52,6 +53,12 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    .title {
+        position: absolute;
+        padding: 0 10px;
+        top: 40px;
+        left: 0;
+    }
 }
 
 .main {
@@ -88,8 +95,8 @@ export default {
         width: 100%;
         white-space: nowrap;
         overflow: hidden;
-        animation: typing 5s steps(16, end),
-            hidden-border 0.5s ease-in 4.6s forwards;
+        animation: typing 1s steps(16, end),
+            hidden-border 0.5s ease-in 1.8s forwards;
     }
     .author {
         float: right;
@@ -98,7 +105,7 @@ export default {
         width: 0;
         white-space: nowrap;
         overflow: hidden;
-        animation: typing 2s steps(16, end) 5s forwards;
+        animation: typing 0.5s steps(16, end) 1s forwards;
     }
     .wave1 {
         position: absolute;
@@ -107,12 +114,10 @@ export default {
         margin: auto;
         right: 0;
         bottom: 0;
-        width: 30px;
-        height: 30px;
         border-radius: 50%;
         opacity: 0;
         background: rgba(56, 151, 228, 0.5);
-        animation: wave 0.8s ease-in-out 6s infinite;
+        animation: wave 1s ease-in-out 1.5s infinite;
     }
     .wave2 {
         position: absolute;
@@ -121,12 +126,10 @@ export default {
         margin: auto;
         right: 0;
         bottom: 0;
-        width: 60px;
-        height: 30px;
         border-radius: 50%;
         opacity: 0;
         background: rgba(56, 151, 228, 0.5);
-        animation: wave 1.6s ease-in-out 6.15s infinite;
+        animation: wave 2s ease-in-out 1.7s infinite;
     }
     .wave3 {
         position: absolute;
@@ -135,12 +138,10 @@ export default {
         margin: auto;
         right: 0;
         bottom: 0;
-        width: 30px;
-        height: 30px;
         border-radius: 50%;
         opacity: 0;
         background: rgba(56, 151, 228, 0.5);
-        animation: wave 2.4s ease-in-out 6.3s infinite;
+        animation: wave 3s ease-in-out 1.9s infinite;
     }
 }
 // animation: name duration timing-function delay iteration-count direction;
@@ -172,13 +173,13 @@ export default {
 
 @keyframes wave {
     0% {
-        width: 30px;
-        height: 30px;
+        width: 10px;
+        height: 10px;
         opacity: 1;
     }
     100% {
-        width: 100%;
-        height: 100%;
+        width: 60px;
+        height: 60px;
     }
 }
 </style>

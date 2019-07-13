@@ -222,7 +222,7 @@ export default {
         position: relative;
         padding: 5px 10px;
         height: 110px;
-        background: #5cadff;
+        background: @primaryBg;
         .i-input {
             height: 30px;
         }
@@ -230,13 +230,6 @@ export default {
             height: 30px;
             padding: 0 15px;
             border-radius: 30px;
-            // position: fixed;
-            // right: 10px;
-            // left: 10px;
-            // position: -webkit-sticky;
-            // position: sticky;
-            // top: 0;
-            // z-index: 10;
         }
         .searchIcon {
             padding: 10px;
