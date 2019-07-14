@@ -85,10 +85,9 @@
 
             <i-button @click="includePoints">缩放</i-button>
         </div>
-        <div class="consult">
-            <i-icon type="collection" size="36" />
-            <i-cion type="customerservice" size="48" />
-        </div>
+        <cover-view class="consult">
+            <cover-image class="img" src="/static/images/consult.png" />
+        </cover-view>
     </div>
 </template>
 
@@ -293,11 +292,17 @@ page {
 }
 .consult {
     position: fixed;
+    width: 40px;
+    height: 40px;
     bottom: 60px;
     right: 15px;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.4);
     border-radius: 50%;
     color: @primary;
-    z-index: 10;
+    padding: 5px;
+    img {
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>
