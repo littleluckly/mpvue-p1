@@ -1,10 +1,12 @@
 <template>
     <div class="welcome">
-        <p class="title" v-bind:style="{ top: top + 'px' }">奋斗者,您好</p>
+        <!-- <p class="title" v-bind:style="{ top: top + 'px' }">
+            <img src="/static/images/logo_text2.png" alt />
+        </p>-->
         <div class="main">
             <div class="slogan" @click="linkToCounter">
-                <p class="quote">“向蜗居在深圳的奋斗者致敬!”</p>
-                <p class="author" style="text-align:right;">———鲁迅</p>
+                <p class="quote">“向勇往直前的奋斗者致敬!”</p>
+                <p class="author" style="text-align:right;">———路人甲</p>
                 <p class="wave1"></p>
                 <p class="wave2"></p>
                 <p class="wave3"></p>
@@ -55,6 +57,12 @@ export default {
         padding: 0 10px;
         // top: 40px;
         left: 0;
+        width: 60px;
+        height: 30px;
+        img {
+            height: 100%;
+            width: 100%;
+        }
     }
 }
 
@@ -114,7 +122,7 @@ export default {
         border-radius: 50%;
         opacity: 0;
         background: rgba(56, 151, 228, 0.5);
-        animation: wave 1s ease-in-out 1.5s infinite;
+        animation: wave 2s ease-in-out 1.5s infinite;
     }
     .wave2 {
         position: absolute;
@@ -126,7 +134,7 @@ export default {
         border-radius: 50%;
         opacity: 0;
         background: rgba(56, 151, 228, 0.5);
-        animation: wave 2s ease-in-out 1.7s infinite;
+        animation: wave 2s ease-in-out 2s infinite;
     }
     .wave3 {
         position: absolute;
@@ -138,7 +146,7 @@ export default {
         border-radius: 50%;
         opacity: 0;
         background: rgba(56, 151, 228, 0.5);
-        animation: wave 3s ease-in-out 1.9s infinite;
+        animation: wave 2s ease-in-out 2.5s infinite;
     }
 }
 // animation: name duration timing-function delay iteration-count direction;

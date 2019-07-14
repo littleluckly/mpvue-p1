@@ -1,15 +1,16 @@
 {
     "pages": [
+        "pages/smallHouse/main",
+        "pages/smallHouse/detail/main",
         "pages/welcome/main",
         "pages/index/main",
         "pages/index/rentSearchList.vue/main",
-        "pages/smallHouse/main",
         "pages/smallHouse/intro/main",
         "pages/smallHouse/news/main",
         "pages/smallHouse/policy/main",
         "pages/smallHouse/questionAndAnswer/main",
         "pages/personal/main",
-        "pages/houseDetail/main",
+        "pages/index/houseDetail/main",
         "pages/collection/main",
         "pages/focus/main",
         "pages/history/main"

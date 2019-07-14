@@ -58,6 +58,7 @@
             <div class="list">
                 <div class="title">猜你喜欢</div>
                 <SaleListItem
+                    @linkTo="linkToDetail(item)"
                     v-for="(item,idx) in smallHouseList"
                     :key="item.name+idx"
                     :data="item"
@@ -206,6 +207,10 @@ export default {
     methods: {
         linkTo(type) {
             wx.navigateTo({ url: `./${type}/main` })
+        },
+        linkToDetail(data) {
+            console.log("data", data)
+            wx.navigateTo({ url: `./detail/main` })
         }
     }
 }

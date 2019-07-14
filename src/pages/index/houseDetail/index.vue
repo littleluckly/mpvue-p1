@@ -102,7 +102,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "../../style/common";
+@import "../../../style/common";
 page {
     background: @graylightBg;
     font-size: 14px;

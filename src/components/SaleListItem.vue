@@ -1,5 +1,5 @@
 <template>
-    <div class="item">
+    <div class="item" @click="$emit('linkTo')">
         <div class="thumb">
             <img :src="data.src" alt />
         </div>
@@ -32,6 +32,10 @@ export default {
         data: {
             type: Object,
             default: () => ({})
+        },
+        linkTo: {
+            type: Function,
+            default: () => {}
         }
     }
 }
