@@ -103,6 +103,27 @@ export default {
             return store.state.homepageList
         }
     },
+    created() {
+        wx.showModal({
+            title: "微信授权申请",
+            content: "申请获取您的公开信息（头像、昵称等）",
+            success(res) {
+                if (res.confirm) {
+                    console.log("用户点击确定")
+                    wx.login({
+                        success: res => {
+                            wx.setStorage({
+                                key: "code",
+                                data: res.code
+                            })
+                        }
+                    })
+                } else if (res.cancel) {
+                    console.log("用户点击取消")
+                }
+            }
+        })
+    },
     methods: {
         // fetchHomepageList:store.,
         handleChange({
@@ -125,6 +146,11 @@ export default {
     },
     mounted() {
         store.dispatch("fetchHomepageList")
+        // wx.startPullDownRefresh({
+        //     success: () => {
+        //         console.log("xiala ")
+        //     }
+        // })
     },
     //页面滚动执行方式
     onPageScroll(event) {

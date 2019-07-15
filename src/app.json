@@ -1,9 +1,9 @@
 {
     "pages": [
+        "pages/index/main",
         "pages/smallHouse/main",
         "pages/smallHouse/detail/main",
         "pages/welcome/main",
-        "pages/index/main",
         "pages/index/rentSearchList.vue/main",
         "pages/smallHouse/intro/main",
         "pages/smallHouse/news/main",

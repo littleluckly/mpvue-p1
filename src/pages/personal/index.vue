@@ -5,8 +5,12 @@
                 <img v-if="userInfo.avatar" src alt />
                 <img v-else src="/static/images/personal.png" alt />
             </div>
-            <div class="info">
+            <div class="info" v-if="!code">
                 <p>八块腹肌的坏蛋</p>
+            </div>
+            <div v-else>
+                <p>登录/注册</p>
+                <p>登录后可以拥有更多的服务</p>
             </div>
         </div>
         <div class="content">
@@ -41,10 +45,20 @@ export default {
         return {
             userInfo: {
                 avatar: ""
-            }
+            },
+            code: ""
         }
     },
     computed: {},
+    created() {
+        wx.getStorage({
+            key: "code",
+            success: res => {
+                console.log("getCode", res.data)
+                this.code = res.data
+            }
+        })
+    },
     methods: {
         navigateTo(page) {
             wx.navigateTo({ url: `../${page}/main` })
