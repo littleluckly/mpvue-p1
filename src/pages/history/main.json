@@ -1,7 +1,7 @@
 {
-  "navigationBarBackgroundColor": "#CFE5F3",
-  "navigationBarTitleText": "历史记录",
-  "usingComponents": {
-    "i-button": "../../../static/iview/button/index"
-  }
+    "navigationBarBackgroundColor": "#5cadff",
+    "navigationBarTitleText": "历史记录",
+    "usingComponents": {
+        "i-button": "../../../static/iview/button/index"
+    }
 }

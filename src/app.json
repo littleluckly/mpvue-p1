@@ -1,5 +1,6 @@
 {
     "pages": [
+        "pages/personal/main",
         "pages/index/main",
         "pages/smallHouse/main",
         "pages/smallHouse/detail/main",
@@ -9,7 +10,6 @@
         "pages/smallHouse/news/main",
         "pages/smallHouse/policy/main",
         "pages/smallHouse/questionAndAnswer/main",
-        "pages/personal/main",
         "pages/index/houseDetail/main",
         "pages/collection/main",
         "pages/focus/main",
