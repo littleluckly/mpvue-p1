@@ -1,27 +1,23 @@
 <template>
-    <div class="homepage">
+    <div
+        class="homepage"
+        :class="{showDrawer:showDrawer}"
+        @touchstart="touchStart"
+        @touchmove="touchmove"
+    >
         <!-- 首页普通内容 -->
         <div class="normalWrap" :class="{showDrawer:showDrawer}">
             <div class="mask" @click="toggledrawer(false)"></div>
             <div class="topWrap" v-bind:style="{ paddingTop: top+height + 'px' }">
-                <!-- <span class="logoText" :style="{backgroundImage:'url('+loggoText+')'}" @click="linkToWelcome"></span> -->
-
-                <!-- <span class="logoText" style="backgroundImage:url(/static/images/logo_text.png)" @click="linkToWelcome"></span> -->
                 <span @click="linkToWelcome" class="logoText">
                     <img src="/static/images/logo_text.png" alt />
                 </span>
-                <div class="searchInputWrap">
-                    <i-input
-                        i-class="searchInput"
-                        v-model="searchVal"
-                        placeholder="搜索好房"
-                        @change="handleChange"
-                        @focus="toggledrawer(true)"
-                        maxlength="200"
-                    />
-                </div>
+                <p
+                    @click="toggledrawer(true)"
+                    style="flex:1;line-height:38px;border:1px solid #f2f2f2;color:#666;border-radius:10px;padding-left:10px;background:#fff;"
+                >搜索好房</p>
                 <span @click="handleSearch" class="searchIcon">
-                    <i-icon type="search" size="18" />
+                    <i-icon type="search" size="18" color="#666" />
                 </span>
             </div>
 
@@ -132,6 +128,8 @@ export default {
             showDrawer: false,
             history: false,
             hotSearch: false,
+            touchX: 0,
+            touchY: 0,
             dailyList: [
                 {
                     thumbImg:
@@ -160,7 +158,6 @@ export default {
         }
     },
     created() {
-        wx.showTabBar({ animation: true })
         // 获取右上角胶囊按钮的位置信息,
         const position = wx.getMenuButtonBoundingClientRect()
         const { top, height } = position
@@ -187,6 +184,38 @@ export default {
         // })
     },
     methods: {
+        touchStart(e) {
+            let x = e.mp.changedTouches[0].clientX
+            let y = e.mp.changedTouches[0].clientY
+            this.touchX = x
+            this.touchY = y
+        },
+        touchmove(e) {
+            let x = e.mp.changedTouches[0].clientX
+            let y = e.mp.changedTouches[0].clientY
+            const direction = this.getTouchDirection(
+                x,
+                y,
+                this.touchX,
+                this.touchY
+            )
+            if (direction == "left") {
+                this.showDrawer = true
+            } else if (direction == "right") {
+                this.showDrawer = false
+            }
+        },
+        getTouchDirection(endX, endY, startX, startY) {
+            let turn = ""
+            if (endX - startX > 50 && Math.abs(endY - startY) < 50) {
+                //左滑
+                turn = "left"
+            } else if (endX - startX < -50 && Math.abs(endY - startY) < 50) {
+                //右滑
+                turn = "right"
+            }
+            return turn
+        },
         // fetchHomepageList:store.,
         handleChange({
             target: {
@@ -209,11 +238,6 @@ export default {
             })
         },
         toggledrawer(flag) {
-            if (flag) {
-                wx.hideTabBar({ animation: true })
-            } else {
-                wx.showTabBar({ animation: true })
-            }
             this.showDrawer = flag
         },
         showMore(type) {
@@ -241,9 +265,26 @@ export default {
 .homepage {
     font-size: 14px;
     position: relative;
+    top: 0;
+    bottom: -60px;
     height: 100vh;
     background: linear-gradient(to bottom, #8fd3f4, #84fab0);
-
+    &.showDrawer {
+        // overflow: hidden;
+        .drawerWrap {
+            left: 0;
+        }
+        .normalWrap {
+            left: 90%;
+            top: 20px;
+            // bottom: -20px;
+            // height: calc(100vh - 40px);
+            overflow: hidden;
+            .mask {
+                display: block;
+            }
+        }
+    }
     .searchInputWrap {
         flex: 1;
         height: 35px;
@@ -270,14 +311,14 @@ export default {
             width: 100%;
             background: transparent;
         }
-        &.showDrawer {
-            left: 90%;
-            top: 20px;
-            bottom: -20px;
-            .mask {
-                display: block;
-            }
-        }
+        // &.showDrawer {
+        //     left: 90%;
+        //     top: 20px;
+        //     bottom: -20px;
+        //     .mask {
+        //         display: block;
+        //     }
+        // }
         .topWrap {
             display: flex;
             height: 60px;
@@ -406,30 +447,28 @@ export default {
     .drawerWrap {
         position: absolute;
         top: 0;
-        // bottom: 0;
-        bottom: -60px;
+        bottom: 0;
+        // bottom: -60px;
         left: -100%;
         width: 80%;
         // height: 100vh;
         padding: 20px;
         transition: left ease-in-out 500ms;
-        &.showDrawer {
-            left: 0;
-        }
         .searchDrawer {
             padding: 0 10px;
-            height: 93vh;
+            height: calc(100vh - 70px);
             background: #fff;
             border-radius: 10px;
             padding-top: 20px;
             .searchIcon {
                 position: absolute;
-                left: 33px;
-                top: 45px;
-                line-height: 38px;
-                padding: 0 5px;
+                left: 5px;
+                top: -2px;
+                line-height: 76rpx;
+                padding: 0 10rpx;
             }
             .searchInputWrap {
+                position: relative;
                 border: 1px solid #ccc;
                 border-radius: 20px;
             }
