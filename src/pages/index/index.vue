@@ -76,15 +76,18 @@
         >
             <div class="searchDrawer">
                 <!-- @focus="toggledrawer(true)" -->
-                <!-- <div class="searchInputWrap"> -->
-                <i-input
-                    i-class="searchInput"
-                    v-model="searchVal"
-                    placeholder="请输入小区名称、地址、户型等"
-                    @change="handleChange"
-                    maxlength="200"
-                />
-                <!-- </div> -->
+                <div class="searchInputWrap">
+                    <i-input
+                        i-class="searchInput"
+                        v-model="searchVal"
+                        placeholder="请输入小区名称、地址、户型等"
+                        @change="handleChange"
+                        maxlength="200"
+                    />
+                    <span @click="handleSearch" class="searchIcon">
+                        <i-icon type="search" size="18" />
+                    </span>
+                </div>
                 <div class="searchHistory">
                     <p>搜索历史</p>
                     <div class="itemWrap" :class="{showMore:history}">
@@ -190,7 +193,7 @@ export default {
                 detail: { value }
             }
         }) {
-            console.log(value)
+            // console.log(value)
             this.searchVal = value
         },
         linkToWelcome() {
@@ -201,6 +204,9 @@ export default {
         },
         handleSearch() {
             console.log("搜索", this.searchVal)
+            wx.navigateTo({
+                url: `./rentSearchList/main?searchVal=${this.searchVal}`
+            })
         },
         toggledrawer(flag) {
             if (flag) {
@@ -400,10 +406,11 @@ export default {
     .drawerWrap {
         position: absolute;
         top: 0;
-        bottom: 0;
+        // bottom: 0;
+        bottom: -60px;
         left: -100%;
         width: 80%;
-        height: 100vh;
+        // height: 100vh;
         padding: 20px;
         transition: left ease-in-out 500ms;
         &.showDrawer {
@@ -414,6 +421,21 @@ export default {
             height: 93vh;
             background: #fff;
             border-radius: 10px;
+            padding-top: 20px;
+            .searchIcon {
+                position: absolute;
+                left: 33px;
+                top: 45px;
+                line-height: 38px;
+                padding: 0 5px;
+            }
+            .searchInputWrap {
+                border: 1px solid #ccc;
+                border-radius: 20px;
+            }
+            .searchInput {
+                padding-left: 30px;
+            }
             .searchHistory,
             .hotSearch {
                 font-size: 12px;
