@@ -1,14 +1,15 @@
 {
-  "navigationBarBackgroundColor": "#5cadff",
-  "navigationBarTextStyle": "white",
-  "navigationBarTitleText": "租房",
-  "usingComponents": {
-    "i-button": "../../../static/iview/button/index",
-    "i-input": "../../../static/iview/input/index",
-    "i-icon": "../../../static/iview/icon/index",
-    "i-sticky": "../../../static/iview/sticky/index",
-    "i-sticky-item": "../../../static/iview/sticky-item/index",
-    "i-row": "../../../static/iview/row/index",
-    "i-col": "../../../static/iview/col/index"
-  }
+    "navigationStyle": "custom",
+    "navigationBarBackgroundColor": "#5cadff",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "租房",
+    "usingComponents": {
+        "i-button": "../../../static/iview/button/index",
+        "i-input": "../../../static/iview/input/index",
+        "i-icon": "../../../static/iview/icon/index",
+        "i-sticky": "../../../static/iview/sticky/index",
+        "i-sticky-item": "../../../static/iview/sticky-item/index",
+        "i-row": "../../../static/iview/row/index",
+        "i-col": "../../../static/iview/col/index"
+    }
 }

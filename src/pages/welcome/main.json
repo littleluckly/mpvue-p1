@@ -3,6 +3,7 @@
     "navigationBarBackgroundColor": "#CFE5F3",
     "navigationBarTitleText": "奋斗者，你好",
     "usingComponents": {
-        "i-button": "../../../static/iview/button/index"
+        "i-button": "../../../static/iview/button/index",
+        "i-icon": "../../../static/iview/icon/index"
     }
 }

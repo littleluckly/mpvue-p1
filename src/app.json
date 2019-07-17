@@ -1,7 +1,7 @@
 {
     "pages": [
-        "pages/personal/main",
         "pages/index/main",
+        "pages/personal/main",
         "pages/smallHouse/main",
         "pages/smallHouse/detail/main",
         "pages/welcome/main",

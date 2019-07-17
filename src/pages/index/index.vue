@@ -1,64 +1,112 @@
 <template>
     <div class="homepage">
-        <div class="topWrap">
-            <!-- <span class="logoText" :style="{backgroundImage:'url('+loggoText+')'}" @click="linkToWelcome"></span> -->
+        <!-- 首页普通内容 -->
+        <div class="normalWrap" :class="{showDrawer:showDrawer}">
+            <div class="mask" @click="toggledrawer(false)"></div>
+            <div class="topWrap" v-bind:style="{ paddingTop: top+height + 'px' }">
+                <!-- <span class="logoText" :style="{backgroundImage:'url('+loggoText+')'}" @click="linkToWelcome"></span> -->
 
-            <!-- <span class="logoText" style="backgroundImage:url(/static/images/logo_text.png)" @click="linkToWelcome"></span> -->
-            <span @click="linkToWelcome" class="logoText">
-                <img src="/static/images/logo_text.png" alt />
-            </span>
-            <div class="searchInputWrap">
-                <i-input
-                    i-class="searchInput"
-                    v-model="searchVal"
-                    placeholder="搜索好房"
-                    @change="handleChange"
-                    maxlength="200"
-                />
+                <!-- <span class="logoText" style="backgroundImage:url(/static/images/logo_text.png)" @click="linkToWelcome"></span> -->
+                <span @click="linkToWelcome" class="logoText">
+                    <img src="/static/images/logo_text.png" alt />
+                </span>
+                <div class="searchInputWrap">
+                    <i-input
+                        i-class="searchInput"
+                        v-model="searchVal"
+                        placeholder="搜索好房"
+                        @change="handleChange"
+                        @focus="toggledrawer(true)"
+                        maxlength="200"
+                    />
+                </div>
+                <span @click="handleSearch" class="searchIcon">
+                    <i-icon type="search" size="18" />
+                </span>
             </div>
-            <span @click="handleSearch" class="searchIcon">
-                <i-icon type="search" size="18" />
-            </span>
-        </div>
 
-        <div class="dailyRecommend">
-            <p class="dailyTitle">- 今日优选 -</p>
-            <div class="dailyItemWrap">
-                <div v-for="(item, idx) in dailyList" :key="idx" class="dailyItem">
-                    <img :src="item.thumbImg" />
-                    <p class="houseLayout">{{item.houseLayout}}</p>
-                    <p class="rent">{{item.rent}}元/月</p>
+            <div class="dailyRecommend">
+                <p class="dailyTitle">- 今日优选 -</p>
+                <div class="dailyItemWrap">
+                    <div v-for="(item, idx) in dailyList" :key="idx" class="dailyItem">
+                        <img :src="item.thumbImg" />
+                        <p class="houseLayout">{{item.houseLayout}}</p>
+                        <p class="rent">{{item.rent}}元/月</p>
+                    </div>
+                </div>
+            </div>
+            <div class="listWrap">
+                <div class="resultWrap">
+                    <p class="listTitle">精选好房</p>
+                    <div
+                        v-for="(item,idx) in homepageList"
+                        :key="item.address+idx"
+                        class="listItem"
+                        @click="showHouseDetail(item)"
+                    >
+                        <div class="thumbImg">
+                            <img :src="item.thumbImg" alt />
+                        </div>
+                        <div class="itemDesc">
+                            <p class="mainDesc">
+                                <span class="layout sperator">{{item.layout}}</span>
+                                <span class="area sperator">
+                                    <span>{{item.area}}</span>
+                                    <span class="square"></span>
+                                </span>
+                                <span class="address">{{item.location}}</span>
+                            </p>
+                            <p class="houseName">{{item.house_name}}</p>
+                            <p class="priceDesc">
+                                <span class="price">{{item.price}}</span>
+                                <span class="unit">元/月</span>
+                                <span class="type">{{item.type}}</span>
+                            </p>
+                            <p class="address">{{item.address}}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="listWrap">
-            <div class="resultWrap">
-                <p class="listTitle">精选好房</p>
-                <div
-                    v-for="(item,idx) in homepageList"
-                    :key="item.address+idx"
-                    class="listItem"
-                    @click="showHouseDetail(item)"
-                >
-                    <div class="thumbImg">
-                        <img :src="item.thumbImg" alt />
+        <!-- 侧滑全屏抽屉效果 -->
+        <div
+            class="drawerWrap"
+            :class="{showDrawer:showDrawer}"
+            :style="{ paddingTop: top + 'px' }"
+        >
+            <div class="searchDrawer">
+                <!-- @focus="toggledrawer(true)" -->
+                <!-- <div class="searchInputWrap"> -->
+                <i-input
+                    i-class="searchInput"
+                    v-model="searchVal"
+                    placeholder="请输入小区名称、地址、户型等"
+                    @change="handleChange"
+                    maxlength="200"
+                />
+                <!-- </div> -->
+                <div class="searchHistory">
+                    <p>搜索历史</p>
+                    <div class="itemWrap" :class="{showMore:history}">
+                        <span class="item">一房一厅</span>
+                        <span class="item">一房一厅</span>
+                        <span class="item">单间</span>
+                        <div class="showMoreBtn" @click="showMore('history')">
+                            显示更多
+                            <i-icon type="unfold"></i-icon>
+                        </div>
                     </div>
-                    <div class="itemDesc">
-                        <p class="mainDesc">
-                            <span class="layout sperator">{{item.layout}}</span>
-                            <span class="area sperator">
-                                <span>{{item.area}}</span>
-                                <span class="square"></span>
-                            </span>
-                            <span class="address">{{item.location}}</span>
-                        </p>
-                        <p class="houseName">{{item.house_name}}</p>
-                        <p class="priceDesc">
-                            <span class="price">{{item.price}}</span>
-                            <span class="unit">元/月</span>
-                            <span class="type">{{item.type}}</span>
-                        </p>
-                        <p class="address">{{item.address}}</p>
+                </div>
+                <div class="hotSearch">
+                    <p>热门搜索</p>
+                    <div class="itemWrap" :class="{showMore:hotSearch}">
+                        <span class="item">单间</span>
+                        <span class="item">近地铁</span>
+                        <span class="item">南北通透</span>
+                        <div class="showMoreBtn" @click="showMore('hotSearch')">
+                            显示更多
+                            <i-icon type="unfold"></i-icon>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -73,9 +121,14 @@ import loggoText from "../../../static/images/logo_text.png"
 export default {
     data() {
         return {
+            top: 0,
+            height: 0,
             searchVal: "",
             scrollTop: 0,
             loggoText: loggoText,
+            showDrawer: false,
+            history: false,
+            hotSearch: false,
             dailyList: [
                 {
                     thumbImg:
@@ -104,6 +157,12 @@ export default {
         }
     },
     created() {
+        wx.showTabBar({ animation: true })
+        // 获取右上角胶囊按钮的位置信息,
+        const position = wx.getMenuButtonBoundingClientRect()
+        const { top, height } = position
+        this.top = Math.ceil(top)
+        this.height = Math.ceil(height)
         // wx.showModal({
         //     title: "微信授权申请",
         //     content: "申请获取您的公开信息（头像、昵称等）",
@@ -142,6 +201,17 @@ export default {
         },
         handleSearch() {
             console.log("搜索", this.searchVal)
+        },
+        toggledrawer(flag) {
+            if (flag) {
+                wx.hideTabBar({ animation: true })
+            } else {
+                wx.showTabBar({ animation: true })
+            }
+            this.showDrawer = flag
+        },
+        showMore(type) {
+            this[type] = true
         }
     },
     mounted() {
@@ -164,136 +234,222 @@ export default {
 @import "../../style/common";
 .homepage {
     font-size: 14px;
-    .topWrap {
-        display: flex;
-        height: 60px;
-        align-items: center;
-        background: #5cadff;
+    position: relative;
+    height: 100vh;
+    background: linear-gradient(to bottom, #8fd3f4, #84fab0);
 
-        .searchInputWrap {
-            flex: 1;
-            height: 35px;
-            overflow: hidden;
-            border-radius: 7px;
-            .searchInput {
-                transform: translateY(-5px);
-                padding-right: 10px;
-            }
-        }
-        .searchIcon {
-            position: relative;
-            left: -30px;
-            top: 0;
-            line-height: 38px;
-            padding: 0 5px;
-        }
-        .logoText {
-            display: inline-block;
-            height: 40px;
-            width: 70px;
-            background-size: contain;
-            background-position: left 4px;
-            img {
-                width: 100%;
-                height: 100%;
-            }
+    .searchInputWrap {
+        flex: 1;
+        height: 35px;
+        overflow: hidden;
+        border-radius: 7px;
+        .searchInput {
+            transform: translateY(-5px);
+            padding-right: 10px;
         }
     }
+    // 普通内容
+    .normalWrap {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        transition: all ease-in-out 500ms;
+        width: 100%;
+        background: #fff;
+        .mask {
+            display: none;
+            position: absolute;
+            height: 100vh;
+            width: 100%;
+            background: transparent;
+        }
+        &.showDrawer {
+            left: 90%;
+            top: 20px;
+            bottom: -20px;
+            .mask {
+                display: block;
+            }
+        }
+        .topWrap {
+            display: flex;
+            height: 60px;
+            align-items: center;
+            background: #5cadff;
+            .searchIcon {
+                position: relative;
+                left: -30px;
+                top: 0;
+                line-height: 38px;
+                padding: 0 5px;
+            }
+            .logoText {
+                display: inline-block;
+                height: 40px;
+                width: 70px;
+                background-size: contain;
+                background-position: left 4px;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+        }
 
-    .dailyRecommend {
-        .dailyTitle {
-            position: relative;
-            text-align: center;
+        .dailyRecommend {
+            .dailyTitle {
+                position: relative;
+                text-align: center;
+                padding: 10px;
+                &::after {
+                    position: absolute;
+                    right: 0;
+                    width: 20px;
+                    height: 2px;
+                    background: #eee;
+                }
+                &::before {
+                    width: 20px;
+                    height: 2px;
+                    background: #eee;
+                }
+            }
+            .dailyItemWrap {
+                display: flex;
+                justify-content: center;
+                padding: 0 10px;
+                margin-bottom: 10px;
+                .dailyItem {
+                    width: 33%;
+                    margin-right: 10px;
+                    padding-bottom: 6px;
+                    height: 120px;
+                    background: @graylightBg;
+                    &:last-child {
+                        margin-right: 0;
+                    }
+                    img {
+                        width: 100%;
+                        height: 80px;
+                    }
+                    .houseLayout {
+                        color: #666;
+                        text-align: center;
+                    }
+                    .rent {
+                        text-align: center;
+                        color: #333;
+                    }
+                }
+            }
+        }
+        .listWrap {
             padding: 10px;
-            &::after {
-                position: absolute;
-                right: 0;
-                width: 20px;
-                height: 2px;
-                background: #eee;
+            .listTitle {
+                font-size: 18px;
+                color: #333;
+                font-weight: bold;
+                margin-bottom: 10px;
             }
-            &::before {
-                width: 20px;
-                height: 2px;
-                background: #eee;
-            }
-        }
-        .dailyItemWrap {
-            display: flex;
-            justify-content: center;
-            padding: 0 10px;
-            margin-bottom: 10px;
-            .dailyItem {
-                width: 33%;
-                margin-right: 10px;
-                padding-bottom: 6px;
-                height: 120px;
-                background: @graylightBg;
-                &:last-child {
-                    margin-right: 0;
+            .listItem {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 10px;
+                // height: 165px;
+                .thumbImg {
+                    width: 112px;
+                    margin-right: 20px;
+                    img {
+                        width: 100%;
+                        height: 80px;
+                    }
                 }
-                img {
-                    width: 100%;
-                    height: 80px;
-                }
-                .houseLayout {
+                .itemDesc {
+                    flex: 1;
                     color: #666;
-                    text-align: center;
-                }
-                .rent {
-                    text-align: center;
-                    color: #333;
+                    // 配合.address文字超长省略
+                    overflow: hidden;
+                    .mainDesc {
+                        font-size: 16px;
+                        color: #333;
+                        margin-bottom: 2px;
+                    }
+                    .houseName {
+                        margin-bottom: 1px;
+                    }
+                    .priceDesc {
+                        .price {
+                            font-size: 18px;
+                            color: @primary;
+                            line-height: 15px;
+                        }
+                        .unit {
+                            margin-right: 10px;
+                            color: @primary;
+                        }
+                    }
+                    .address {
+                        .textOverflow;
+                    }
                 }
             }
         }
     }
-    .listWrap {
-        padding: 10px;
-        .listTitle {
-            font-size: 18px;
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 10px;
+    // 侧滑抽屉内容
+    .drawerWrap {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -100%;
+        width: 80%;
+        height: 100vh;
+        padding: 20px;
+        transition: left ease-in-out 500ms;
+        &.showDrawer {
+            left: 0;
         }
-        .listItem {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-            // height: 165px;
-            .thumbImg {
-                width: 112px;
-                margin-right: 20px;
-                img {
-                    width: 100%;
-                    height: 80px;
+        .searchDrawer {
+            padding: 0 10px;
+            height: 93vh;
+            background: #fff;
+            border-radius: 10px;
+            .searchHistory,
+            .hotSearch {
+                font-size: 12px;
+                & > p {
+                    font-weight: bold;
+                    padding: 10px 0;
                 }
-            }
-            .itemDesc {
-                flex: 1;
-                color: #666;
-                // 配合.address文字超长省略
-                overflow: hidden;
-                .mainDesc {
-                    font-size: 16px;
-                    color: #333;
-                    margin-bottom: 2px;
-                }
-                .houseName {
-                    margin-bottom: 1px;
-                }
-                .priceDesc {
-                    .price {
-                        font-size: 18px;
-                        color: @primary;
-                        line-height: 15px;
+                .itemWrap {
+                    max-height: 100px;
+                    overflow: hidden;
+                    position: relative;
+                    &.showMore {
+                        max-height: 100%;
+                        .showMoreBtn {
+                            display: none;
+                        }
                     }
-                    .unit {
+                    .item {
+                        display: inline-block;
+                        padding: 2px 10px;
+                        background: @graylightBg;
+                        border-radius: 15px;
+                        color: @grayText;
                         margin-right: 10px;
-                        color: @primary;
+                        margin-bottom: 5px;
+                        white-space: nowrap;
                     }
-                }
-                .address {
-                    .textOverflow;
+                    .showMoreBtn {
+                        position: absolute;
+                        background: #fff;
+                        top: 84px;
+                        width: 100%;
+                        text-align: center;
+                        line-height: 18px;
+                        // margin-left: -30px;
+                    }
                 }
             }
         }

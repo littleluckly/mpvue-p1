@@ -1,7 +1,7 @@
 <template>
     <div class="welcome">
         <!-- <p class="title" v-bind:style="{ top: top + 'px' }">
-            <img src="/static/images/logo_text2.png" alt />
+            <i-icon type="return" size="18" color="#fff;"></i-icon>
         </p>-->
         <div class="main">
             <div class="slogan" @click="linkToCounter">
