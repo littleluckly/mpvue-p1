@@ -5,7 +5,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         count: 0,
-        homepageList: []
+        homepageList: [],
+        drawerVisible: false
     },
     mutations: {
         increment: state => {
@@ -16,6 +17,9 @@ export default new Vuex.Store({
         },
         homepageList: (state, payload) => {
             state.homepageList = payload
+        },
+        drawerVisible: (state, payload) => {
+            state.drawerVisible = payload
         }
     },
     actions: {
@@ -27,6 +31,9 @@ export default new Vuex.Store({
                     commit("homepageList", res.data)
                 }
             })
-        }
+        },
+        toggleDrawerVisible({ commit }, flag) {
+            commit('drawerVisible', flag)
+        },
     }
 })

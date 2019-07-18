@@ -6,7 +6,7 @@
         @touchmove="touchmove"
     >
         <!-- 首页普通内容 -->
-        <div class="normalWrap" :class="{showDrawer:showDrawer}">
+        <div class="normalWrap">
             <div class="mask" @click="toggledrawer(false)"></div>
             <div class="topWrap" v-bind:style="{ paddingTop: top+height + 'px' }">
                 <span @click="linkToWelcome" class="logoText">
@@ -65,11 +65,7 @@
             </div>
         </div>
         <!-- 侧滑全屏抽屉效果 -->
-        <div
-            class="drawerWrap"
-            :class="{showDrawer:showDrawer}"
-            :style="{ paddingTop: top + 'px' }"
-        >
+        <div class="drawerWrap" :style="{ paddingTop: top + 'px' }">
             <div class="searchDrawer">
                 <!-- @focus="toggledrawer(true)" -->
                 <div class="searchInputWrap">
@@ -115,6 +111,7 @@
 
 <script>
 import store from "@/stores/index"
+import { mapActions } from "vuex"
 import loggoText from "../../../static/images/logo_text.png"
 import calcCapsulePosi from "@/mixins/calcCapsulePosi"
 export default {
@@ -156,10 +153,22 @@ export default {
     computed: {
         homepageList() {
             return store.state.homepageList
+        },
+        drawerVisible() {
+            return store.state.drawerVisible
         }
     },
+    onShow() {
+        // console.log("onshow", this.toggleDrawerVisible(false))
+        // store.commit("drawerVisible", false)
+        // this.showDrawer = false
+    },
+    onHide() {
+        console.log("onHide")
+        store.commit("drawerVisible", false)
+    },
     created() {
-        console.log("lk11111111")
+        // console.log("lk11111111")
         // 获取右上角胶囊按钮的位置信息,
         // const position = wx.getMenuButtonBoundingClientRect()
         // const { top, height } = position
@@ -186,6 +195,7 @@ export default {
         // })
     },
     methods: {
+        ...mapActions(["toggleDrawerVisible"]),
         touchStart(e) {
             let x = e.mp.changedTouches[0].clientX
             let y = e.mp.changedTouches[0].clientY
@@ -202,8 +212,10 @@ export default {
                 this.touchY
             )
             if (direction == "left") {
+                store.commit("drawerVisible", true)
                 this.showDrawer = true
             } else if (direction == "right") {
+                store.commit("drawerVisible", false)
                 this.showDrawer = false
             }
         },
@@ -218,7 +230,6 @@ export default {
             }
             return turn
         },
-        // fetchHomepageList:store.,
         handleChange({
             target: {
                 detail: { value }
@@ -235,12 +246,14 @@ export default {
         },
         handleSearch() {
             console.log("搜索", this.searchVal)
+            // this.showDrawer = false
             wx.navigateTo({
                 url: `./rentSearchList/main?searchVal=${this.searchVal}`
             })
         },
         toggledrawer(flag) {
             this.showDrawer = flag
+            store.commit("drawerVisible", flag)
         },
         showMore(type) {
             this[type] = true

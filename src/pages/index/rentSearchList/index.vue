@@ -10,10 +10,15 @@
 </template>
 <script>
 import calcCapsulePosi from "@/mixins/calcCapsulePosi"
+import store from "@/stores/index"
 export default {
     mixins: [calcCapsulePosi],
     data() {},
     created() {},
+    onUnload() {
+        console.log("onUnload")
+        // store.commit("drawerVisible", false)
+    },
     methods: {
         backTo() {
             wx.switchTab({ url: "../main" })
