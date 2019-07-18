@@ -116,12 +116,13 @@
 <script>
 import store from "@/stores/index"
 import loggoText from "../../../static/images/logo_text.png"
-
+import calcCapsulePosi from "@/mixins/calcCapsulePosi"
 export default {
+    mixins: [calcCapsulePosi],
     data() {
         return {
-            top: 0,
-            height: 0,
+            // top: 0,
+            // height: 0,
             searchVal: "",
             scrollTop: 0,
             loggoText: loggoText,
@@ -158,11 +159,12 @@ export default {
         }
     },
     created() {
+        console.log("lk11111111")
         // 获取右上角胶囊按钮的位置信息,
-        const position = wx.getMenuButtonBoundingClientRect()
-        const { top, height } = position
-        this.top = Math.ceil(top)
-        this.height = Math.ceil(height)
+        // const position = wx.getMenuButtonBoundingClientRect()
+        // const { top, height } = position
+        // this.top = Math.ceil(top)
+        // this.height = Math.ceil(height)
         // wx.showModal({
         //     title: "微信授权申请",
         //     content: "申请获取您的公开信息（头像、昵称等）",

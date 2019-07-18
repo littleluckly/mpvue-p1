@@ -39,6 +39,12 @@
             <ul>
                 <li class="item">
                     <span class="itemIcon">
+                        <i-icon type="brush" size="24" />
+                    </span>
+                    <span>我要发布房源</span>
+                </li>
+                <li class="item">
+                    <span class="itemIcon">
                         <i-icon type="integral" size="24" />
                     </span>
                     <span>关于蜗居深圳</span>

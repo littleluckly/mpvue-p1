@@ -8,21 +8,15 @@
 </template>
 
 <script>
+import calcCapsulePosi from "@/mixins/calcCapsulePosi"
 export default {
+    mixins: [calcCapsulePosi],
     data() {
-        return {
-            top: 20
-        }
+        return {}
     },
-    created() {
-        // 获取右上角胶囊按钮的位置信息,
-        const position = wx.getMenuButtonBoundingClientRect()
-        const { top } = position
-        this.top = Math.ceil(top)
-    },
+    created() {},
     methods: {
         backTo() {
-            console.log("aaa")
             wx.switchTab({ url: "../personal/main" })
         }
     }
