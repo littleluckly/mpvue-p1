@@ -67,13 +67,13 @@
         <!-- 侧滑全屏抽屉效果 -->
         <div class="drawerWrap" :style="{ paddingTop: top + 'px' }">
             <div class="searchDrawer">
-                <!-- @focus="toggledrawer(true)" -->
                 <div class="searchInputWrap">
-                    <i-input
-                        i-class="searchInput"
+                    <input
+                        class="searchInput"
                         v-model="searchVal"
                         placeholder="请输入小区名称、地址、户型等"
-                        @change="handleChange"
+                        confirm-type="search"
+                        @confirm="handleSearch"
                         maxlength="200"
                     />
                     <span @click="handleSearch" class="searchIcon">
@@ -165,9 +165,11 @@ export default {
     },
     onHide() {
         console.log("onHide")
-        store.commit("drawerVisible", false)
+        // this.showDrawer = false
+        // store.commit("drawerVisible", false)
     },
     created() {
+        store.dispatch("fetchHomepageList")
         // console.log("lk11111111")
         // 获取右上角胶囊按钮的位置信息,
         // const position = wx.getMenuButtonBoundingClientRect()
@@ -235,7 +237,7 @@ export default {
                 detail: { value }
             }
         }) {
-            // console.log(value)
+            console.log(value)
             this.searchVal = value
         },
         linkToWelcome() {
@@ -244,11 +246,12 @@ export default {
         showHouseDetail(item) {
             wx.navigateTo({ url: `./houseDetail/main?id=${item.id}` })
         },
-        handleSearch() {
-            console.log("搜索", this.searchVal)
+        handleSearch(e) {
+            const value = e.target ? e.target.value : this.searchVal
+            console.log("搜索", value)
             // this.showDrawer = false
             wx.navigateTo({
-                url: `./rentSearchList/main?searchVal=${this.searchVal}`
+                url: `./rentSearchList/main?searchVal=${value}`
             })
         },
         toggledrawer(flag) {
@@ -260,7 +263,6 @@ export default {
         }
     },
     mounted() {
-        store.dispatch("fetchHomepageList")
         // wx.startPullDownRefresh({
         //     success: () => {
         //         console.log("xiala ")
@@ -306,8 +308,9 @@ export default {
         overflow: hidden;
         border-radius: 7px;
         .searchInput {
-            transform: translateY(-5px);
-            padding-right: 10px;
+            height: 38px;
+            padding-left: 30px;
+            line-height: 38px;
         }
     }
     // 普通内容
@@ -344,7 +347,7 @@ export default {
                 left: -30px;
                 top: 0;
                 line-height: 38px;
-                padding: 0 5px;
+                padding: 0 8px;
             }
             .logoText {
                 display: inline-block;
@@ -478,7 +481,7 @@ export default {
             .searchIcon {
                 position: absolute;
                 left: 5px;
-                top: -2px;
+                top: -1px;
                 line-height: 76rpx;
                 padding: 0 10rpx;
             }

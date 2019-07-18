@@ -1,5 +1,6 @@
 {
     "pages": [
+        "pages/index/rentSearchList/main",
         "pages/index/main",
         "pages/personal/main",
         "pages/smallHouse/main",
@@ -10,7 +11,6 @@
         "pages/smallHouse/policy/main",
         "pages/smallHouse/questionAndAnswer/main",
         "pages/index/houseDetail/main",
-        "pages/index/rentSearchList/main",
         "pages/collection/main",
         "pages/focus/main",
         "pages/history/main"
@@ -34,7 +34,7 @@
                 "selectedIconPath": "static/tabs/home_active.png"
             },
             {
-                "text": "小产权房",
+                "text": "小产权购买",
                 "pagePath": "pages/smallHouse/main",
                 "iconPath": "static/tabs/house.png",
                 "selectedIconPath": "static/tabs/house_active.png"
