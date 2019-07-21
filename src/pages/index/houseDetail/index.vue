@@ -3,7 +3,7 @@
         <!-- <div class="topBar">
             <div>{{title}}</div>
         </div>-->
-        <CustomTopBar :top="top" :height="height" :title="title" />
+        <!-- <CustomTopBar :top="top" :height="height" :title="title" /> -->
         <div class="pictureArea">
             <swiper
                 class="swiper"
@@ -109,6 +109,9 @@ export default {
     onLoad(query) {
         console.log("id", query)
         const { name = "蜗居深圳", id } = query
+        wx.setNavigationBarTitle({
+            title: name
+        })
         this.title = name
         // store.dispatch("fetchHomepageList")
     },

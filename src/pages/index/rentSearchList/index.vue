@@ -1,6 +1,6 @@
 <template>
     <div class="rentSearchList">
-        <CustomTopBar :top="top" :height="height" :title="searchVal" />
+        <!-- <CustomTopBar :top="top" :height="height" :title="searchVal" /> -->
         <!-- <div class="topWrap" v-bind:style="{ paddingTop: top + 'px',height: height + 'px' }">
             <div class="back" @click="backTo">
                 <i-icon type="return" size="24" color="#fff;" @click="backTo"></i-icon>
@@ -182,6 +182,9 @@ export default {
     onLoad({ searchVal = "" }) {
         console.log("searchval", searchVal)
         this.searchVal = searchVal
+        wx.setNavigationBarTitle({
+            title: searchVal
+        })
         store.dispatch("fetchHomepageList")
     },
     //页面滚动执行方式
