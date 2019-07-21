@@ -2,10 +2,10 @@
     "pages": [
         "pages/index/rentSearchList/main",
         "pages/index/main",
+        "pages/welcome/main",
         "pages/personal/main",
         "pages/smallHouse/main",
         "pages/smallHouse/detail/main",
-        "pages/welcome/main",
         "pages/smallHouse/intro/main",
         "pages/smallHouse/news/main",
         "pages/smallHouse/policy/main",

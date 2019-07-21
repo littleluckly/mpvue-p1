@@ -76,6 +76,7 @@
                         @confirm="handleSearch"
                         maxlength="200"
                     />
+                    <!-- @change="handleChange" -->
                     <span @click="handleSearch" class="searchIcon">
                         <i-icon type="search" size="18" />
                     </span>
@@ -164,7 +165,7 @@ export default {
         // this.showDrawer = false
     },
     onHide() {
-        console.log("onHide")
+        // console.log("onHide")
         // this.showDrawer = false
         // store.commit("drawerVisible", false)
     },
@@ -233,8 +234,10 @@ export default {
             return turn
         },
         handleChange({
-            target: {
-                detail: { value }
+            map: {
+                target: {
+                    detail: { value }
+                }
             }
         }) {
             console.log(value)
@@ -248,7 +251,7 @@ export default {
         },
         handleSearch(e) {
             const value = e.target ? e.target.value : this.searchVal
-            console.log("搜索", value)
+            console.log("搜索", e, value)
             // this.showDrawer = false
             wx.navigateTo({
                 url: `./rentSearchList/main?searchVal=${value}`

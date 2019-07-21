@@ -3,6 +3,10 @@ import App from './App'
 import store from './stores/index'
 import './icons/index.js' // icon
 
+wx.cloud.init({
+    env: "wojushenzhen-cpm5n",
+    traceUser: true
+})
 Vue.config.productionTip = false
 App.mpType = 'app'
 
