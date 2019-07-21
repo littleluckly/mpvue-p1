@@ -251,10 +251,9 @@ export default {
         },
         handleSearch(e) {
             const value = e.target ? e.target.value : this.searchVal
-            console.log("搜索", e, value)
             // this.showDrawer = false
             wx.navigateTo({
-                url: `./rentSearchList/main?searchVal=${value}`
+                url: `./rentSearchList/main?searchVal=${value || ""}`
             })
         },
         toggledrawer(flag) {

@@ -4,9 +4,9 @@
             <div class="back" @click="backTo">
                 <i-icon type="return" size="24" color="#fff;" @click="backTo"></i-icon>
             </div>
-            <div class="title">搜索列表</div>
+            <div class="title">{{searchVal}}</div>
         </div>
-        <div class="searchInputWrap">
+        <!-- <div class="searchInputWrap">
             <input
                 :value="searchVal"
                 @input="handleInputChange"
@@ -20,10 +20,10 @@
             <span @click="handleSearch" class="searchIcon">
                 <i-icon type="search" size="18" />
             </span>
-        </div>
+        </div>-->
         <div class="filterArea">
             <div class="types">
-                <div class="filterType">
+                <div class="filterType" @blur="handleBlur">
                     <p @click="showSubtype('location')">
                         {{selectedTypes.location||'区域'}}
                         <i-icon type="unfold"></i-icon>
@@ -62,10 +62,15 @@
             >
                 <li
                     v-for="(item,idx) in type.items"
-                    :class="{active:selectedTypes[type.type]==item.label}"
                     :key="idx"
                     @click="selectType({type:type.type,value:item.label})"
-                >{{item.label}}</li>
+                >
+                    <p
+                        :class="{active:!selectedTypes[type.type]&&item.label=='不限'}"
+                        v-if="idx==0"
+                    >{{item.label}}</p>
+                    <p :class="{active:selectedTypes[type.type]==item.label}" v-else>{{item.label}}</p>
+                </li>
             </ul>
             <ul class="subContent">
                 <li>更多</li>
@@ -76,7 +81,7 @@
                 v-for="(item,idx) in homepageList"
                 :key="item.address+idx"
                 class="listItem"
-                @click="showHouseDetail(item)"
+                @click="linkToDetail(item)"
             >
                 <div class="thumbImg">
                     <img :src="item.thumbImg" alt />
@@ -169,10 +174,18 @@ export default {
         console.log("onUnload")
         // store.commit("drawerVisible", false)
     },
-    onLoad({ searchVal }) {
+    onLoad({ searchVal = "" }) {
+        console.log("searchval", searchVal)
         this.searchVal = searchVal
         store.dispatch("fetchHomepageList")
-        console.log("this.searchVal", this.searchVal)
+    },
+    //页面滚动执行方式
+    onPageScroll(event) {
+        console.log("scroll", event.scrollTop)
+        this.scrollTop = event.scrollTop
+        // if (this.scrollTop > 100) {
+        //     this.subType = ""
+        // }
     },
     computed: {
         homepageList() {
@@ -202,10 +215,15 @@ export default {
                 ["layout", "户型"],
                 ["rentType", "出租类型"]
             ])
-            this.selectedTypes[type] =
-                value == "不限" ? typeMap.get(type) : value
+            this.selectedTypes[type] = value == "不限" ? "" : value
             this.subType = ""
             console.log(this.selectedTypes)
+        },
+        handleBlur() {
+            console.log("ljljljllkj")
+        },
+        linkToDetail(item) {
+            wx.navigateTo({ url: `../houseDetail/main?id=${item.id}` })
         }
     }
 }
@@ -220,7 +238,8 @@ export default {
         padding-bottom: 10px;
         background: @primaryBg;
         .back {
-            float: left;
+            position: absolute;
+            // float: left;
             padding: 0 10px;
         }
         .title {
@@ -278,7 +297,6 @@ export default {
         .subContent {
             height: 0;
             overflow: hidden;
-            transition: height 500ms;
             &.active {
                 height: auto;
             }
@@ -288,8 +306,10 @@ export default {
                 }
                 padding: 5px 0;
                 border-bottom: 1px solid @graylightBg;
-                &.active {
-                    color: @primary;
+                p {
+                    &.active {
+                        color: @primary;
+                    }
                 }
             }
         }
