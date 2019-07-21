@@ -10,6 +10,7 @@ const myMixin = {
         // 获取右上角胶囊按钮的位置信息,
         const position = wx.getMenuButtonBoundingClientRect()
         const { top, height } = position
+        console.log('top', top, height)
         this.top = Math.floor(top)
         this.height = Math.floor(height)
     }

@@ -1,5 +1,9 @@
 <template>
     <div>
+        <!-- <div class="topBar">
+            <div>{{title}}</div>
+        </div>-->
+        <CustomTopBar :top="top" :height="height" :title="title" />
         <div class="pictureArea">
             <swiper
                 class="swiper"
@@ -63,9 +67,16 @@
 </template>
 
 <script>
+import calcCapsulePosi from "@/mixins/calcCapsulePosi"
+import CustomTopBar from "@/components/customTopBar"
 export default {
+    mixins: ["calcCapsulePosi"],
+    components: {
+        CustomTopBar
+    },
     data() {
         return {
+            title: "",
             indicatorDots: true,
             autoplay: true,
             interval: 3000,
@@ -94,6 +105,12 @@ export default {
                 }
             ]
         }
+    },
+    onLoad(query) {
+        console.log("id", query)
+        const { name = "蜗居深圳", id } = query
+        this.title = name
+        // store.dispatch("fetchHomepageList")
     },
     computed: {},
     methods: {},

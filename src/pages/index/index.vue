@@ -247,7 +247,12 @@ export default {
             wx.navigateTo({ url: "../welcome/main" })
         },
         showHouseDetail(item) {
-            wx.navigateTo({ url: `./houseDetail/main?id=${item.id}` })
+            console.log("item", item, 2233)
+            wx.navigateTo({
+                url: `./houseDetail/main?id=${
+                    item._id
+                }&name=${item.house_name || ""}`
+            })
         },
         handleSearch(e) {
             const value = e.target ? e.target.value : this.searchVal

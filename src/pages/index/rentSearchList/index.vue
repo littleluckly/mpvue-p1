@@ -1,17 +1,18 @@
 <template>
     <div class="rentSearchList">
-        <div class="topWrap" v-bind:style="{ paddingTop: top + 'px',height: height + 'px' }">
+        <CustomTopBar :top="top" :height="height" :title="searchVal" />
+        <!-- <div class="topWrap" v-bind:style="{ paddingTop: top + 'px',height: height + 'px' }">
             <div class="back" @click="backTo">
                 <i-icon type="return" size="24" color="#fff;" @click="backTo"></i-icon>
             </div>
             <div class="title">{{searchVal}}</div>
-        </div>
+        </div>-->
         <!-- <div class="searchInputWrap">
             <input
                 :value="searchVal"
                 @input="handleInputChange"
                 @confirm="handleSearch"
-                @focus="subType=''"
+                @focus="selectSubtype=''"
                 class="searchInput"
                 placeholder="请输入小区名称、地址、户型等"
                 confirm-type="search"
@@ -43,7 +44,7 @@
                 </div>
                 <div class="filterType">
                     <p @click="showSubtype('rentType')">
-                        {{selectedTypes.rentType||'出租类型'}}
+                        {{selectedTypes.rentType||'类型'}}
                         <i-icon type="unfold"></i-icon>
                     </p>
                 </div>
@@ -58,7 +59,7 @@
                 v-for="type in subTypes"
                 :key="type.type"
                 class="subContent"
-                :class="{active:subType==type.type}"
+                :class="{active:selectSubtype==type.type}"
             >
                 <li
                     v-for="(item,idx) in type.items"
@@ -109,13 +110,17 @@
 </template>
 <script>
 import calcCapsulePosi from "@/mixins/calcCapsulePosi"
+import CustomTopBar from "@/components/customTopBar"
 import store from "@/stores/index"
 export default {
     mixins: [calcCapsulePosi],
+    components: {
+        CustomTopBar
+    },
     data() {
         return {
             searchVal: "",
-            subType: "",
+            selectSubtype: "",
             selectedTypes: {},
             subTypes: [
                 {
@@ -171,7 +176,7 @@ export default {
         }
     },
     onUnload() {
-        console.log("onUnload")
+        this.selectSubtype = ""
         // store.commit("drawerVisible", false)
     },
     onLoad({ searchVal = "" }) {
@@ -184,7 +189,7 @@ export default {
         console.log("scroll", event.scrollTop)
         this.scrollTop = event.scrollTop
         // if (this.scrollTop > 100) {
-        //     this.subType = ""
+        //     this.selectSubtype = ""
         // }
     },
     computed: {
@@ -206,24 +211,27 @@ export default {
         handleSearch() {},
         showSubtype(type) {
             console.log("type", type)
-            this.subType = type
+            if (this.selectSubtype == type) {
+                this.selectSubtype = ""
+                return
+            }
+            this.selectSubtype = type
         },
         selectType({ type, value }) {
-            const typeMap = new Map([
-                ["location", "区域"],
-                ["price", "价格"],
-                ["layout", "户型"],
-                ["rentType", "出租类型"]
-            ])
             this.selectedTypes[type] = value == "不限" ? "" : value
-            this.subType = ""
+            this.selectSubtype = ""
             console.log(this.selectedTypes)
         },
         handleBlur() {
             console.log("ljljljllkj")
         },
         linkToDetail(item) {
-            wx.navigateTo({ url: `../houseDetail/main?id=${item.id}` })
+            console.log("item", item)
+            wx.navigateTo({
+                url: `../houseDetail/main?id=${item._id}&name=${
+                    item.house_name
+                }`
+            })
         }
     }
 }
@@ -238,13 +246,14 @@ export default {
         padding-bottom: 10px;
         background: @primaryBg;
         .back {
-            position: absolute;
-            // float: left;
+            // position: absolute;
+            float: left;
             padding: 0 10px;
         }
         .title {
             color: #fff;
-            text-align: center;
+            text-align: left;
+            // padding-left: 50px;
         }
     }
     .searchInputWrap {
@@ -278,12 +287,12 @@ export default {
             // justify-content: space-around;
             .filterType {
                 display: inline-block;
-                width: calc(20% - 21px);
+                width: calc(20%);
                 // flex-grow: 1;
                 // flex-shrink: 0;
                 position: relative;
                 text-align: center;
-                .sperator;
+                // .sperator;
                 &:last-child {
                     &::after {
                         display: none;
