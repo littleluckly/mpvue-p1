@@ -15,7 +15,6 @@
         "pages/focus/main",
         "pages/history/main"
     ],
-    "navigationStyle": "custom",
     "window": {
         "backgroundTextStyle": "light",
         "navigationBarBackgroundColor": "#5cadff",

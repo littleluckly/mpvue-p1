@@ -27,6 +27,7 @@ export default new Vuex.Store({
             const db = wx.cloud.database({ env: "wojushenzhen-cpm5n" })
             db.collection("rent").get({
                 success: function (res) {
+                    console.log('res.data', res.data)
                     commit("homepageList", res.data)
                 }
             })

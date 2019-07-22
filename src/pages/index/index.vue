@@ -7,6 +7,7 @@
     >
         <!-- 首页普通内容 -->
         <div class="normalWrap">
+            <button @click="handleUser">登录</button>
             <div class="mask" @click="toggledrawer(false)"></div>
             <div class="topWrap" v-bind:style="{ paddingTop: top+height + 'px' }">
                 <span @click="linkToWelcome" class="logoText">
@@ -25,7 +26,7 @@
                 <p class="dailyTitle">- 今日优选 -</p>
                 <div class="dailyItemWrap">
                     <div v-for="(item, idx) in dailyList" :key="idx" class="dailyItem">
-                        <img :src="item.thumbImg" />
+                        <img :src="item.thumb_img" />
                         <p class="houseLayout">{{item.houseLayout}}</p>
                         <p class="rent">{{item.rent}}元/月</p>
                     </div>
@@ -41,7 +42,7 @@
                         @click="showHouseDetail(item)"
                     >
                         <div class="thumbImg">
-                            <img :src="item.thumbImg" alt />
+                            <img :src="item.thumb_img" alt />
                         </div>
                         <div class="itemDesc">
                             <p class="mainDesc">
@@ -131,19 +132,19 @@ export default {
             touchY: 0,
             dailyList: [
                 {
-                    thumbImg:
+                    thumb_img:
                         "https://pic1.ajkimg.com/display/58ajk/b094d6112bda9a33b1537b3192cb2450/240x180.jpg",
                     houseLayout: "一房一厅",
                     rent: "1800"
                 },
                 {
-                    thumbImg:
+                    thumb_img:
                         "https://pic1.ajkimg.com/display/58ajk/674ddbe8a7feb2e7e824fadb2a1d378f/240x180.jpg",
                     houseLayout: "两房一厅",
                     rent: "800"
                 },
                 {
-                    thumbImg:
+                    thumb_img:
                         "https://pic1.ajkimg.com/display/58ajk/dad4e4b1319f5efb4b6228b089dc9847/240x180.jpg",
                     houseLayout: "单间",
                     rent: "670"
@@ -267,6 +268,28 @@ export default {
         },
         showMore(type) {
             this[type] = true
+        },
+        handleUser() {
+            // 调用云函数，返回用户openId，参数为云函数名称
+            wx.cloud
+                .callFunction({ name: "user" })
+                .then(res => {
+                    console.log("res", res)
+                    // 更新store中的openId
+                    // this.$store.commit("updateOpenId", res.result)
+                    // return this.WXP.getSetting()
+                    return res.result
+                })
+                .then(res => {
+                    console.log("ressss", res)
+                    return res
+                    // 检验是否授权
+                    // const authUserInfo = res.authSetting["scope.userInfo"]
+                    // if (authUserInfo) {
+                    // this.$store.commit("updateAuthUserInfo", authUserInfo)
+                    // }
+                })
+                .catch(err => console.error(111, err))
         }
     },
     mounted() {
