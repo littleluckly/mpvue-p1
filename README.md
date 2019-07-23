@@ -12,3 +12,4 @@ iview的输入框在模拟器中无法输入|设置maxLength属性|[CSDN](https:
 使用flex布局实现左侧width固定（width:固定值），右侧width自适应（flex：1），如果右侧内容超长时，会压缩左侧的元素，导致左侧的width不起作用|在父元素上添加overflow:hidden| 
 保存时markdown被自动格式化了！|没有合适的解决方案，只能先禁用eslint再保存markdown|
 新增页面，重新`npm run dev`之后报错`Page is not constructed because it is not found.`|执行`npm run build`, 之后再执行`npm run dev`
+如何本地调试|在微信开发者工具=>设置=>项目设置=>取消勾选【不校验合法域名、web-view（业务域名）、TLS 版本以及 HTTPS 证书】，就可以本地调试了，本地的koa后台开发参见[koa后台项目](https://github.com/littleluckly/wojushenzhen_backen_koa)

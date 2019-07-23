@@ -1,13 +1,10 @@
 <template>
-    <div
-        class="homepage"
-        :class="{showDrawer:showDrawer}"
-        @touchstart="touchStart"
-        @touchmove="touchmove"
-    >
+    <div class="homepage" :class="{showDrawer:showDrawer}" @touchstart="touchStart" @touchmove="touchmove">
         <!-- 首页普通内容 -->
         <div class="normalWrap">
             <button @click="handleUser">登录</button>
+            <!-- <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="handleUser">获取用户信息</button> -->
+
             <div class="mask" @click="toggledrawer(false)"></div>
             <div class="topWrap" v-bind:style="{ paddingTop: top+height + 'px' }">
                 <span @click="linkToWelcome" class="logoText">
@@ -35,12 +32,7 @@
             <div class="listWrap">
                 <div class="resultWrap">
                     <p class="listTitle">精选好房</p>
-                    <div
-                        v-for="(item,idx) in homepageList"
-                        :key="item.address+idx"
-                        class="listItem"
-                        @click="showHouseDetail(item)"
-                    >
+                    <div v-for="(item,idx) in homepageList" :key="item.address+idx" class="listItem" @click="showHouseDetail(item)">
                         <div class="thumbImg">
                             <img :src="item.thumb_img" alt />
                         </div>
@@ -69,14 +61,7 @@
         <div class="drawerWrap" :style="{ paddingTop: top + 'px' }">
             <div class="searchDrawer">
                 <div class="searchInputWrap">
-                    <input
-                        class="searchInput"
-                        v-model="searchVal"
-                        placeholder="请输入小区名称、地址、户型等"
-                        confirm-type="search"
-                        @confirm="handleSearch"
-                        maxlength="200"
-                    />
+                    <input class="searchInput" v-model="searchVal" placeholder="请输入小区名称、地址、户型等" confirm-type="search" @confirm="handleSearch" maxlength="200" />
                     <!-- @change="handleChange" -->
                     <span @click="handleSearch" class="searchIcon">
                         <i-icon type="search" size="18" />
@@ -112,17 +97,17 @@
 </template>
 
 <script>
-import store from "@/stores/index"
-import { mapActions } from "vuex"
-import loggoText from "../../../static/images/logo_text.png"
-import calcCapsulePosi from "@/mixins/calcCapsulePosi"
+import store from '@/stores/index'
+import { mapActions } from 'vuex'
+import loggoText from '../../../static/images/logo_text.png'
+import calcCapsulePosi from '@/mixins/calcCapsulePosi'
 export default {
     mixins: [calcCapsulePosi],
     data() {
         return {
             // top: 0,
             // height: 0,
-            searchVal: "",
+            searchVal: '',
             scrollTop: 0,
             loggoText: loggoText,
             showDrawer: false,
@@ -132,22 +117,19 @@ export default {
             touchY: 0,
             dailyList: [
                 {
-                    thumb_img:
-                        "https://pic1.ajkimg.com/display/58ajk/b094d6112bda9a33b1537b3192cb2450/240x180.jpg",
-                    houseLayout: "一房一厅",
-                    rent: "1800"
+                    thumb_img: 'https://pic1.ajkimg.com/display/58ajk/b094d6112bda9a33b1537b3192cb2450/240x180.jpg',
+                    houseLayout: '一房一厅',
+                    rent: '1800'
                 },
                 {
-                    thumb_img:
-                        "https://pic1.ajkimg.com/display/58ajk/674ddbe8a7feb2e7e824fadb2a1d378f/240x180.jpg",
-                    houseLayout: "两房一厅",
-                    rent: "800"
+                    thumb_img: 'https://pic1.ajkimg.com/display/58ajk/674ddbe8a7feb2e7e824fadb2a1d378f/240x180.jpg',
+                    houseLayout: '两房一厅',
+                    rent: '800'
                 },
                 {
-                    thumb_img:
-                        "https://pic1.ajkimg.com/display/58ajk/dad4e4b1319f5efb4b6228b089dc9847/240x180.jpg",
-                    houseLayout: "单间",
-                    rent: "670"
+                    thumb_img: 'https://pic1.ajkimg.com/display/58ajk/dad4e4b1319f5efb4b6228b089dc9847/240x180.jpg',
+                    houseLayout: '单间',
+                    rent: '670'
                 }
             ]
         }
@@ -171,7 +153,7 @@ export default {
         // store.commit("drawerVisible", false)
     },
     created() {
-        store.dispatch("fetchHomepageList")
+        store.dispatch('fetchHomepageList')
         // console.log("lk11111111")
         // 获取右上角胶囊按钮的位置信息,
         // const position = wx.getMenuButtonBoundingClientRect()
@@ -199,7 +181,7 @@ export default {
         // })
     },
     methods: {
-        ...mapActions(["toggleDrawerVisible"]),
+        ...mapActions(['toggleDrawerVisible']),
         touchStart(e) {
             let x = e.mp.changedTouches[0].clientX
             let y = e.mp.changedTouches[0].clientY
@@ -209,28 +191,23 @@ export default {
         touchmove(e) {
             let x = e.mp.changedTouches[0].clientX
             let y = e.mp.changedTouches[0].clientY
-            const direction = this.getTouchDirection(
-                x,
-                y,
-                this.touchX,
-                this.touchY
-            )
-            if (direction == "left") {
-                store.commit("drawerVisible", true)
+            const direction = this.getTouchDirection(x, y, this.touchX, this.touchY)
+            if (direction == 'left') {
+                store.commit('drawerVisible', true)
                 this.showDrawer = true
-            } else if (direction == "right") {
-                store.commit("drawerVisible", false)
+            } else if (direction == 'right') {
+                store.commit('drawerVisible', false)
                 this.showDrawer = false
             }
         },
         getTouchDirection(endX, endY, startX, startY) {
-            let turn = ""
+            let turn = ''
             if (endX - startX > 50 && Math.abs(endY - startY) < 50) {
                 //左滑
-                turn = "left"
+                turn = 'left'
             } else if (endX - startX < -50 && Math.abs(endY - startY) < 50) {
                 //右滑
-                turn = "right"
+                turn = 'right'
             }
             return turn
         },
@@ -245,51 +222,94 @@ export default {
             this.searchVal = value
         },
         linkToWelcome() {
-            wx.navigateTo({ url: "../welcome/main" })
+            wx.navigateTo({ url: '../welcome/main' })
         },
         showHouseDetail(item) {
-            console.log("item", item, 2233)
+            console.log('item', item, 2233)
             wx.navigateTo({
-                url: `./houseDetail/main?id=${
-                    item._id
-                }&name=${item.house_name || ""}`
+                url: `./houseDetail/main?id=${item._id}&name=${item.house_name || ''}`
             })
         },
         handleSearch(e) {
             const value = e.target ? e.target.value : this.searchVal
             // this.showDrawer = false
             wx.navigateTo({
-                url: `./rentSearchList/main?searchVal=${value || ""}`
+                url: `./rentSearchList/main?searchVal=${value || ''}`
             })
         },
         toggledrawer(flag) {
             this.showDrawer = flag
-            store.commit("drawerVisible", flag)
+            store.commit('drawerVisible', flag)
         },
         showMore(type) {
             this[type] = true
         },
         handleUser() {
+            wx.request({
+                url: 'https://localhost:9527/api/test',
+                success: function(c) {
+                    console.log('c', c)
+                }
+            })
+            // wx.checkSession({
+            // success() {
+            //     console.log('success')
+            // },
+            // fail() {
+            // var that = this
+            //登录
+            // wx.login({
+            //     success(res) {
+            //         if (res.code) {
+            //             //获取code
+            //             var code = res.code
+            //             //在小程序规定请求地址通过appId，appSecret，登录时获取的code 来获得json数据
+            //             var url =
+            //                 'https://api.weixin.qq.com/sns/jscode2session?appid=' +
+            //                 'wxb76f934941bce27c' +
+            //                 '&secret=' +
+            //                 '172531853dfde0faf6ce3f135b28685d' +
+            //                 '&js_code=' +
+            //                 code +
+            //                 '&grant_type=authorization_code'
+            //             //向服务器发起请求获取session_key，openid
+            //             wx.request({
+            //                 url: url,
+            //                 data: {
+            //                     session_key: '',
+            //                     openid: ''
+            //                 },
+            //                 success: function(res) {
+            //                     console.log('res5555', res)
+            //                 }
+            //             })
+            //         } else {
+            //             console.log('登录失败！' + res.errMsg)
+            //         }
+            //     }
+            // })
+            // }
+            // })
             // 调用云函数，返回用户openId，参数为云函数名称
-            wx.cloud
-                .callFunction({ name: "user" })
-                .then(res => {
-                    console.log("res", res)
-                    // 更新store中的openId
-                    // this.$store.commit("updateOpenId", res.result)
-                    // return this.WXP.getSetting()
-                    return res.result
-                })
-                .then(res => {
-                    console.log("ressss", res)
-                    return res
-                    // 检验是否授权
-                    // const authUserInfo = res.authSetting["scope.userInfo"]
-                    // if (authUserInfo) {
-                    // this.$store.commit("updateAuthUserInfo", authUserInfo)
-                    // }
-                })
-                .catch(err => console.error(111, err))
+            // wx.cloud
+            //     .callFunction({ name: 'user' })
+            //     .then(res => {
+            //         console.log('res', res, this.$store)
+            //         // 更新store中的openId
+            //         // this.$store.commit("updateOpenId", res.result)
+            //         // return this.WXP.getSetting()
+            //         return res.result
+            //     })
+            //     .then(res => {
+            //         console.log('ressss', res)
+            //         return res
+            //         // 检验是否授权
+            //         // const authUserInfo = res.authSetting["scope.userInfo"]
+            //         // if (authUserInfo) {
+            //         // this.$store.commit("updateAuthUserInfo", authUserInfo)
+            //         // }
+            //     })
+            //     .catch(err => console.error(111, err))
         }
     },
     mounted() {
@@ -301,14 +321,14 @@ export default {
     },
     //页面滚动执行方式
     onPageScroll(event) {
-        console.log("scroll")
+        console.log('scroll')
         this.scrollTop = event.scrollTop
     }
 }
 </script>
 
 <style lang="less">
-@import "../../style/common";
+@import '../../style/common';
 .homepage {
     font-size: 14px;
     position: relative;
