@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import App from './App'
 import store from './stores/index'
-import './icons/index.js' // icon
-
+import './icons/index.js' // icon 
+Vue.prototype.$store = store
 wx.cloud.init({
-    env: "wojushenzhen-cpm5n",
-    traceUser: true
+  env: "wojushenzhen-cpm5n",
+  traceUser: true
 })
 Vue.config.productionTip = false
 App.mpType = 'app'

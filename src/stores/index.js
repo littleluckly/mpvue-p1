@@ -1,8 +1,12 @@
 import Vue from "vue"
 import Vuex from "vuex"
+import saleStore from './modules/saleStore'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
+  modules: {
+    saleStore
+  },
   state: {
     count: 0,
     homepageList: [],
@@ -26,20 +30,9 @@ export default new Vuex.Store({
     fetchHomepageList({
       commit
     }, params) {
-      // const db = wx.cloud.database({ env: "wojushenzhen-cpm5n" })
-      // db.collection("rent").get({
-      //     success: function (res) {
-      //         console.log('res.data', res.data)
-      //         commit("homepageList", res.data)
-      //     }
-      // })
       wx.request({
         url: 'https://localhost:9527/rent/fetchList',
-        method: 'put',
-        data: {
-          type: 'allaaa',
-          method: 'get'
-        },
+        method: 'get',
         success: function (res) {
           const {
             statusCode,

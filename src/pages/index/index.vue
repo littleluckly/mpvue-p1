@@ -97,10 +97,10 @@
 </template>
 
 <script>
-import store from '@/stores/index'
-import { mapActions } from 'vuex'
-import loggoText from '../../../static/images/logo_text.png'
-import calcCapsulePosi from '@/mixins/calcCapsulePosi'
+// import store from '@/stores/index'
+import { mapActions } from 'vuex';
+import loggoText from '../../../static/images/logo_text.png';
+import calcCapsulePosi from '@/mixins/calcCapsulePosi';
 export default {
     mixins: [calcCapsulePosi],
     data() {
@@ -132,28 +132,28 @@ export default {
                     rent: '670'
                 }
             ]
-        }
+        };
     },
     computed: {
         homepageList() {
-            return store.state.homepageList
+            return this.$store.state.homepageList;
         },
         drawerVisible() {
-            return store.state.drawerVisible
+            return this.$store.state.drawerVisible;
         }
     },
     onShow() {
         // console.log("onshow", this.toggleDrawerVisible(false))
-        // store.commit("drawerVisible", false)
+        // this.$store.commit("drawerVisible", false)
         // this.showDrawer = false
     },
     onHide() {
         // console.log("onHide")
         // this.showDrawer = false
-        // store.commit("drawerVisible", false)
+        // this.$store.commit("drawerVisible", false)
     },
     created() {
-        store.dispatch('fetchHomepageList')
+        this.$store.dispatch('fetchHomepageList');
         // console.log("lk11111111")
         // 获取右上角胶囊按钮的位置信息,
         // const position = wx.getMenuButtonBoundingClientRect()
@@ -183,33 +183,33 @@ export default {
     methods: {
         ...mapActions(['toggleDrawerVisible']),
         touchStart(e) {
-            let x = e.mp.changedTouches[0].clientX
-            let y = e.mp.changedTouches[0].clientY
-            this.touchX = x
-            this.touchY = y
+            let x = e.mp.changedTouches[0].clientX;
+            let y = e.mp.changedTouches[0].clientY;
+            this.touchX = x;
+            this.touchY = y;
         },
         touchmove(e) {
-            let x = e.mp.changedTouches[0].clientX
-            let y = e.mp.changedTouches[0].clientY
-            const direction = this.getTouchDirection(x, y, this.touchX, this.touchY)
+            let x = e.mp.changedTouches[0].clientX;
+            let y = e.mp.changedTouches[0].clientY;
+            const direction = this.getTouchDirection(x, y, this.touchX, this.touchY);
             if (direction == 'left') {
-                store.commit('drawerVisible', true)
-                this.showDrawer = true
+                this.$store.commit('drawerVisible', true);
+                this.showDrawer = true;
             } else if (direction == 'right') {
-                store.commit('drawerVisible', false)
-                this.showDrawer = false
+                this.$store.commit('drawerVisible', false);
+                this.showDrawer = false;
             }
         },
         getTouchDirection(endX, endY, startX, startY) {
-            let turn = ''
+            let turn = '';
             if (endX - startX > 50 && Math.abs(endY - startY) < 50) {
                 //左滑
-                turn = 'left'
+                turn = 'left';
             } else if (endX - startX < -50 && Math.abs(endY - startY) < 50) {
                 //右滑
-                turn = 'right'
+                turn = 'right';
             }
-            return turn
+            return turn;
         },
         handleChange({
             map: {
@@ -218,39 +218,39 @@ export default {
                 }
             }
         }) {
-            console.log(value)
-            this.searchVal = value
+            console.log(value);
+            this.searchVal = value;
         },
         linkToWelcome() {
-            wx.navigateTo({ url: '../welcome/main' })
+            wx.navigateTo({ url: '../welcome/main' });
         },
         showHouseDetail(item) {
-            console.log('item', item, 2233)
+            console.log('item', item, 2233);
             wx.navigateTo({
                 url: `./houseDetail/main?id=${item._id}&name=${item.house_name || ''}`
-            })
+            });
         },
         handleSearch(e) {
-            const value = e.target ? e.target.value : this.searchVal
+            const value = e.target ? e.target.value : this.searchVal;
             // this.showDrawer = false
             wx.navigateTo({
                 url: `./rentSearchList/main?searchVal=${value || ''}`
-            })
+            });
         },
         toggledrawer(flag) {
-            this.showDrawer = flag
-            store.commit('drawerVisible', flag)
+            this.showDrawer = flag;
+            this.$store.commit('drawerVisible', flag);
         },
         showMore(type) {
-            this[type] = true
+            this[type] = true;
         },
         handleUser() {
             wx.request({
                 url: 'https://localhost:9527/api/test',
                 success: function(c) {
-                    console.log('c', c)
+                    console.log('c', c);
                 }
-            })
+            });
             // wx.checkSession({
             // success() {
             //     console.log('success')
@@ -296,7 +296,7 @@ export default {
             //     .then(res => {
             //         console.log('res', res, this.$store)
             //         // 更新store中的openId
-            //         // this.$store.commit("updateOpenId", res.result)
+            //         // this.$this.$store.commit("updateOpenId", res.result)
             //         // return this.WXP.getSetting()
             //         return res.result
             //     })
@@ -306,7 +306,7 @@ export default {
             //         // 检验是否授权
             //         // const authUserInfo = res.authSetting["scope.userInfo"]
             //         // if (authUserInfo) {
-            //         // this.$store.commit("updateAuthUserInfo", authUserInfo)
+            //         // this.$this.$store.commit("updateAuthUserInfo", authUserInfo)
             //         // }
             //     })
             //     .catch(err => console.error(111, err))
@@ -321,10 +321,10 @@ export default {
     },
     //页面滚动执行方式
     onPageScroll(event) {
-        console.log('scroll')
-        this.scrollTop = event.scrollTop
+        console.log('scroll');
+        this.scrollTop = event.scrollTop;
     }
-}
+};
 </script>
 
 <style lang="less">

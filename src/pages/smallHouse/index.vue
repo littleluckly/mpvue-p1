@@ -1,25 +1,13 @@
 <template>
     <div class="smallHouse">
         <div class="searchInputWrap">
-            <i-input
-                i-class="searchInput"
-                v-model="searchVal"
-                placeholder="搜索好房"
-                @change="handleChange"
-                maxlength="200"
-            />
+            <i-input i-class="searchInput" v-model="searchVal" placeholder="搜索好房" @change="handleChange" maxlength="200" />
             <span @click="handleSearch" class="searchIcon">
                 <i-icon type="search" size="18" />
             </span>
         </div>
         <div class="swiperWrap">
-            <swiper
-                v-if="imgUrls.length > 0"
-                :indicator-dots="indicatorDots"
-                :autoplay="autoplay"
-                :interval="interval"
-                :duration="duration"
-            >
+            <swiper v-if="imgUrls.length > 0" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
                 <block v-for="(item, index) in imgUrls" :key="index">
                     <swiper-item class="swiperItem">
                         <img :src="item.src" mode="scaleToFill" />
@@ -57,52 +45,23 @@
         <div class="listWrap">
             <div class="list">
                 <div class="title">猜你喜欢</div>
-                <SaleListItem
-                    @linkTo="linkToDetail(item)"
-                    v-for="(item,idx) in smallHouseList"
-                    :key="item.name+idx"
-                    :data="item"
-                />
-                <!-- <div v-for="(item,idx) in smallHouseList" :key="item.name+idx" class="item">
-                    <div class="thumb">
-                        <img :src="item.src" alt />
-                    </div>
-                    <div class="info">
-                        <p class="name">{{item.name}}</p>
-                        <p class="price">
-                            <span class="type">{{item.type}}</span>
-                            <span>{{item.price}}万</span>
-                        </p>
-                        <p class="layoutWrap">
-                            <span class="layout">{{item.layout}}</span>
-                            <span class="area">{{item.area}}m</span>
-                        </p>
-                        <p class="tags">
-                            <i-tag
-                                v-for="tag in item.tags"
-                                :key="tag"
-                                class="i-tags"
-                                type="border"
-                                color="red"
-                            >{{tag}}</i-tag>
-                        </p>
-                    </div>
-                </div>-->
+                <SaleListItem @linkTo="linkToDetail(item)" v-for="(item,idx) in smallHouseList" :key="item.name+idx" :data="item" />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { formatTime } from "@/utils/index"
-import SaleListItem from "@/components/SaleListItem"
+import { formatTime } from '@/utils/index';
+import { mapActions } from 'vuex';
+import SaleListItem from '@/components/SaleListItem';
 export default {
     components: {
         SaleListItem
     },
     data() {
         return {
-            searchVal: "",
+            searchVal: '',
             indicatorDots: true,
             autoplay: true,
             interval: 3000,
@@ -111,113 +70,121 @@ export default {
             smallHouseList: [
                 {
                     src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "华侨新苑",
-                    type: "村委楼",
+                        'http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5',
+                    name: '华侨新苑',
+                    type: '村委楼',
                     price: 55,
-                    layout: "三室",
-                    decoraction: "简装",
+                    layout: '三室',
+                    decoraction: '简装',
                     area: 99,
-                    tags: ["带花园", "停车场", "使用率高"]
+                    tags: ['带花园', '停车场', '使用率高']
                 },
                 {
                     src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "大富豪花园",
-                    type: "村委楼",
+                        'http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5',
+                    name: '大富豪花园',
+                    type: '村委楼',
                     price: 125,
-                    layout: "三室",
-                    decoraction: "精装",
+                    layout: '三室',
+                    decoraction: '精装',
                     area: 112,
-                    tags: ["使用率高", "高品质"]
+                    tags: ['使用率高', '高品质']
                 },
                 {
                     src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "宝安花园",
-                    type: "村委楼",
+                        'http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5',
+                    name: '宝安花园',
+                    type: '村委楼',
                     price: 155,
-                    layout: "三室",
-                    decoraction: "毛坯",
+                    layout: '三室',
+                    decoraction: '毛坯',
                     area: 112,
-                    tags: ["使用率高", "高品质"]
+                    tags: ['使用率高', '高品质']
                 },
                 {
                     src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "宝安花园",
-                    type: "村委楼",
+                        'http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5',
+                    name: '宝安花园',
+                    type: '村委楼',
                     price: 130,
-                    layout: "三室",
-                    decoraction: "毛坯",
+                    layout: '三室',
+                    decoraction: '毛坯',
                     area: 112,
-                    tags: ["使用率高", "高品质"]
+                    tags: ['使用率高', '高品质']
                 },
                 {
                     src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "宝安花园",
-                    type: "村委楼",
+                        'http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5',
+                    name: '宝安花园',
+                    type: '村委楼',
                     price: 130,
-                    layout: "三室",
-                    decoraction: "毛坯",
+                    layout: '三室',
+                    decoraction: '毛坯',
                     area: 112,
-                    tags: ["使用率高", "高品质"]
+                    tags: ['使用率高', '高品质']
                 }
             ],
             imgUrls: [
                 {
                     src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    text: "农民房: 农村村民私人修建的房子",
-                    type: "famerHouse"
+                        'http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5',
+                    text: '农民房: 农村村民私人修建的房子',
+                    type: 'famerHouse'
                 },
                 {
                     src:
-                        "http://a3.qpic.cn/psb?/V10roI243u0y8c/H9WCkTAw5Rj7TNJUc0Ah2uP.bGZXGd32hyaqkW1wgvA!/m/dLYAAAAAAAAAnull&bo=dQMPAgAAAAADB1k!&rf=photolist&t=5",
-                    text: "村委房: 即村委统建楼，村里出资建的房子，规模大",
-                    type: "villageHouse"
+                        'http://a3.qpic.cn/psb?/V10roI243u0y8c/H9WCkTAw5Rj7TNJUc0Ah2uP.bGZXGd32hyaqkW1wgvA!/m/dLYAAAAAAAAAnull&bo=dQMPAgAAAAADB1k!&rf=photolist&t=5',
+                    text: '村委房: 即村委统建楼，村里出资建的房子，规模大',
+                    type: 'villageHouse'
                 },
                 {
                     src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/d5972twaIy9qQL6NO.v00AC97aoVM6hAC3Y7wUc9Xac!/m/dLgAAAAAAAAAnull&bo=wQVVAwAAAAADB7A!&rf=photolist&t=5",
-                    text:
-                        "大红本房：整栋只有一本正规的房产证，没有独立的房产证",
-                    type: "bigRedHouse"
+                        'http://a1.qpic.cn/psb?/V10roI243u0y8c/d5972twaIy9qQL6NO.v00AC97aoVM6hAC3Y7wUc9Xac!/m/dLgAAAAAAAAAnull&bo=wQVVAwAAAAADB7A!&rf=photolist&t=5',
+                    text: '大红本房：整栋只有一本正规的房产证，没有独立的房产证',
+                    type: 'bigRedHouse'
                 },
                 {
                     src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/8eaubFVmbB0afD3l3ObHeioBIAhasz1FRC.3aocEWdk!/m/dDQBAAAAAAAAnull&bo=owVQAwAAAAADB9c!&rf=photolist&t=5",
-                    text: "军产房: 军产房是指军队享有房屋所有权的房屋。",
-                    type: "armyHouse"
+                        'http://a1.qpic.cn/psb?/V10roI243u0y8c/8eaubFVmbB0afD3l3ObHeioBIAhasz1FRC.3aocEWdk!/m/dDQBAAAAAAAAnull&bo=owVQAwAAAAADB9c!&rf=photolist&t=5',
+                    text: '军产房: 军产房是指军队享有房屋所有权的房屋。',
+                    type: 'armyHouse'
                 }
             ]
-        }
+        };
     },
 
     created() {
-        let logs
-        if (mpvuePlatform === "my") {
-            logs = mpvue.getStorageSync({ key: "logs" }).data || []
+        let logs;
+        if (mpvuePlatform === 'my') {
+            logs = mpvue.getStorageSync({ key: 'logs' }).data || [];
         } else {
-            logs = mpvue.getStorageSync("logs") || []
+            logs = mpvue.getStorageSync('logs') || [];
         }
-        this.logs = logs.map(log => formatTime(new Date(log)))
+        this.logs = logs.map(log => formatTime(new Date(log)));
+    },
+    mounted() {
+        console.log(this.$store, this.fetchSaleList);
+        this.fetchSaleList();
     },
     methods: {
+        // ...mapActions({
+        //     fetchSaleList: this.$store.saleStore.fetchSaleList
+        // }),
+
+        ...mapActions('saleStore/', ['fetchSaleList']),
         linkTo(type) {
-            wx.navigateTo({ url: `./${type}/main` })
+            wx.navigateTo({ url: `./${type}/main` });
         },
         linkToDetail(data) {
-            console.log("data", data)
-            wx.navigateTo({ url: `./detail/main` })
+            console.log('data', data);
+            wx.navigateTo({ url: `./detail/main` });
         }
     }
-}
+};
 </script>
 
 <style lang="less">
-@import "../../style/common";
+@import '../../style/common';
 .smallHouse {
     height: 100vh;
     padding: 0;
