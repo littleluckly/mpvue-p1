@@ -1,11 +1,15 @@
 import Vue from "vue"
 import Vuex from "vuex"
+import request from '@/utils/request'
 import saleStore from './modules/saleStore'
+import rentStore from './modules/rentStore'
+
 
 Vue.use(Vuex)
-export default new Vuex.Store({
+const store = new Vuex.Store({
   modules: {
-    saleStore
+    saleStore,
+    rentStore
   },
   state: {
     count: 0,
@@ -54,3 +58,5 @@ export default new Vuex.Store({
     },
   }
 })
+store.$request = request
+export default store

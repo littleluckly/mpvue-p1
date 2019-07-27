@@ -1,9 +1,9 @@
-function formatNumber (n) {
+function formatNumber(n) {
   const str = n.toString()
   return str[1] ? str : `0${str}`
 }
 
-export function formatTime (date) {
+export function formatTime(date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
@@ -18,7 +18,20 @@ export function formatTime (date) {
   return `${t1} ${t2}`
 }
 
-export default {
-  formatNumber,
-  formatTime
+export function serialization(params = {}) {
+  let query = ''
+  for (key in Object.keys(params)) {
+    if (key !== undefined && key !== '' && key !== null) {
+      query += `${key}=${params[key]}&`
+    }
+  }
+  if (query) {
+    query = '?' + query.slice(0, -1)
+  }
+  return query
 }
+// export default {
+//   serialization,
+//   formatNumber,
+//   formatTime
+// }

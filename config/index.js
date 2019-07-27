@@ -1,30 +1,30 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 var fileExtConfig = {
-    swan: {
-        template: 'swan',
-        script: 'js',
-        style: 'css',
-        platform: 'swan'
-    },
-    tt: {
-        template: 'ttml',
-        script: 'js',
-        style: 'ttss',
-        platform: 'tt'
-    },
-    wx: {
-        template: 'wxml',
-        script: 'js',
-        style: 'wxss',
-        platform: 'wx'
-    },
-    my: {
-        template: 'axml',
-        script: 'js',
-        style: 'acss',
-        platform: 'my'
-    }
+  swan: {
+    template: 'swan',
+    script: 'js',
+    style: 'css',
+    platform: 'swan'
+  },
+  tt: {
+    template: 'ttml',
+    script: 'js',
+    style: 'ttss',
+    platform: 'tt'
+  },
+  wx: {
+    template: 'wxml',
+    script: 'js',
+    style: 'wxss',
+    platform: 'wx'
+  },
+  my: {
+    template: 'axml',
+    script: 'js',
+    style: 'acss',
+    platform: 'my'
+  }
 }
 var fileExt = fileExtConfig[process.env.PLATFORM]
 
@@ -56,7 +56,15 @@ module.exports = {
     autoOpenBrowser: false,
     assetsSubDirectory: '',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/rent': {
+        target: 'https://localhost:9527', //目标接口域名
+        changeOrigin: true, //是否跨域
+        // pathRewrite: {
+        //   '^/api': '' //重写接口
+        // }
+      }
+    },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)

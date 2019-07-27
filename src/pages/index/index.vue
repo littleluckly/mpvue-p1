@@ -2,7 +2,7 @@
     <div class="homepage" :class="{showDrawer:showDrawer}" @touchstart="touchStart" @touchmove="touchmove">
         <!-- 首页普通内容 -->
         <div class="normalWrap">
-            <button @click="handleUser">登录</button>
+            <!-- <button @click="handleUser">登录</button> -->
             <!-- <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="handleUser">获取用户信息</button> -->
 
             <div class="mask" @click="toggledrawer(false)"></div>
@@ -32,7 +32,7 @@
             <div class="listWrap">
                 <div class="resultWrap">
                     <p class="listTitle">精选好房</p>
-                    <div v-for="(item,idx) in homepageList" :key="item.address+idx" class="listItem" @click="showHouseDetail(item)">
+                    <div v-for="(item,idx) in rentRecommendList" :key="item.address+idx" class="listItem" @click="showHouseDetail(item)">
                         <div class="thumbImg">
                             <img :src="item.thumb_img" alt />
                         </div>
@@ -98,15 +98,13 @@
 
 <script>
 // import store from '@/stores/index'
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import loggoText from '../../../static/images/logo_text.png';
 import calcCapsulePosi from '@/mixins/calcCapsulePosi';
 export default {
     mixins: [calcCapsulePosi],
     data() {
         return {
-            // top: 0,
-            // height: 0,
             searchVal: '',
             scrollTop: 0,
             loggoText: loggoText,
@@ -135,25 +133,19 @@ export default {
         };
     },
     computed: {
-        homepageList() {
-            return this.$store.state.homepageList;
-        },
-        drawerVisible() {
-            return this.$store.state.drawerVisible;
-        }
+        ...mapState({
+            rentRecommendList: state => state.rentStore.rentRecommendList
+        })
     },
     onShow() {
-        // console.log("onshow", this.toggleDrawerVisible(false))
-        // this.$store.commit("drawerVisible", false)
-        // this.showDrawer = false
+        // wx.pageScrollTo({
+        //     scrollTop: 0
+        // });
     },
-    onHide() {
-        // console.log("onHide")
-        // this.showDrawer = false
-        // this.$store.commit("drawerVisible", false)
-    },
+    onHide() {},
     created() {
-        this.$store.dispatch('fetchHomepageList');
+        this.fetchRecommendList();
+        // this.$store.dispatch('fetchHomepageList');
         // console.log("lk11111111")
         // 获取右上角胶囊按钮的位置信息,
         // const position = wx.getMenuButtonBoundingClientRect()
@@ -181,7 +173,7 @@ export default {
         // })
     },
     methods: {
-        ...mapActions(['toggleDrawerVisible']),
+        ...mapActions('rentStore/', ['fetchRecommendList']),
         touchStart(e) {
             let x = e.mp.changedTouches[0].clientX;
             let y = e.mp.changedTouches[0].clientY;
