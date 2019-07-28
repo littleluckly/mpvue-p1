@@ -30,9 +30,13 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
+@import './style/common.less';
 page {
     font-size: 16px;
+}
+button[type='primary'] {
+    background-color: @primaryBg;
 }
 .container {
     height: 100%;

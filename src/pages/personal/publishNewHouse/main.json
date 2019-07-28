@@ -1,9 +1,9 @@
 {
   "navigationBarTitleText": "房源发布",
   "usingComponents": {
-    "i-button": "../../../static/iview/button/index",
-    "i-input": "../../../static/iview/input/index",
-    "i-icon": "../../../static/iview/icon/index",
-    "i-modal": "../../../static/iview/modal/index"
+    "i-button": "../../../../static/iview/button/index",
+    "i-input": "../../../../static/iview/input/index",
+    "i-icon": "../../../../static/iview/icon/index",
+    "i-modal": "../../../../static/iview/modal/index"
   }
 }

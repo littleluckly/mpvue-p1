@@ -37,6 +37,7 @@
                             <img :src="item.thumb_img" alt />
                         </div>
                         <div class="itemDesc">
+                            <p class="houseName">{{item.house_name}}</p>
                             <p class="mainDesc">
                                 <span class="layout sperator">{{item.layout}}</span>
                                 <span class="area sperator">
@@ -45,7 +46,6 @@
                                 </span>
                                 <span class="address">{{item.location}}</span>
                             </p>
-                            <p class="houseName">{{item.house_name}}</p>
                             <p class="priceDesc">
                                 <span class="price">{{item.price}}</span>
                                 <span class="unit">元/月</span>
@@ -478,11 +478,12 @@ export default {
                     // 配合.address文字超长省略
                     overflow: hidden;
                     .mainDesc {
-                        font-size: 16px;
+                        font-size: 14px;
                         color: #333;
                         margin-bottom: 2px;
                     }
                     .houseName {
+                        font-size: 16px;
                         margin-bottom: 1px;
                     }
                     .priceDesc {
