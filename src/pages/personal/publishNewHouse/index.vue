@@ -1,7 +1,30 @@
 <template>
     <div class="FormWrap">
+        <button open-type="contact">客服</button>
         <form @submit="formSubmit" @reset="formReset">
-            <picker
+            <view class="formItem section section_gap">
+                <view class="section__title">发布类型：</view>
+                <radio-group @change="handleChangeRadio" name="publishType">
+                    <label>
+                        <radio value="出租" />出租
+                    </label>
+                    <label>
+                        <radio value="出售" />出售
+                    </label>
+                </radio-group>
+            </view>
+            <view class="formItem section section_gap" v-if="publishType=='出租'">
+                <view class="section__title">出租方式：</view>
+                <radio-group name="rentType">
+                    <label>
+                        <radio value="整租" />整租
+                    </label>
+                    <label>
+                        <radio value="合租" />合租
+                    </label>
+                </radio-group>
+            </view>
+            <!-- <picker
                 :value="formData.houseTypeIndex"
                 :range="array"
                 name="houseType"
@@ -9,11 +32,11 @@
                 @change="(e)=>handleSelect(e,'houseType')"
             >
                 <view class="section__title">
-                    <span class="requireIcon">*</span>房源类型：
+                    <span class="requireIcon">*</span>发布类型：
                     <div v-if="validateErrData.houseType" class="errText">{{validateErrData.houseType.msg}}</div>
                 </view>
                 <view class="picker formVal">{{array[formData.houseTypeIndex]||'请选择要发布的类型'}}</view>
-            </picker>
+            </picker>-->
             <view class="formItem section section_gap">
                 <view class="section__title">
                     <span class="requireIcon">*</span>标题:
@@ -52,7 +75,9 @@
                 </view>
                 <input @input="(e)=>handleFormChange(e,'area')" v-model="formData.area" type="digit" class="formVal" name="area" placeholder="请输入面积" />
             </view>
-            <picker
+
+            <!-- <picker
+                v-if="formData.houseTypeIndex!==1"
                 :value="formData.rentTypeIndex"
                 :range="rentTypeOptions"
                 name="rentType"
@@ -64,8 +89,8 @@
                     <div v-if="validateErrData.rentType" class="errText">{{validateErrData.rentType.msg}}</div>
                 </view>
                 <view class="picker formVal">{{rentTypeOptions[formData.rentTypeIndex]||'请选择要出租方式'}}</view>
-            </picker>
-            <picker :value="formData.regionIndex" :range="region" name="region" class="formItem" @change="(e)=>handleSelect(e,'region')">
+            </picker>-->
+            <picker :value="formData.regionIndex" :range="region" name="location" class="formItem" @change="(e)=>handleSelect(e,'region')">
                 <view class="section__title">
                     <span class="requireIcon">*</span>区域:
                     <div v-if="validateErrData.location" class="errText">{{validateErrData.location.msg}}</div>
@@ -135,7 +160,8 @@ export default {
                 title: null,
                 region: null
             },
-            validateErrData: {}
+            validateErrData: {},
+            publishType: ''
         };
     },
     onLoad() {
@@ -194,9 +220,9 @@ export default {
         rentTypeOptions(e) {},
         initValidate() {
             let rules = {
-                houseType: {
-                    required: true
-                },
+                // houseType: {
+                //     required: true
+                // },
                 house_name: {
                     required: true,
                     maxlength: 10
@@ -251,6 +277,12 @@ export default {
             };
             //实例化当前的验证规则和提示消息
             this.WxValidate = new WxValidate(rules, message);
+        },
+        handleChangeRadio(e) {
+            const value = e.mp.detail.value;
+            console.log(value);
+            this.formData.publishType = value;
+            this.publishType = value;
         }
     }
 };

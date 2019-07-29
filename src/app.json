@@ -1,12 +1,12 @@
 {
   "pages": [
+    "pages/smallHouse/detail/main",
     "pages/personal/publishNewHouse/main",
     "pages/index/main",
     "pages/index/rentSearchList/main",
     "pages/welcome/main",
     "pages/personal/main",
     "pages/smallHouse/main",
-    "pages/smallHouse/detail/main",
     "pages/smallHouse/intro/main",
     "pages/smallHouse/news/main",
     "pages/smallHouse/policy/main",
@@ -16,6 +16,11 @@
     "pages/focus/main",
     "pages/history/main"
   ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "授权当前位置"
+    }
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#5cadff",

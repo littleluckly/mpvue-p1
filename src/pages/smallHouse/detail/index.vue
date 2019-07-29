@@ -1,13 +1,7 @@
 <template>
     <div class="smallHouseDetail">
         <div class="pictureArea">
-            <swiper
-                class="swiper"
-                :indicator-dots="indicatorDots"
-                :autoplay="autoplay"
-                :interval="interval"
-                :duration="duration"
-            >
+            <swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
                 <block v-for="(item, index) in imgList" :key="index">
                     <swiper-item class="swiperItem">
                         <image :src="item.src" class="slide-image" mode="aspectFill" />
@@ -22,13 +16,7 @@
 
                 <div class="tagsWrap">
                     <p class="tags">
-                        <i-tag
-                            v-for="tag in houseInfo.tags"
-                            :key="tag"
-                            class="i-tags"
-                            type="border"
-                            color="red"
-                        >{{tag}}</i-tag>
+                        <i-tag v-for="tag in houseInfo.tags" :key="tag" class="i-tags" type="border" color="red">{{tag}}</i-tag>
                     </p>
                     <span class="icon">
                         <i-icon type="collection" size="22" />收藏
@@ -73,25 +61,25 @@
         <div class="mapWrap">
             <p class="mapTitle">地理位置</p>
 
-            <map
-                id="myMap"
-                style="width: 100%; height: 200px;"
-                :latitude="latitude"
-                :longitude="longitude"
-                :markers="markers"
-                :covers="covers"
-                show-location
-            ></map>
+            <map id="myMap" style="width: 100%; height: 200px;" :latitude="latitude" :longitude="longitude" :markers="markers" show-location></map>
+            <!-- :covers="covers" -->
 
             <i-button @click="includePoints">缩放</i-button>
         </div>
         <cover-view class="consult">
             <cover-image class="img" src="/static/images/consult.png" />
+            <button open-type="contact" class="consultBtn">客服</button>
         </cover-view>
     </div>
 </template>
 
 <script>
+// var QQMapWX = require('@/utils/qqmap-wx-jssdk.min.js');
+import QQMapWX from '../../../utils/qqmap-wx-jssdk.min.js';
+// 实例化API核心类
+var qqmapsdk = new QQMapWX({
+    key: 'IHIBZ-EPZRS-A7VOO-6OXF6-BEVN7-7EFMU' // 必填
+});
 export default {
     data() {
         return {
@@ -100,41 +88,27 @@ export default {
             autoplay: false,
             interval: 3000,
             duration: 500,
-            value1: "",
+            value1: '',
             imgList: [
                 {
-                    src:
-                        "https://pic5.58cdn.com.cn/anjuke_58/cc29706ea6857b65dab56f9f67add4c6?w=640&h=480&crop=1",
-                    type: "video"
+                    src: 'https://pic5.58cdn.com.cn/anjuke_58/cc29706ea6857b65dab56f9f67add4c6?w=640&h=480&crop=1',
+                    type: 'video'
                 },
                 {
-                    src:
-                        "https://pic6.58cdn.com.cn/anjuke_58/599bef62e817176cfe7fd42014da45ca?w=640&h=480&crop=1"
+                    src: 'https://pic6.58cdn.com.cn/anjuke_58/599bef62e817176cfe7fd42014da45ca?w=640&h=480&crop=1'
                 },
                 {
-                    src:
-                        "https://pic5.58cdn.com.cn/anjuke_58/22eec5a3cf94ff9593e17b9c5124ba84?w=640&h=480&crop=1"
+                    src: 'https://pic5.58cdn.com.cn/anjuke_58/22eec5a3cf94ff9593e17b9c5124ba84?w=640&h=480&crop=1'
                 },
                 {
-                    src:
-                        "https://pic6.58cdn.com.cn/anjuke_58/0dc0ee4030643470a6247063823ab639?w=640&h=480&crop=1"
+                    src: 'https://pic6.58cdn.com.cn/anjuke_58/0dc0ee4030643470a6247063823ab639?w=640&h=480&crop=1'
                 },
                 {
-                    src:
-                        "https://pic4.58cdn.com.cn/anjuke_58/749a8fafd17d5a7791bcda127ee8a4f2?w=640&h=480&crop=1"
+                    src: 'https://pic4.58cdn.com.cn/anjuke_58/749a8fafd17d5a7791bcda127ee8a4f2?w=640&h=480&crop=1'
                 }
             ],
             houseInfo: {
-                tags: [
-                    "带花园",
-                    "停车场",
-                    "使用率高",
-                    "使用率高",
-                    "使用率高",
-                    "使用率高",
-                    "使用率高",
-                    "使用率高"
-                ]
+                tags: ['带花园', '停车场', '使用率高', '使用率高', '使用率高', '使用率高', '使用率高', '使用率高']
             },
             latitude: 23.099994,
             longitude: 113.32452,
@@ -143,22 +117,59 @@ export default {
                     id: 1,
                     latitude: 23.099994,
                     longitude: 113.32452,
-                    name: "T.I.T 创意园"
-                }
-            ],
-            covers: [
-                {
-                    latitude: 23.099994,
-                    longitude: 113.34452,
-                    iconPath: "/static/images/phone.png"
-                },
-                {
-                    latitude: 23.099994,
-                    longitude: 113.30452,
-                    iconPath: "/static/images/phone.png"
+                    name: 'T.I.T 创意园'
                 }
             ]
-        }
+            // covers: [
+            //     {
+            //         latitude: 23.099994,
+            //         longitude: 113.34452,
+            //         iconPath: "/static/images/phone.png"
+            //     },
+            //     {
+            //         latitude: 23.099994,
+            //         longitude: 113.30452,
+            //         iconPath: "/static/images/phone.png"
+            //     }
+            // ]
+        };
+    },
+    onLoad() {
+        var that = this;
+        wx.showLoading({
+            title: '定位中',
+            mask: true
+        });
+
+        wx.getLocation({
+            type: 'wgs84',
+            //定位成功，更新定位结果
+            success: function(res) {
+                var latitude = res.latitude;
+                var longitude = res.longitude;
+                var speed = res.speed;
+                var accuracy = res.accuracy;
+                //经纬度转化为地址
+                that.getLocal(latitude, longitude);
+                that.longitude = longitude;
+                that.latitude = latitude;
+                that.speed = speed;
+                that.accuracy = accuracy;
+                console.log('res', res);
+            },
+            //定位失败回调
+            fail: function() {
+                wx.showToast({
+                    title: '定位失败',
+                    icon: 'none'
+                });
+            },
+
+            complete: function() {
+                //隐藏定位中信息进度
+                wx.hideLoading();
+            }
+        });
     },
     computed: {},
     methods: {
@@ -175,17 +186,44 @@ export default {
                         longitude: 113.3345211
                     }
                 ]
-            })
+            });
+        },
+        getLocal: function(latitude, longitude) {
+            let vm = this;
+            qqmapsdk.reverseGeocoder({
+                location: {
+                    latitude: latitude,
+                    longitude: longitude
+                },
+                success: function(res) {
+                    let province = res.result.ad_info.province;
+                    let city = res.result.ad_info.city;
+                    let district = res.result.ad_info.district;
+                    this.district = district;
+                    console.log('district', district);
+                    // vm.setData({
+                    //     province: province, //省
+                    //     city: city, //市
+                    //     district: district //区
+                    // });
+                },
+                fail: function(res) {
+                    console.log(res);
+                },
+                complete: function(res) {
+                    // console.log(res);
+                }
+            });
         }
     },
     mounted() {
-        this.mapCtx = wx.createMapContext("myMap")
+        this.mapCtx = wx.createMapContext('myMap');
     }
-}
+};
 </script>
 
 <style lang="less">
-@import "../../../style/common";
+@import '../../../style/common';
 page {
     background: @graylightBg;
     font-size: 14px;
@@ -300,6 +338,17 @@ page {
     border-radius: 50%;
     color: @primary;
     padding: 5px;
+    .consultBtn {
+        padding: 0px;
+        background: rgba(0, 0, 0, 0);
+        color: transparent;
+        border: none;
+        outline: none;
+        position: absolute;
+        top: 0;
+        box-shadow: none;
+        z-index: 10;
+    }
     img {
         width: 100%;
         height: 100%;
