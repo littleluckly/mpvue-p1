@@ -86,7 +86,7 @@
           <div v-if="validateErrData.area" class="errText">{{validateErrData.area.msg}}</div>
         </view>
         <input
-          @input="(e)=>handleFormChange(e,'area')"
+          @input="handleFormChange"
           v-model="formData.area"
           type="digit"
           class="formVal"
@@ -265,15 +265,6 @@ export default {
       // name !== '' && delete this.validateErrData[name];
       // console.log('this.validateErrData', this.validateErrData);
     },
-    getAddress() {
-      const { regionIndex, address } = this.formData;
-      if (regionIndex != null && regionIndex != undefined) {
-        return `${this.regionList[regionIndex]}${address}`;
-      } else {
-        return address;
-      }
-      //   return;
-    },
     handleSelectMapLoca() {
       const that = this;
       // 调用接口
@@ -323,12 +314,19 @@ export default {
     //移动选点
     moveToLocation: function() {
       var that = this;
+      console.log("getCurrentPages", getCurrentPages());
       wx.chooseLocation({
         success: function(res) {
           console.log("移动选点", res);
           const { address, latitude, longitude } = res;
-          wx.navigateTo({
-            url: `../publishNewHouse/main?address=${address}&latitude=${latitude}&longitude=${longitude}`
+          wx.redirectTo({
+            url: `../publishNewHouse/main?address=${address}&latitude=${latitude}&longitude=${longitude}`,
+            events: {
+              // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
+              acceptDataFromOpenedPage: function(data) {
+                console.log("000000", data);
+              }
+            }
           });
         },
         fail: function(err) {
