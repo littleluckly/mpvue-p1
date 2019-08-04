@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "地图选点",
+  "usingComponents": {
+    "i-button": "../../../../static/iview/button/index",
+    "i-input": "../../../../static/iview/input/index",
+    "i-icon": "../../../../static/iview/icon/index",
+    "i-modal": "../../../../static/iview/modal/index"
+  }
+}
