@@ -22,8 +22,6 @@
           <i-icon type="search" size="18" color="#666" />
         </span>
       </div>
-
-      <button @click="chooseImage">上传</button>
       <div class="dailyRecommend">
         <p class="dailyTitle">- 今日优选 -</p>
         <div class="dailyItemWrap">

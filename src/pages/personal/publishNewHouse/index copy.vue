@@ -1,14 +1,17 @@
 <template>
-  <div class="FormWrap">
-    <form @submit="formSubmit" @reset="formReset">
-      <div class="infoType">
-        <div class="divider"></div>
-        <div class="infoTitle">基本信息</div>
-        <div class="divider"></div>
-      </div>
-      <view class="formItem section section_gap">
+  <div class="publishFormWrap">
+    <i-steps i-class="publishSteps" :current="currentStep">
+      <i-step @click="handleSteps(0)">
+        <view slot="title">基本信息</view>
+      </i-step>
+      <i-step @click="handleSteps(1)">
+        <view slot="title">详细信息</view>
+      </i-step>
+    </i-steps>
+    <form class="baseInfoForm" @submit="formSubmit" @reset="formReset" v-show="currentStep==0">
+      <!-- <view class="formItem">
         <view class="section__title">发布类型：</view>
-        <radio-group @change="handleChangeRadio" name="publishType">
+        <radio-group v-model="publishType" @change="handleChangeRadio" name="publishType">
           <label>
             <radio value="出租" :checked="publishType=='出租'" />出租
           </label>
@@ -16,10 +19,10 @@
             <radio value="出售" :checked="publishType=='出售'" />出售
           </label>
         </radio-group>
-      </view>
-      <view class="formItem section section_gap" v-if="publishType=='出租'">
+      </view>-->
+      <view class="formItem" v-show="publishType=='出租'">
         <view class="section__title">出租方式：</view>
-        <radio-group name="rentType">
+        <radio-group v-model="rentType" name="rentType">
           <label>
             <radio value="整租" :checked="rentType=='整租'" />整租
           </label>
@@ -28,47 +31,36 @@
           </label>
         </radio-group>
       </view>
-      <view class="formItem section section_gap" v-if="publishType=='出租'">
-        <view class="section__title">付款方式：</view>
-        <radio-group name="payType">
-          <label>
-            <radio value="押一付一" :checked="payType=='押一付一'" />押一付一
-          </label>
-          <label>
-            <radio value="押二付一" :checked="payType=='押二付一'" />押二付一
-          </label>
-        </radio-group>
-      </view>
-      <view class="formItem section section_gap">
+      <view class="formItem">
         <view class="section__title">
           <span class="requireIcon">*</span>标题:
           <div v-if="validateErrData.title" class="errText">{{validateErrData.title.msg}}</div>
         </view>
         <input
           @input="(e)=>handleFormChange(e,'title')"
-          v-model="formData.title"
+          v-model="title"
           class="formVal"
           name="title"
           placeholder="请输入标题"
         />
       </view>
 
-      <view class="formItem section section_gap">
+      <view class="formItem">
         <view class="section__title">
           <span class="requireIcon">*</span>
-          {{publishType=='出租'?'租金(元/月)':'总价(万)'}}:
+          {{publishType=="出租"?'租金(元/月)':'总价(万)'}}:
           <div v-if="validateErrData.price" class="errText">{{validateErrData.price.msg}}</div>
         </view>
         <input
           @input="(e)=>handleFormChange(e,'price')"
-          v-model="formData.price"
+          v-model="price"
           type="digit"
           class="formVal"
           name="price"
           :placeholder="publishType=='出租'?'请输入租金':'请输入总价'"
         />
       </view>
-      <view class="formItem section section_gap">
+      <view class="formItem">
         <view class="section__title">
           <span class="requireIcon">*</span>
           面积:
@@ -76,14 +68,44 @@
         </view>
         <input
           @input="handleFormChange"
-          v-model="formData.area"
+          v-model="area"
           type="digit"
           class="formVal"
           name="area"
           placeholder="请输入面积"
         />
       </view>
-      <view class="formItem section section_gap">
+
+      <view class="formItem">
+        <view class="section__title">
+          <span class="requireIcon">*</span>地图位置:
+          <div v-if="validateErrData.geo" class="errText">{{validateErrData.geo.msg}}</div>
+        </view>
+        <input
+          @click="handleSelectMapLoca"
+          v-model="geo"
+          readonly
+          disabled
+          class="formVal"
+          name="geo"
+          placeholder="请选择地图位置"
+        />
+      </view>
+      <view class="formItem">
+        <view class="section__title" style="margin-button:15px;">
+          <span class="requireIcon">*</span>详细地址:
+          <div v-if="validateErrData.address" class="errText">{{validateErrData.address.msg}}</div>
+        </view>
+        <textarea
+          @input="(e)=>handleFormChange(e,'address')"
+          v-model="address"
+          class="formVal"
+          name="address"
+          auto-height
+          placeholder="请输入房源地址"
+        />
+      </view>
+      <view class="formItem">
         <view class="section__title">
           <span class="requireIcon">*</span>户型:
           <div v-if="validateErrData.layout" class="errText">{{validateErrData.layout.msg}}</div>
@@ -95,104 +117,37 @@
           placeholder="请输入房源的户型"
         />
       </view>
-      <view class="formItem section section_gap">
-        <view class="section__title">
-          <span class="requireIcon">*</span>地图位置:
-          <div v-if="validateErrData.geo" class="errText">{{validateErrData.geo.msg}}</div>
-        </view>
-        <input
-          @click="handleSelectMapLoca"
-          v-model="formData.geo"
-          readonly
-          disabled
-          class="formVal"
-          name="geo"
-          placeholder="请选择地图位置"
-        />
-      </view>
-      <view class="formItem section section_gap">
-        <view class="section__title" style="margin-button:15px;">
-          <span class="requireIcon">*</span>详细地址:
-          <div v-if="validateErrData.address" class="errText">{{validateErrData.address.msg}}</div>
-        </view>
-        <textarea
-          @input="(e)=>handleFormChange(e,'address')"
-          v-model="formData.address"
-          class="formVal"
-          name="address"
-          auto-height
-          placeholder="请输入房源地址"
-        />
-      </view>
-
-      <div class="infoType">
-        <div class="divider"></div>
-        <div class="infoTitle">详细信息</div>
-        <div class="divider"></div>
-      </div>
-      <view class="formItem section section_gap">
+      <button confirm-type="submit" ref="baseInfoForm">提交</button>
+    </form>
+    <form class="detailInfoForm" @submit="formSubmit" @reset="formReset" v-show="currentStep==1">
+      <view class="formItem">
         <view class="section__title">
           <span class="requireIcon">*</span>小区名称:
           <div v-if="validateErrData.house_name" class="errText">{{validateErrData.house_name.msg}}</div>
         </view>
         <input
           @input="(e)=>handleFormChange(e,'house_name')"
-          v-model="formData.house_name"
+          v-model="house_name"
           class="formVal"
           name="house_name"
           placeholder="请输入小区名称"
         />
       </view>
-      <view class="formItem section section_gap">
-        <view class="section__title">
-          所在楼层:
-          <div v-if="validateErrData.floor" class="errText">{{validateErrData.floor.msg}}</div>
-        </view>
-        <input
-          @input="(e)=>handleFormChange(e,'floor')"
-          v-model="formData.floor"
-          class="formVal"
-          name="floor"
-          placeholder="请输入房源所在楼层"
-        />
-      </view>
-      <view class="formItem section section_gap">
-        <view class="section__title">
-          家电情况:
-          <div v-if="validateErrData.electro" class="errText">{{validateErrData.electro.msg}}</div>
-        </view>
-        <checkbox-group name="electro">
-          <label class="electroCheckbox" v-for="item in electroList" :key="item.label">
-            <checkbox :value="item.value" />
-            {{item.label}}
-          </label>
-        </checkbox-group>
-      </view>
-      <view class="formItem section section_gap">
-        <view class="section__title">
-          房源特点:
-          <div v-if="validateErrData.feature" class="errText">{{validateErrData.feature.msg}}</div>
-        </view>
-        <checkbox-group name="electro">
-          <label class="electroCheckbox" v-for="item in featureList" :key="item.label">
-            <checkbox :value="item.value" />
-            {{item.label}}
-          </label>
-        </checkbox-group>
-      </view>
-      <view class="btn-area">
-        <button form-type="submit" type="primary" style="margin-bottom:15px;">发布</button>
-        <!-- <button form-type="reset" type="warn">重置</button> -->
-      </view>
     </form>
+    <i-button @click="handleNextStep" v-if="currentStep==0">下一步</i-button>
+    <i-button type="primary" @click="handlePublish" v-else>发布</i-button>
   </div>
 </template>
 <script>
 import WxValidate from "@/utils/validate";
+import BaseInfoForm from "./baseInfoForm";
 export default {
+  components: {
+    BaseInfoForm
+  },
   data() {
     return {
-      array: ["出租", "出售"],
+      currentStep: 0,
       houseTypeIndex: null,
       region: "",
       regionList: [
@@ -205,48 +160,21 @@ export default {
         "盐田区",
         "坪山区"
       ],
-      electroList: [
-        { label: "空调", value: "空调" },
-        { label: "床", value: "床" },
-        { label: "衣柜", value: "衣柜" },
-        { label: "洗衣机", value: "洗衣机" },
-        { label: "梳妆台", value: "梳妆台" },
-        { label: "电冰箱", value: "电冰箱" },
-        { label: "沙发", value: "沙发" },
-        { label: "椅子", value: "椅子" },
-        { label: "餐桌", value: "餐桌" },
-        { label: "热水器", value: "热水器" }
-      ],
-      featureList: [
-        { label: "邻地铁", value: "邻地铁" },
-        { label: "大阳台", value: "大阳台" },
-        { label: "采光好", value: "采光好" },
-        { label: "有电梯", value: "有电梯" },
-        { label: "大单间", value: "大单间" },
-        { label: "安静", value: "安静" },
-        { label: "配套齐全", value: "配套齐全" },
-        { label: "精装修", value: "精装修" },
-        { label: "邻公园", value: "邻公园" },
-        { label: "停车场", value: "停车场" },
-        { label: "带花园", value: "带花园" },
-        { label: "使用率高", value: "使用率高" }
-      ],
       regionIndex: null,
-      rentTypeOptions: ["整租", "合租"],
-      formData: {
-        house_name: "",
-        houseTypeIndex: null,
-        regionIndex: null,
-        price: null,
-        area: null,
-        rentTypeIndex: 0,
-        title: null,
-        address: ""
-      },
-      validateErrData: {},
-      publishType: "出租",
+      //   formData: {
+      publishType: "出售",
       rentType: "整租",
-      payType: "押一付一",
+      house_name: "",
+      //   houseTypeIndex: null,
+      //   regionIndex: null,
+      price: null,
+      area: null,
+      rentTypeIndex: 0,
+      title: null,
+      address: "",
+      //   },
+      validateErrData: {},
+      //   publishType: "",
       longitude: 0,
       latitude: 0
     };
@@ -272,6 +200,10 @@ export default {
     };
   },
   methods: {
+    handleSteps(a) {
+      console.log("aaa", a);
+      this.currentStep = a;
+    },
     formSubmit: function(e) {
       const params = e.mp.detail.value;
       console.log("form发生了submit事件，携带数据为：", params);
@@ -292,6 +224,29 @@ export default {
         // 校验成功，清除错误消息
         this.validateErrData = {};
       }
+    },
+    handleNextStep() {
+      //   console.log("this.formData", this.formData);
+      console.log("title", this.title);
+      if (
+        this.WxValidate.checkForm({
+          title: this.title
+        })
+      ) {
+        this.currentStep = this.currentStep + 1;
+      } else {
+        const errorList = this.WxValidate.errorList;
+        console.log("errorList", errorList);
+        if (errorList) {
+          errorList.forEach(item => {
+            this.validateErrData[item.param] = { ...item };
+          });
+          console.log(this.validateErrData, "this.validateErrData");
+        }
+      }
+    },
+    handlePublish() {
+      this.currentStep = 0;
     },
     handleFormChange(e, name) {
       console.log(e.mp.detail.value, name);
@@ -353,7 +308,6 @@ export default {
       console.log("getCurrentPages", getCurrentPages());
       wx.chooseLocation({
         success: function(res) {
-          console.log("移动选点", res);
           const { address, latitude, longitude } = res;
           wx.redirectTo({
             url: `../publishNewHouse/main?address=${address}&latitude=${latitude}&longitude=${longitude}`,
@@ -378,19 +332,10 @@ export default {
       this.validateErrData = {};
       console.log("form发生了reset事件");
     },
-    handleSelectHouseType(e) {
-      this.formData.houseTypeIndex = Number(e.mp.detail.value);
-      this.validateErrData["houseType"] = null;
-    },
-    handleSelectRegion(e) {
-      this.formData.regionIndex = Number(e.mp.detail.value);
-    },
-    handleSelectRentType(e) {},
     handleSelect(e, type) {
       this.formData[type + "Index"] = Number(e.mp.detail.value);
       this.validateErrData[type] = null;
     },
-    rentTypeOptions(e) {},
     initValidate() {
       let rules = {
         // houseType: {
@@ -453,35 +398,19 @@ export default {
     },
     handleChangeRadio(e) {
       const value = e.mp.detail.value;
-      console.log(value);
-      this.formData.publishType = value;
       this.publishType = value;
+      this.publishType = value;
+      console.log(this.publishType);
     }
   }
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
 @import "../../../style/common.less";
-.FormWrap {
+.publishFormWrap {
   padding: 10px;
-  font-size: 14px;
-  .infoType {
-    display: flex;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: bold;
+  .publishSteps {
     margin-bottom: 20px;
-    .divider {
-      flex-grow: 1;
-      height: 1px;
-      background: #d8d8d8;
-      vertical-align: top;
-      margin-top: 11px;
-    }
-    .infoTitle {
-      flex-grow: 0;
-      margin: 0 15px;
-    }
   }
   input {
     font-size: 16px;
@@ -507,11 +436,6 @@ export default {
       padding: 3px 0;
       width: 100%;
       border-bottom: 1px solid @graylightBg;
-    }
-    .electroCheckbox {
-      display: inline-block;
-      width: 95px;
-      margin-top: 8px;
     }
   }
 }
