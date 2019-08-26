@@ -1,5 +1,5 @@
 export default {
-  name: 'rentStore',
+  name: "rentStore",
   namespaced: true,
   state: {
     rentRecommendList: [],
@@ -11,51 +11,51 @@ export default {
     },
     searchList: (state, payload) => {
       state.searchList = payload
-    },
+    }
   },
   actions: {
-    fetchRecommendList({
-      commit
-    }, params) {
-      this.$request({
-        url: '/rent/fetchRecommendList',
-        method: 'get',
-        success: function (res) {
-          const {
-            statusCode,
-            data
-          } = res
-          if (statusCode === 200) {
-            commit("rentRecommendList", data)
-          } else {
-            commit("rentRecommendList", [])
+    fetchRecommendList({ commit }, params) {
+      this.$db.collection("rent").get({
+        success: function(res) {
+          if (res && res.errMsg == "collection.get:ok") {
+            commit("rentRecommendList", res.data)
           }
-          console.log('rentRecommendList::', res)
         }
       })
     },
-    searchRentList({
-      commit
-    }, params = {}) {
-      this.$request({
-        url: '/rent/searchRentList',
-        method: 'get',
-        data: {
-          ...params
-        },
-        success: function (res) {
-          const {
-            statusCode,
-            data
-          } = res
-          if (statusCode === 200) {
-            commit("searchList", data)
-          } else {
-            commit("searchList", [])
+    searchRentList({ commit }, params = {}) {
+      this.$db
+        .collection("rent")
+        .where({
+          address: {
+            $regex: ".*" + "龙岗"
           }
-          console.log('searchList::', res)
-        }
-      })
+        })
+        .get({
+          success: function(res) {
+            // res.data 包含该记录的数据
+            console.log("搜索", res)
+            if (res && res.errMsg == "collection.get:ok") {
+              commit("searchList", res.data)
+            }
+          }
+        })
+      //   this.$request({
+      //     url: "/rent/searchRentList",
+      //     method: "get",
+      //     data: {
+      //       ...params
+      //     },
+      //     success: function(res) {
+      //       const { statusCode, data } = res
+      //       if (statusCode === 200) {
+      //         commit("searchList", data)
+      //       } else {
+      //         commit("searchList", [])
+      //       }
+      //       console.log("searchList::", res)
+      //     }
+      //   })
     }
   }
 }
