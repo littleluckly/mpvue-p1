@@ -1,0 +1,9 @@
+{
+    "navigationBarTitleText": "详情",
+    "usingComponents": {
+        "i-button": "../../../static/iview/button/index",
+        "i-input": "../../../static/iview/input/index",
+        "i-icon": "../../../static/iview/icon/index",
+        "i-tag": "../../../static/iview/tag/index"
+    }
+}

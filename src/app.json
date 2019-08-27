@@ -1,6 +1,9 @@
 {
   "pages": [
     "pages/index/main",
+    "pages/index/detail/main",
+    "pages/search/main",
+    "pages/docs/main",
     "pages/personal/publishNewHouse/main",
     "pages/personal/selectMapLocation/main",
     "pages/smallHouse/detail/main",
@@ -35,16 +38,16 @@
     "borderStyle": "white",
     "list": [
       {
-        "text": "租房",
+        "text": "小产权购买",
         "pagePath": "pages/index/main",
         "iconPath": "static/tabs/home.png",
         "selectedIconPath": "static/tabs/home_active.png"
       },
       {
-        "text": "小产权购买",
-        "pagePath": "pages/smallHouse/main",
-        "iconPath": "static/tabs/house.png",
-        "selectedIconPath": "static/tabs/house_active.png"
+        "text": "小产权百科",
+        "pagePath": "pages/docs/main",
+        "iconPath": "static/tabs/home.png",
+        "selectedIconPath": "static/tabs/home_active.png"
       },
       {
         "text": "个人中心",
