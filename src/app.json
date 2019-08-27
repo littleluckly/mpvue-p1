@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/main",
     "pages/search/main",
+    "pages/docs/main",
     "pages/personal/publishNewHouse/main",
     "pages/personal/selectMapLocation/main",
     "pages/smallHouse/detail/main",
@@ -43,7 +44,7 @@
       },
       {
         "text": "小产权百科",
-        "pagePath": "pages/index/main",
+        "pagePath": "pages/docs/main",
         "iconPath": "static/tabs/home.png",
         "selectedIconPath": "static/tabs/home_active.png"
       },
