@@ -29,7 +29,14 @@
             <div class="listWrap">
                 <div class="resultWrap">
                     <p class="listTitle">精选好房</p>
-                    <div
+
+                    <SaleListItem
+                        @linkTo="linkToDetail(item)"
+                        v-for="(item,idx) in smallHouseList"
+                        :key="item.name+idx"
+                        :data="item"
+                    />
+                    <!-- <div
                         v-for="(item,idx) in rentRecommendList"
                         :key="item.address+idx"
                         class="listItem"
@@ -55,7 +62,7 @@
                             </p>
                             <p class="address">{{item.address}}</p>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -67,8 +74,10 @@
 import { mapActions, mapState } from "vuex"
 import loggoText from "../../../static/images/logo_text.png"
 import calcCapsulePosi from "@/mixins/calcCapsulePosi"
+import SaleListItem from "@/components/SaleListItem"
 export default {
     mixins: [calcCapsulePosi],
+    components: { SaleListItem },
     data() {
         return {
             searchVal: "",
@@ -96,6 +105,63 @@ export default {
                         "https://pic1.ajkimg.com/display/58ajk/dad4e4b1319f5efb4b6228b089dc9847/240x180.jpg",
                     houseLayout: "单间",
                     rent: "670"
+                }
+            ],
+            smallHouseList: [
+                {
+                    src:
+                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
+                    name: "华侨新苑",
+                    type: "村委楼",
+                    price: 55,
+                    layout: "三室",
+                    decoraction: "简装",
+                    area: 99,
+                    tags: ["带花园", "停车场", "使用率高"]
+                },
+                {
+                    src:
+                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
+                    name: "大富豪花园",
+                    type: "村委楼",
+                    price: 125,
+                    layout: "三室",
+                    decoraction: "精装",
+                    area: 112,
+                    tags: ["使用率高", "高品质"]
+                },
+                {
+                    src:
+                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
+                    name: "宝安花园",
+                    type: "村委楼",
+                    price: 155,
+                    layout: "三室",
+                    decoraction: "毛坯",
+                    area: 112,
+                    tags: ["使用率高", "高品质"]
+                },
+                {
+                    src:
+                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
+                    name: "宝安花园",
+                    type: "村委楼",
+                    price: 130,
+                    layout: "三室",
+                    decoraction: "毛坯",
+                    area: 112,
+                    tags: ["使用率高", "高品质"]
+                },
+                {
+                    src:
+                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
+                    name: "宝安花园",
+                    type: "村委楼",
+                    price: 130,
+                    layout: "三室",
+                    decoraction: "毛坯",
+                    area: 112,
+                    tags: ["使用率高", "高品质"]
                 }
             ]
         }
@@ -159,6 +225,10 @@ export default {
         },
         linkToWelcome() {
             wx.navigateTo({ url: "../welcome/main" })
+        },
+        linkToDetail(data) {
+            console.log("data", data)
+            wx.navigateTo({ url: `./detail/main` })
         },
         showHouseDetail(item) {
             console.log("item", item, 2233)
