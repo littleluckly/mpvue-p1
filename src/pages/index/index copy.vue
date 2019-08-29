@@ -215,9 +215,54 @@ export default {
                     console.log("c", c)
                 }
             })
+            // wx.checkSession({
+            // success() {
+            //     console.log('success')
+            // },
+            // fail() {
+            // var that = this
+            //登录
+            // wx.login({
+            //     success(res) {
+            //         if (res.code) {
+            //             //获取code
+            //             var code = res.code
+            //             //在小程序规定请求地址通过appId，appSecret，登录时获取的code 来获得json数据
+            //             var url =
+            //                 'https://api.weixin.qq.com/sns/jscode2session?appid=' +
+            //                 'wxb76f934941bce27c' +
+            //                 '&secret=' +
+            //                 '172531853dfde0faf6ce3f135b28685d' +
+            //                 '&js_code=' +
+            //                 code +
+            //                 '&grant_type=authorization_code'
+            //             //向服务器发起请求获取session_key，openid
+            //             wx.request({
+            //                 url: url,
+            //                 data: {
+            //                     session_key: '',
+            //                     openid: ''
+            //                 },
+            //                 success: function(res) {
+            //                     console.log('res5555', res)
+            //                 }
+            //             })
+            //         } else {
+            //             console.log('登录失败！' + res.errMsg)
+            //         }
+            //     }
+            // })
+            // }
+            // })
         }
     },
-    mounted() {},
+    mounted() {
+        // wx.startPullDownRefresh({
+        //     success: () => {
+        //         console.log("xiala ")
+        //     }
+        // })
+    },
     //页面滚动执行方式
     onPageScroll(event) {
         console.log("scroll")

@@ -1,6 +1,9 @@
 {
   "navigationBarBackgroundColor": "#5cadff",
   "navigationBarTextStyle": "white",
-  "navigationBarTitleText": "小产权百科",
-  "usingComponents": {}
+  "navigationBarTitleText": "小产权知识百科",
+  "usingComponents": {
+    "i-tabs": "../../../static/iview/tabs",
+    "i-tab": "../../../static/iview/tab"
+  }
 }
