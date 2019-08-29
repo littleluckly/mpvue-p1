@@ -58,33 +58,42 @@
             </ul>
         </div>
         <div class="footer">退出登录</div>
-        <i-modal :visible="loginModalVisible" :actions="loginModalActions" @click="handleClick3" i-class="loginModal">
+        <i-modal
+            :visible="loginModalVisible"
+            :actions="loginModalActions"
+            @click="handleClick3"
+            i-class="loginModal"
+        >
             <div>蜗居深圳</div>
             <p>蜗居深圳申请获取一下权限：</p>
             <p>申请获取您的公开信息（头像、昵称等）</p>
         </i-modal>
+        <Consult />
     </div>
 </template>
 
 <script>
+import Consult from "@/components/consult"
 export default {
+    components: { Consult },
     data() {
         return {
             userInfo: {
-                avatar: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2884107401,3797902000&fm=27&gp=0.jpg'
+                avatar:
+                    "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2884107401,3797902000&fm=27&gp=0.jpg"
             },
-            code: '',
+            code: "",
             loginModalVisible: false,
             loginModalActions: [
                 {
-                    name: '取消'
+                    name: "取消"
                 },
                 {
-                    name: '确认',
-                    color: '#2d8cf0'
+                    name: "确认",
+                    color: "#2d8cf0"
                 }
             ]
-        };
+        }
     },
     computed: {},
     created() {
@@ -106,14 +115,14 @@ export default {
     },
     methods: {
         navigateTo(page) {
-            wx.navigateTo({ url: `../${page}/main` });
+            wx.navigateTo({ url: `../${page}/main` })
         },
         linkTo() {
-            wx.navigateTo({ url: `./publishNewHouse/main` });
+            wx.navigateTo({ url: `./publishNewHouse/main` })
         },
         handleClick3(a) {
             // const index = detail.index
-            console.log(a);
+            console.log(a)
 
             // if (index === 0) {
             //     console.log("aa")
@@ -121,21 +130,21 @@ export default {
             //     console.log("bbb")
             // }
 
-            this.loginModalVisible = false;
+            this.loginModalVisible = false
         },
         handleLogin() {
-            console.log('llll');
-            this.loginModalVisible = true;
+            console.log("llll")
+            this.loginModalVisible = true
         }
     },
     mounted() {}
-};
+}
 </script>
 <style lang="less">
 </style>
 
 <style lang="less">
-@import '../../style/common';
+@import "../../style/common";
 .personal {
     height: 100vh;
     background: @graylightBg;

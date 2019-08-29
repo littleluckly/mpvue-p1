@@ -7,7 +7,6 @@
     "pages/personal/publishNewHouse/main",
     "pages/personal/selectMapLocation/main",
     "pages/smallHouse/detail/main",
-    "pages/index/rentSearchList/main",
     "pages/welcome/main",
     "pages/personal/main",
     "pages/smallHouse/main",
@@ -15,7 +14,6 @@
     "pages/smallHouse/news/main",
     "pages/smallHouse/policy/main",
     "pages/smallHouse/questionAndAnswer/main",
-    "pages/index/houseDetail/main",
     "pages/collection/main",
     "pages/focus/main",
     "pages/history/main"
@@ -40,14 +38,14 @@
       {
         "text": "小产权购买",
         "pagePath": "pages/index/main",
-        "iconPath": "static/tabs/home.png",
-        "selectedIconPath": "static/tabs/home_active.png"
+        "iconPath": "static/tabs/house.png",
+        "selectedIconPath": "static/tabs/house_active.png"
       },
       {
         "text": "小产权百科",
         "pagePath": "pages/docs/main",
-        "iconPath": "static/tabs/home.png",
-        "selectedIconPath": "static/tabs/home_active.png"
+        "iconPath": "static/tabs/baike.png",
+        "selectedIconPath": "static/tabs/baike_active.png"
       },
       {
         "text": "个人中心",
