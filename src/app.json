@@ -3,6 +3,7 @@
     "pages/index/main",
     "pages/index/detail/main",
     "pages/search/main",
+    "pages/search/searchList/main",
     "pages/docs/main",
     "pages/personal/publishNewHouse/main",
     "pages/personal/selectMapLocation/main",
@@ -25,9 +26,7 @@
   },
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#5cadff",
-    "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "蜗居深圳"
+    "navigationBarBackgroundColor": "#5cadff"
   },
   "tabBar": {
     "color": "#999",
@@ -36,13 +35,13 @@
     "borderStyle": "white",
     "list": [
       {
-        "text": "小产权购买",
+        "text": "首页",
         "pagePath": "pages/index/main",
         "iconPath": "static/tabs/house.png",
         "selectedIconPath": "static/tabs/house_active.png"
       },
       {
-        "text": "小产权百科",
+        "text": "资讯",
         "pagePath": "pages/docs/main",
         "iconPath": "static/tabs/baike.png",
         "selectedIconPath": "static/tabs/baike_active.png"

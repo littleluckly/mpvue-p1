@@ -51,6 +51,6 @@ const store = new Vuex.Store({
     }
   }
 })
-store.$db = new MyDB().init()
+// store.$db = new MyDB().init()
 store.$request = request
 export default store

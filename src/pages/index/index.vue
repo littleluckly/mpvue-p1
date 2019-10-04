@@ -2,13 +2,20 @@
     <div class="homepage">
         <!-- 首页普通内容 -->
         <div class="normalWrap">
-            <div class="topWrap" v-bind:style="{ paddingTop: top+height + 'px' }">
-                <span @click="linkToWelcome" class="logo">
+            <div class="topBg">
+                <img src="/static/images/bg.jpg" height="180px" alt />
+                <img class="wave" src="https://image.weilanwl.com/gif/wave.gif" alt />
+                <div
+                    v-bind:style="{ textAlign:'center', color:'white',position:'absolute', fontSize:'14px',top: top + 'px', height:height+'px',width:'100%', lineHeight:height+'px' }"
+                >首页</div>
+            </div>
+            <div class="topWrap">
+                <!-- <span @click="linkToWelcome" class="logo">
                     <img src="/static/images/logo.png" alt />
-                </span>
+                </span>-->
                 <p
                     @click="linkToSearch"
-                    style="flex:1;line-height:38px;border:1px solid #f2f2f2;color:#666;border-radius:30px;padding-left:10px;background:#fff;"
+                    style="flex:1;height:30px;line-height:30px;border:1px solid #f2f2f2;color:#666;border-radius:30px;padding-left:10px;background:#fff;"
                 >搜索好房</p>
                 <span @click="handleSearch" class="searchIcon">
                     <i-icon type="search" size="18" color="#666" />
@@ -199,6 +206,22 @@ export default {
         transition: all ease-in-out 500ms;
         width: 100%;
         background: #fff;
+        .topBg {
+            position: relative;
+            img {
+                height: 180px;
+                width: 100%;
+            }
+            .wave {
+                position: absolute;
+                width: 100%;
+                bottom: 0;
+                left: 0;
+                z-index: 99;
+                mix-blend-mode: screen;
+                height: 50px;
+            }
+        }
         .mask {
             display: none;
             position: absolute;
@@ -207,15 +230,13 @@ export default {
             background: transparent;
         }
         .topWrap {
-            display: flex;
-            height: 60px;
-            align-items: center;
-            background: #5cadff;
+            position: relative;
+            padding: 10px;
             .searchIcon {
-                position: relative;
-                left: -30px;
-                top: 0;
-                line-height: 38px;
+                position: absolute;
+                right: 15px;
+                top: 10px;
+                line-height: 30px;
                 padding: 0 8px;
             }
             .logo {

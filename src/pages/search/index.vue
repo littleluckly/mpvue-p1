@@ -1,46 +1,47 @@
 <template>
-    <div class="drawerWrap" :style="{ paddingTop: top + 'px' }">
-        <div class="searchDrawer">
-            <div class="searchInputWrap">
-                <input
-                    class="searchInput"
-                    v-model="searchVal"
-                    placeholder="请输入小区名称、地址、户型等"
-                    confirm-type="search"
-                    autofocus
-                    @confirm="handleSearch"
-                    maxlength="200"
-                />
-                <!-- @change="handleChange" -->
-                <span @click="handleSearch" class="searchIcon">
-                    <i-icon type="search" size="18" />
-                </span>
-            </div>
-            <div class="searchHistory">
-                <p>搜索历史</p>
-                <div class="itemWrap" :class="{showMore:history}">
-                    <span class="item">一房一厅</span>
-                    <span class="item">一房一厅</span>
-                    <span class="item">单间</span>
-                    <div class="showMoreBtn" @click="showMore('history')">
-                        显示更多
-                        <i-icon type="unfold"></i-icon>
-                    </div>
-                </div>
-            </div>
-            <div class="hotSearch">
-                <p>热门搜索</p>
-                <div class="itemWrap" :class="{showMore:hotSearch}">
-                    <span class="item">单间</span>
-                    <span class="item">近地铁</span>
-                    <span class="item">南北通透</span>
-                    <div class="showMoreBtn" @click="showMore('hotSearch')">
-                        显示更多
-                        <i-icon type="unfold"></i-icon>
-                    </div>
+    <div class="searchWrap" :style="{ paddingTop: top + 'px' }">
+        <!-- <div class="searchDrawer"> -->
+        <div class="searchInputWrap">
+            <input
+                class="searchInput"
+                v-bind:value="searchVal"
+                v-on:input="handleChange"
+                placeholder="请输入小区名称、地址、户型等"
+                confirm-type="search"
+                autofocus
+                @confirm="handleSearch"
+                maxlength="200"
+            />
+            <!-- @change="handleChange" -->
+            <span @click="handleSearch" class="searchIcon">
+                <i-icon type="search" size="18" />
+            </span>
+        </div>
+        <div class="searchHistory">
+            <p>搜索历史</p>
+            <div class="itemWrap" :class="{showMore:history}">
+                <span class="item">一房一厅</span>
+                <span class="item">一房一厅</span>
+                <span class="item">单间</span>
+                <div class="showMoreBtn" @click="showMore('history')">
+                    显示更多
+                    <i-icon type="unfold"></i-icon>
                 </div>
             </div>
         </div>
+        <div class="hotSearch">
+            <p>热门搜索</p>
+            <div class="itemWrap" :class="{showMore:hotSearch}">
+                <span class="item">单间</span>
+                <span class="item">近地铁</span>
+                <span class="item">南北通透</span>
+                <div class="showMoreBtn" @click="showMore('hotSearch')">
+                    显示更多
+                    <i-icon type="unfold"></i-icon>
+                </div>
+            </div>
+        </div>
+        <!-- </div> -->
     </div>
 </template>
 <script>
@@ -48,12 +49,22 @@ export default {
     data() {
         return {
             history: false,
-            hotSearch: false
+            hotSearch: false,
+            searchval: ""
         }
     },
     methods: {
         showMore(type) {
             this[type] = true
+        },
+        handleChange(e) {
+            this.searchval = e.mp.detail.value
+        },
+        handleSearch() {
+            // console.log(999, this.searchval)
+            wx.navigateTo({
+                url: `./searchList/main?searchVal=${this.searchval}`
+            })
         }
     }
 }
@@ -61,69 +72,72 @@ export default {
 <style lang="less">
 @import "../../style/common";
 // 侧滑抽屉内容
-.drawerWrap {
-    // height: 100vh;
-    padding: 20px;
-    transition: left ease-in-out 500ms;
-    .searchDrawer {
-        padding: 0 10px;
-        height: calc(100vh - 70px);
-        background: #fff;
-        border-radius: 10px;
+// .searchWrap {
+// height: 100vh;
+// padding: 20px;
+// transition: left ease-in-out 500ms;
+.searchWrap {
+    padding: 10px;
+    height: 100vh;
+    background: #fff;
+    border-radius: 10px;
+    .searchInputWrap {
+        position: relative;
+        border: 1px solid #ccc;
+        border-radius: 20px;
         .searchIcon {
             position: absolute;
-            left: 5px;
-            top: -1px;
+            left: 0;
+            top: -6px;
             line-height: 76rpx;
-            padding: 0 10rpx;
+            padding: 0 10px;
+            width: 20px;
+            height: 20px;
+            color: #999;
         }
-        .searchInputWrap {
+    }
+    .searchInput {
+        padding-left: 30px;
+        height: 30px;
+    }
+    .searchHistory,
+    .hotSearch {
+        font-size: 12px;
+        & > p {
+            font-weight: bold;
+            padding: 10px 0;
+        }
+        .itemWrap {
+            max-height: 100px;
+            overflow: hidden;
             position: relative;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-        }
-        .searchInput {
-            padding-left: 30px;
-            height: 30px;
-        }
-        .searchHistory,
-        .hotSearch {
-            font-size: 12px;
-            & > p {
-                font-weight: bold;
-                padding: 10px 0;
-            }
-            .itemWrap {
-                max-height: 100px;
-                overflow: hidden;
-                position: relative;
-                &.showMore {
-                    max-height: 100%;
-                    .showMoreBtn {
-                        display: none;
-                    }
-                }
-                .item {
-                    display: inline-block;
-                    padding: 2px 10px;
-                    background: @graylightBg;
-                    border-radius: 15px;
-                    color: @grayText;
-                    margin-right: 10px;
-                    margin-bottom: 5px;
-                    white-space: nowrap;
-                }
+            &.showMore {
+                max-height: 100%;
                 .showMoreBtn {
-                    position: absolute;
-                    background: #fff;
-                    top: 84px;
-                    width: 100%;
-                    text-align: center;
-                    line-height: 18px;
-                    // margin-left: -30px;
+                    display: none;
                 }
+            }
+            .item {
+                display: inline-block;
+                padding: 2px 10px;
+                background: @graylightBg;
+                border-radius: 15px;
+                color: @grayText;
+                margin-right: 10px;
+                margin-bottom: 5px;
+                white-space: nowrap;
+            }
+            .showMoreBtn {
+                position: absolute;
+                background: #fff;
+                top: 84px;
+                width: 100%;
+                text-align: center;
+                line-height: 18px;
+                // margin-left: -30px;
             }
         }
     }
 }
+// }
 </style>

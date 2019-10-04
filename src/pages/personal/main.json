@@ -1,10 +1,9 @@
 {
-    "navigationStyle": "custom",
-    "navigationBarTitleText": "个人中心",
-    "usingComponents": {
-        "i-button": "../../../static/iview/button/index",
-        "i-input": "../../../static/iview/input/index",
-        "i-icon": "../../../static/iview/icon/index",
-        "i-modal": "../../../static/iview/modal/index"
-    }
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "i-button": "../../../static/iview/button/index",
+    "i-input": "../../../static/iview/input/index",
+    "i-icon": "../../../static/iview/icon/index",
+    "i-modal": "../../../static/iview/modal/index"
+  }
 }
