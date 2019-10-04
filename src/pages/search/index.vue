@@ -70,7 +70,6 @@ export default {
         height: calc(100vh - 70px);
         background: #fff;
         border-radius: 10px;
-        padding-top: 20px;
         .searchIcon {
             position: absolute;
             left: 5px;
@@ -85,6 +84,7 @@ export default {
         }
         .searchInput {
             padding-left: 30px;
+            height: 30px;
         }
         .searchHistory,
         .hotSearch {

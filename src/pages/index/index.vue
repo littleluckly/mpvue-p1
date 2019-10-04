@@ -37,7 +37,7 @@
 
                     <SaleListItem
                         @linkTo="linkToDetail(item)"
-                        v-for="(item,idx) in smallHouseList"
+                        v-for="(item,idx) in saleList"
                         :key="item.name+idx"
                         :data="item"
                     />
@@ -93,70 +93,14 @@ export default {
                     text: "军产房: 军产房是指军队享有房屋所有权的房屋。",
                     type: "armyHouse"
                 }
-            ],
-            smallHouseList: [
-                {
-                    src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "华侨新苑",
-                    type: "村委楼",
-                    price: 55,
-                    layout: "三室",
-                    decoraction: "简装",
-                    area: 99,
-                    tags: ["带花园", "停车场", "使用率高"]
-                },
-                {
-                    src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "大富豪花园",
-                    type: "村委楼",
-                    price: 125,
-                    layout: "三室",
-                    decoraction: "精装",
-                    area: 112,
-                    tags: ["使用率高", "高品质"]
-                },
-                {
-                    src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "宝安花园",
-                    type: "村委楼",
-                    price: 155,
-                    layout: "三室",
-                    decoraction: "毛坯",
-                    area: 112,
-                    tags: ["使用率高", "高品质"]
-                },
-                {
-                    src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "宝安花园",
-                    type: "村委楼",
-                    price: 130,
-                    layout: "三室",
-                    decoraction: "毛坯",
-                    area: 112,
-                    tags: ["使用率高", "高品质"]
-                },
-                {
-                    src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "宝安花园",
-                    type: "村委楼",
-                    price: 130,
-                    layout: "三室",
-                    decoraction: "毛坯",
-                    area: 112,
-                    tags: ["使用率高", "高品质"]
-                }
             ]
         }
     },
     computed: {
         ...mapState({
             rentRecommendList: state => state.rentStore.rentRecommendList
-        })
+        }),
+        ...mapState("saleStore/", ["saleList"])
     },
     onShow() {
         // wx.pageScrollTo({
@@ -165,10 +109,10 @@ export default {
     },
     onHide() {},
     created() {
-        this.fetchRecommendList()
+        this.fetchSaleList()
     },
     methods: {
-        ...mapActions("rentStore/", ["fetchRecommendList"]),
+        ...mapActions("saleStore/", ["fetchSaleList"]),
         handleChange({
             map: {
                 target: {
