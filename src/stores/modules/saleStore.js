@@ -12,6 +12,12 @@ export default {
     },
     searchList(state, payload) {
       state.searchList = payload
+    },
+    searchHistoryList(state, payload) {
+      state.searchHistoryList = payload
+    },
+    hostSearchList(state, payload) {
+      state.hostSearchList = payload
     }
   },
   actions: {
@@ -29,6 +35,20 @@ export default {
       }
       console.log("saleList::", res)
     },
-    searchSaleList({ commit }, params = {}) {}
+    searchSaleList({ commit }, params = {}) {},
+    async fetchSearchHistory({ commit }, params = {}) {
+      const result = await request({
+        url: "/sales/searchHistory",
+        method: "get",
+        data: { ...params }
+      })
+      const { statusCode, data } = result
+      if (statusCode === 200) {
+        commit("searchHistoryList", data)
+      } else {
+        commit("searchHistoryList", [])
+      }
+      console.log("searchHistoryList::", res)
+    }
   }
 }

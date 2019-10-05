@@ -97,12 +97,8 @@
                 style="width: 100%; height: 200px;"
                 :latitude="latitude"
                 :longitude="longitude"
-                :markers="markers"
                 show-location
             ></map>
-            <!-- :covers="covers" -->
-
-            <i-button @click="includePoints">缩放</i-button>
         </div>
         <Consult />
         <!-- <cover-view class="consult">
@@ -166,8 +162,8 @@ export default {
                     "使用率高"
                 ]
             },
-            latitude: 23.099994,
-            longitude: 113.32452,
+            latitude: null,
+            longitude: null,
             markers: [
                 {
                     id: 1,
@@ -192,49 +188,36 @@ export default {
     },
     onLoad() {
         var that = this
-        wx.showLoading({
-            title: "定位中",
-            mask: true
-        })
 
-        wx.getLocation({
-            type: "wgs84",
-            //定位成功，更新定位结果
-            success: function(res) {
-                var latitude = res.latitude
-                var longitude = res.longitude
-                var speed = res.speed
-                var accuracy = res.accuracy
-                //经纬度转化为地址
-                // that.getLocal(latitude, longitude)
-                // that.longitude = 22.524117
-                // that.latitude = 113.92358
-                that.longitude = 113.92358
-                that.latitude = 22.524117
-                that.markers = [
-                    {
-                        id: 1,
-                        latitude: 22.524117,
-                        longitude: 113.92358
-                    }
-                ]
-                that.speed = speed
-                that.accuracy = accuracy
-                console.log("res999999", res)
-            },
-            //定位失败回调
-            fail: function() {
-                wx.showToast({
-                    title: "定位失败",
-                    icon: "none"
-                })
-            },
+        // wx.getLocation({
+        //     type: "wgs84",
+        //     //定位成功，更新定位结果
+        //     success: function(res) {
+        //         var latitude = res.latitude
+        //         var longitude = res.longitude
+        //         var speed = res.speed
+        //         var accuracy = res.accuracy
+        //         //经纬度转化为地址
+        //         that.getLocal(latitude, longitude)
+        //         that.longitude = longitude
+        //         that.latitude = latitude
+        //         that.speed = speed
+        //         that.accuracy = accuracy
+        //         console.log("res999999", res)
+        //     },
+        //     //定位失败回调
+        //     fail: function() {
+        //         wx.showToast({
+        //             title: "定位失败",
+        //             icon: "none"
+        //         })
+        //     },
 
-            complete: function() {
-                //隐藏定位中信息进度
-                wx.hideLoading()
-            }
-        })
+        //     complete: function() {
+        //         //隐藏定位中信息进度
+        //         wx.hideLoading()
+        //     }
+        // })
     },
     computed: {},
     methods: {
@@ -257,15 +240,15 @@ export default {
             let vm = this
             qqmapsdk.reverseGeocoder({
                 location: {
-                    latitude: latitude,
-                    longitude: longitude
+                    latitude: 22.53336,
+                    longitude: 113.93041
                 },
                 success: function(res) {
                     let province = res.result.ad_info.province
                     let city = res.result.ad_info.city
                     let district = res.result.ad_info.district
                     this.district = district
-                    console.log("district", district)
+                    console.log("district", res.result, district)
                     // vm.setData({
                     //     province: province, //省
                     //     city: city, //市
@@ -273,7 +256,7 @@ export default {
                     // });
                 },
                 fail: function(res) {
-                    console.log(res)
+                    console.log("err:", res)
                 },
                 complete: function(res) {
                     // console.log(res);
@@ -283,6 +266,8 @@ export default {
     },
     mounted() {
         this.mapCtx = wx.createMapContext("myMap")
+
+        this.getLocal()
     }
 }
 </script>
