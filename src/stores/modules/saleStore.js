@@ -3,28 +3,32 @@ export default {
   name: "saleStore",
   namespaced: true,
   state: {
-    saleList: []
+    saleList: [],
+    searchList: []
   },
   mutations: {
     saleList(state, payload) {
       state.saleList = payload
+    },
+    searchList(state, payload) {
+      state.searchList = payload
     }
   },
   actions: {
-    fetchSaleList({ commit }, params = {}) {
-      request({
+    async fetchSaleList({ commit }, params = {}) {
+      const result = await request({
         url: "/sales/fetchList",
         method: "get",
-        success: function(res) {
-          const { statusCode, data } = res
-          if (statusCode === 200) {
-            commit("saleList", data)
-          } else {
-            commit("saleList", [])
-          }
-          console.log("saleList::", res)
-        }
+        data: { ...params }
       })
-    }
+      const { statusCode, data } = result
+      if (statusCode === 200) {
+        commit("saleList", data)
+      } else {
+        commit("saleList", [])
+      }
+      console.log("saleList::", res)
+    },
+    searchSaleList({ commit }, params = {}) {}
   }
 }

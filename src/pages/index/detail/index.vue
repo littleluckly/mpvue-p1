@@ -1,5 +1,24 @@
 <template>
-    <div class="smallHouseDetail">
+    <div class="homePageWrap">
+        <div class="topBg">
+            <img
+                src="http://a2.qpic.cn/psb?/V10roI243u0y8c/RM7FnlgDjuVx0O*cIyKmaPaAaC1tDA3Sf3YHFQX3LzA!/m/dAUBAAAAAAAAnull&bo=0ALgAQAAAAARBwM!&rf=photolist&t=5"
+                height="180px"
+                alt
+            />
+            <img
+                class="wave"
+                src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif"
+                alt
+            />
+            <div
+                v-bind:style="{ textAlign:'center', color:'white',position:'absolute', fontSize:'14px',top: top + 'px', height:height+'px',width:'100%', lineHeight:height+'px' }"
+            >
+                <navigator open-type="navigateBack" style="float:left;padding:0 10px;">
+                    <i-icon type="return" size="18" />
+                </navigator>详情
+            </div>
+        </div>
         <div class="pictureArea">
             <swiper
                 class="swiper"
@@ -94,6 +113,7 @@
 </template>
 
 <script>
+import calcCapsulePosi from "@/mixins/calcCapsulePosi"
 import Consult from "@/components/consult"
 import QQMapWX from "../../../utils/qqmap-wx-jssdk.min.js"
 // 实例化API核心类
@@ -101,6 +121,7 @@ var qqmapsdk = new QQMapWX({
     key: "IHIBZ-EPZRS-A7VOO-6OXF6-BEVN7-7EFMU" // 必填
 })
 export default {
+    mixins: [calcCapsulePosi],
     components: { Consult },
     data() {
         return {
@@ -266,127 +287,145 @@ page {
 .clear {
     clear: both;
 }
-.pictureArea {
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    background: #ffffff;
-    .slide-image {
-        width: 100%;
-    }
-    .title {
-        padding: 10px;
-        font-size: 20px;
-    }
-    .tagsWrap {
-        display: flex;
-        line-height: 26px;
-        .tags {
-            flex: 1;
-            font-size: 12px;
-            padding: 0 10px;
-            &::-webkit-scrollbar {
-                display: none;
-            }
-            .i-tags {
-                margin-right: 5px;
-            }
-        }
-        .icon {
-            width: 60px;
-            margin-right: 10px;
-            color: @grayIcon;
-        }
-    }
-    .swiperItem {
+.homePageWrap {
+    .topBg {
         position: relative;
-        .videoBtn {
+        img {
+            height: 120px;
+            width: 100%;
+        }
+        .wave {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translateX(-24px) translateY(-24px);
-            color: #ffffff;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            z-index: 99;
+            mix-blend-mode: screen;
+            height: 50px;
         }
     }
-}
-
-.baseInfo {
-    background: #ffffff;
-    padding: 0 10px;
-    margin-bottom: 10px;
-    .baseInfoTitle {
-        padding-top: 10px;
-        font-size: 16px;
-        font-weight: bold;
-    }
-    .importantInfo {
-        display: flex;
-        justify-content: center;
-        padding: 20px 0;
-        border-bottom: 1px solid #f1f1f1;
-        .item {
-            flex-grow: 1;
-            text-align: center;
-            .label {
-                margin-bottom: 5px;
-                font-size: 12px;
-                color: #999;
-            }
-            .value {
-                color: @primary;
-                font-size: 16px;
-            }
-        }
-    }
-    .info {
-        padding: 20px 0;
-        .infoItem {
-            display: flex;
-            vertical-align: top;
-            box-sizing: border-box;
-            .label {
-                color: #666;
-                width: 50px;
-            }
-            .value {
-                flex: 1;
-                color: #333;
-            }
-        }
-    }
-}
-.mapWrap {
-    background: #fff;
-    padding: 10px;
-    .mapTitle {
-        font-size: 16px;
-        font-weight: bold;
+    .pictureArea {
         margin-bottom: 10px;
+        padding-bottom: 10px;
+        background: #ffffff;
+        .slide-image {
+            width: 100%;
+        }
+        .title {
+            padding: 10px;
+            font-size: 20px;
+        }
+        .tagsWrap {
+            display: flex;
+            line-height: 26px;
+            .tags {
+                flex: 1;
+                font-size: 12px;
+                padding: 0 10px;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+                .i-tags {
+                    margin-right: 5px;
+                }
+            }
+            .icon {
+                width: 60px;
+                margin-right: 10px;
+                color: @grayIcon;
+            }
+        }
+        .swiperItem {
+            position: relative;
+            .videoBtn {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translateX(-24px) translateY(-24px);
+                color: #ffffff;
+            }
+        }
     }
-}
-.consult {
-    position: fixed;
-    width: 30px;
-    height: 30px;
-    bottom: 60px;
-    right: 15px;
-    // background: rgba(0, 0, 0, 0.4);
-    border-radius: 50%;
-    color: @primary;
-    padding: 5px;
-    .consultBtn {
-        padding: 0px;
-        background: rgba(0, 0, 0, 0);
-        color: transparent;
-        border: none;
-        outline: none;
-        position: absolute;
-        top: 0;
-        box-shadow: none;
-        z-index: 10;
+
+    .baseInfo {
+        background: #ffffff;
+        padding: 0 10px;
+        margin-bottom: 10px;
+        .baseInfoTitle {
+            padding-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .importantInfo {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #f1f1f1;
+            .item {
+                flex-grow: 1;
+                text-align: center;
+                .label {
+                    margin-bottom: 5px;
+                    font-size: 12px;
+                    color: #999;
+                }
+                .value {
+                    color: @primary;
+                    font-size: 16px;
+                }
+            }
+        }
+        .info {
+            padding: 20px 0;
+            .infoItem {
+                display: flex;
+                vertical-align: top;
+                box-sizing: border-box;
+                .label {
+                    color: #666;
+                    width: 50px;
+                }
+                .value {
+                    flex: 1;
+                    color: #333;
+                }
+            }
+        }
     }
-    img {
-        width: 100%;
-        height: 100%;
+    .mapWrap {
+        background: #fff;
+        padding: 10px;
+        .mapTitle {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    }
+    .consult {
+        position: fixed;
+        width: 30px;
+        height: 30px;
+        bottom: 60px;
+        right: 15px;
+        // background: rgba(0, 0, 0, 0.4);
+        border-radius: 50%;
+        color: @primary;
+        padding: 5px;
+        .consultBtn {
+            padding: 0px;
+            background: rgba(0, 0, 0, 0);
+            color: transparent;
+            border: none;
+            outline: none;
+            position: absolute;
+            top: 0;
+            box-shadow: none;
+            z-index: 10;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+        }
     }
 }
 </style>

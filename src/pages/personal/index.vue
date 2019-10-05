@@ -12,7 +12,11 @@
                 <p class="login">登录/注册</p>
                 <p class="loginTips">登录后可以拥有更多的服务</p>
             </div>
-            <img class="wave" src="https://image.weilanwl.com/gif/wave.gif" alt />
+            <img
+                class="wave"
+                src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif"
+                alt
+            />
         </div>
 
         <div class="myservice">

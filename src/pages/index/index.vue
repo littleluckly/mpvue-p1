@@ -3,11 +3,21 @@
         <!-- 首页普通内容 -->
         <div class="normalWrap">
             <div class="topBg">
-                <img src="/static/images/bg.jpg" height="180px" alt />
-                <img class="wave" src="https://image.weilanwl.com/gif/wave.gif" alt />
+                <img
+                    src="http://a3.qpic.cn/psb?/V10roI243u0y8c/ddehqkdpUBzJLY4cs.JsZJ8beLjHqUaSs.AtDPm8.rc!/m/dAYBAAAAAAAAnull&bo=NQQqAjUEKgIRCT4!&rf=photolist&t=5"
+                    height="180px"
+                    alt
+                />
+                <img
+                    class="wave"
+                    src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif"
+                    alt
+                />
                 <div
                     v-bind:style="{ textAlign:'center', color:'white',position:'absolute', fontSize:'14px',top: top + 'px', height:height+'px',width:'100%', lineHeight:height+'px' }"
-                >首页</div>
+                >
+                    <i-icon type="homepage" />首页
+                </div>
             </div>
             <div class="topWrap">
                 <!-- <span @click="linkToWelcome" class="logo">

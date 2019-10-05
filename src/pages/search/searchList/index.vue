@@ -22,6 +22,26 @@
                 <i-icon type="search" size="18" />
             </span>
         </div>-->
+        <div class="topBg">
+            <img
+                src="http://a4.qpic.cn/psb?/V10roI243u0y8c/9io9I1EObRQJpAWahel8RNPSUEfwPBBxvFOzC*3Xf0Q!/m/dL8AAAAAAAAAnull&bo=OAStAjgErQIRCT4!&rf=photolist&t=5"
+                height="180px"
+                alt
+            />
+            <img
+                class="wave"
+                src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif"
+                alt
+            />
+            <div
+                v-bind:style="{ textAlign:'center', color:'white',position:'absolute', fontSize:'14px',top: top + 'px', height:height+'px',width:'100%', lineHeight:height+'px' }"
+            >
+                <navigator open-type="navigateBack" style="float:left;padding:0 10px;">
+                    <i-icon type="return" size="18" />
+                </navigator>
+                {{searchVal}}
+            </div>
+        </div>
         <div class="filterArea">
             <div class="types">
                 <div class="filterType">
@@ -135,7 +155,7 @@ export default {
                     items: [
                         { label: "不限", value: "" },
                         { label: "龙岗", value: "" },
-                        { label: "龙华新区", value: "" },
+                        { label: "龙华", value: "" },
                         { label: "宝安", value: "" },
                         { label: "福田", value: "" },
                         { label: "南山", value: "" },
@@ -150,13 +170,11 @@ export default {
                     type: "price",
                     items: [
                         { label: "不限", value: "" },
-                        { label: "800以下", value: "800" },
-                        { label: "800~1000", value: "800-1000" },
-                        { label: "1000~1500", value: "1000-1500" },
-                        { label: "1500~2000", value: "1500-2000" },
-                        { label: "2000-2500", value: "2000-2500" },
-                        { label: "2500~3000", value: "2500-3000" },
-                        { label: "3000以上", value: "3000" }
+                        { label: "<80万", value: "80" },
+                        { label: "80~100万", value: "80-100" },
+                        { label: "100~120万", value: "100-120" },
+                        { label: "120~150万", value: "120-150" },
+                        { label: ">150万", value: "150" }
                     ]
                 },
                 {
@@ -168,15 +186,17 @@ export default {
                         { label: "两房", value: "3" },
                         { label: "三房", value: "4" },
                         { label: "四房", value: "5" },
-                        { label: "四房以上", value: "2500-3000" }
+                        { label: "四房以上", value: "6" }
                     ]
                 },
                 {
                     type: "rentType",
                     items: [
                         { label: "不限", value: "" },
-                        { label: "整租", value: "1" },
-                        { label: "合租", value: "2" }
+                        { label: "村委房", value: "1" },
+                        { label: "军产房", value: "2" },
+                        { label: "集资房", value: "2" },
+                        { label: "大红本房", value: "2" }
                     ]
                 }
             ]
@@ -193,7 +213,7 @@ export default {
         wx.setNavigationBarTitle({
             title: searchVal
         })
-        // this.searchRentList({ searchVal })
+        // this.searchSaleList({ searchVal })
     },
     //页面滚动执行方式
     onPageScroll(event) {
@@ -205,11 +225,11 @@ export default {
     },
     computed: {
         ...mapState({
-            searchList: state => state.rentStore.searchList
+            searchList: state => state.saleStore.searchList
         })
     },
     methods: {
-        ...mapActions("rentStore/", ["searchRentList"]),
+        ...mapActions("saleStore/", ["searchSaleList"]),
         backTo() {
             wx.switchTab({ url: "../main" })
             // wx.navigateBack({
@@ -233,7 +253,7 @@ export default {
             this.selectedTypes[type] = value == "不限" ? "" : value
             this.currSubType = ""
             const { layout, price, location, rentType } = this.selectedTypes
-            this.searchRentList({
+            this.searchSaleList({
                 searchVal: this.searchVal,
                 layout,
                 price,
@@ -257,6 +277,22 @@ export default {
 .rentSearchList {
     height: 100vh;
     background: @graylightBg;
+    .topBg {
+        position: relative;
+        img {
+            height: 180px;
+            width: 100%;
+        }
+        .wave {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            z-index: 99;
+            mix-blend-mode: screen;
+            height: 50px;
+        }
+    }
     .topWrap {
         width: 100%;
         padding-bottom: 10px;
