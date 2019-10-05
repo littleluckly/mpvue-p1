@@ -10,7 +10,7 @@
                 <span>{{data.price}}万</span>
             </p>
             <p class="layoutWrap">
-                <span class="decoraction">{{data.decoraction}}</span>
+                <span class="decoration">{{data.decoration}}</span>
                 <span class="layout">{{data.layout}}</span>
                 <span class="area">{{data.area}}</span>
             </p>

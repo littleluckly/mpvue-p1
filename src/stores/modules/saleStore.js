@@ -1,34 +1,34 @@
- export default {
-   name: 'saleStore',
-   namespaced: true,
-   state: {
-     saleList: []
-   },
-   mutations: {
-     saleList(state, payload) {
-       state.saleList = payload
-     }
-   },
-   actions: {
-     fetchSaleList({
-       commit
-     }, params = {}) {
-       wx.request({
-         url: 'https://localhost:9527/sales/fetchList',
-         method: 'get',
-         success: function (res) {
-           const {
-             statusCode,
-             data
-           } = res
-           if (statusCode === 200) {
-             commit("saleList", data)
-           } else {
-             commit("saleList", [])
-           }
-           console.log('saleList::', res)
-         }
-       })
-     }
-   }
- }
+import request from "@/utils/request"
+export default {
+  name: "saleStore",
+  namespaced: true,
+  state: {
+    saleList: [],
+    searchList: []
+  },
+  mutations: {
+    saleList(state, payload) {
+      state.saleList = payload
+    },
+    searchList(state, payload) {
+      state.searchList = payload
+    }
+  },
+  actions: {
+    async fetchSaleList({ commit }, params = {}) {
+      const result = await request({
+        url: "/sales/fetchList",
+        method: "get",
+        data: { ...params }
+      })
+      const { statusCode, data } = result
+      if (statusCode === 200) {
+        commit("saleList", data)
+      } else {
+        commit("saleList", [])
+      }
+      console.log("saleList::", res)
+    },
+    searchSaleList({ commit }, params = {}) {}
+  }
+}

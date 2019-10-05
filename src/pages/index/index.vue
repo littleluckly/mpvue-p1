@@ -2,13 +2,30 @@
     <div class="homepage">
         <!-- 首页普通内容 -->
         <div class="normalWrap">
-            <div class="topWrap" v-bind:style="{ paddingTop: top+height + 'px' }">
-                <span @click="linkToWelcome" class="logo">
+            <div class="topBg">
+                <img
+                    src="http://a3.qpic.cn/psb?/V10roI243u0y8c/ddehqkdpUBzJLY4cs.JsZJ8beLjHqUaSs.AtDPm8.rc!/m/dAYBAAAAAAAAnull&bo=NQQqAjUEKgIRCT4!&rf=photolist&t=5"
+                    height="180px"
+                    alt
+                />
+                <img
+                    class="wave"
+                    src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif"
+                    alt
+                />
+                <div
+                    v-bind:style="{ textAlign:'center', color:'white',position:'absolute', fontSize:'14px',top: top + 'px', height:height+'px',width:'100%', lineHeight:height+'px' }"
+                >
+                    <i-icon type="homepage" />首页
+                </div>
+            </div>
+            <div class="topWrap">
+                <!-- <span @click="linkToWelcome" class="logo">
                     <img src="/static/images/logo.png" alt />
-                </span>
+                </span>-->
                 <p
                     @click="linkToSearch"
-                    style="flex:1;line-height:38px;border:1px solid #f2f2f2;color:#666;border-radius:30px;padding-left:10px;background:#fff;"
+                    style="flex:1;height:30px;line-height:30px;border:1px solid #f2f2f2;color:#666;border-radius:30px;padding-left:10px;background:#fff;"
                 >搜索好房</p>
                 <span @click="handleSearch" class="searchIcon">
                     <i-icon type="search" size="18" color="#666" />
@@ -37,7 +54,7 @@
 
                     <SaleListItem
                         @linkTo="linkToDetail(item)"
-                        v-for="(item,idx) in smallHouseList"
+                        v-for="(item,idx) in saleList"
                         :key="item.name+idx"
                         :data="item"
                     />
@@ -93,70 +110,14 @@ export default {
                     text: "军产房: 军产房是指军队享有房屋所有权的房屋。",
                     type: "armyHouse"
                 }
-            ],
-            smallHouseList: [
-                {
-                    src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "华侨新苑",
-                    type: "村委楼",
-                    price: 55,
-                    layout: "三室",
-                    decoraction: "简装",
-                    area: 99,
-                    tags: ["带花园", "停车场", "使用率高"]
-                },
-                {
-                    src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "大富豪花园",
-                    type: "村委楼",
-                    price: 125,
-                    layout: "三室",
-                    decoraction: "精装",
-                    area: 112,
-                    tags: ["使用率高", "高品质"]
-                },
-                {
-                    src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "宝安花园",
-                    type: "村委楼",
-                    price: 155,
-                    layout: "三室",
-                    decoraction: "毛坯",
-                    area: 112,
-                    tags: ["使用率高", "高品质"]
-                },
-                {
-                    src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "宝安花园",
-                    type: "村委楼",
-                    price: 130,
-                    layout: "三室",
-                    decoraction: "毛坯",
-                    area: 112,
-                    tags: ["使用率高", "高品质"]
-                },
-                {
-                    src:
-                        "http://a1.qpic.cn/psb?/V10roI243u0y8c/il58CIlDzx18S1xWVpiRyA7zVbMPE5RlQpsacu21lrE!/m/dLgAAAAAAAAAnull&bo=fAeoAwAAAAADB*I!&rf=photolist&t=5",
-                    name: "宝安花园",
-                    type: "村委楼",
-                    price: 130,
-                    layout: "三室",
-                    decoraction: "毛坯",
-                    area: 112,
-                    tags: ["使用率高", "高品质"]
-                }
             ]
         }
     },
     computed: {
         ...mapState({
             rentRecommendList: state => state.rentStore.rentRecommendList
-        })
+        }),
+        ...mapState("saleStore/", ["saleList"])
     },
     onShow() {
         // wx.pageScrollTo({
@@ -165,10 +126,10 @@ export default {
     },
     onHide() {},
     created() {
-        this.fetchRecommendList()
+        this.fetchSaleList()
     },
     methods: {
-        ...mapActions("rentStore/", ["fetchRecommendList"]),
+        ...mapActions("saleStore/", ["fetchSaleList"]),
         handleChange({
             map: {
                 target: {
@@ -255,6 +216,22 @@ export default {
         transition: all ease-in-out 500ms;
         width: 100%;
         background: #fff;
+        .topBg {
+            position: relative;
+            img {
+                height: 180px;
+                width: 100%;
+            }
+            .wave {
+                position: absolute;
+                width: 100%;
+                bottom: 0;
+                left: 0;
+                z-index: 99;
+                mix-blend-mode: screen;
+                height: 50px;
+            }
+        }
         .mask {
             display: none;
             position: absolute;
@@ -263,15 +240,13 @@ export default {
             background: transparent;
         }
         .topWrap {
-            display: flex;
-            height: 60px;
-            align-items: center;
-            background: #5cadff;
+            position: relative;
+            padding: 10px;
             .searchIcon {
-                position: relative;
-                left: -30px;
-                top: 0;
-                line-height: 38px;
+                position: absolute;
+                right: 15px;
+                top: 10px;
+                line-height: 30px;
                 padding: 0 8px;
             }
             .logo {

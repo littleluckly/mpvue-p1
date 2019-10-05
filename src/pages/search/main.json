@@ -1,6 +1,9 @@
 {
+  "navigationStyle": "custom",
   "navigationBarBackgroundColor": "#5cadff",
   "navigationBarTextStyle": "white",
   "navigationBarTitleText": "搜索",
-  "usingComponents": {}
+  "usingComponents": {
+    "i-icon": "../../../static/iview/icon/index"
+  }
 }
