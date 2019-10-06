@@ -71,6 +71,7 @@ import { mapActions, mapState } from "vuex"
 import calcCapsulePosi from "@/mixins/calcCapsulePosi"
 import SaleListItem from "@/components/SaleListItem"
 import Consult from "@/components/consult"
+import request from "@/utils/request"
 export default {
     mixins: [calcCapsulePosi],
     components: { SaleListItem, Consult },
@@ -118,6 +119,36 @@ export default {
             rentRecommendList: state => state.rentStore.rentRecommendList
         }),
         ...mapState("saleStore/", ["saleList"])
+    },
+    onLoad() {
+        wx.checkSession({
+            success() {
+                //session_key 未过期，并且在本生命周期一直有效
+            },
+            fail() {
+                // session_key 已经失效，需要重新执行登录流程
+                wx.login({
+                    success(res) {
+                        if (res.code) {
+                            //发起网络请求
+                            request({
+                                url: "/login/jscode2session",
+                                data: {
+                                    code: res.code
+                                }
+                            }).then(res => {
+                                wx.setStorage({
+                                    key: "loginIfo",
+                                    data: res.data
+                                })
+                            })
+                        } else {
+                            console.log("登录失败！" + res.errMsg)
+                        }
+                    }
+                })
+            }
+        })
     },
     onShow() {
         // wx.pageScrollTo({
