@@ -11,43 +11,25 @@ const store = new Vuex.Store({
     saleStore,
     rentStore
   },
-  state: {
-    count: 0,
-    homepageList: [],
-    drawerVisible: false
-  },
-  mutations: {
-    increment: state => {
-      state.count += 1
-    },
-    decrement: state => {
-      state.count -= 1
-    },
-    homepageList: (state, payload) => {
-      state.homepageList = payload
-    },
-    drawerVisible: (state, payload) => {
-      state.drawerVisible = payload
-    }
-  },
+  state: {},
+  mutations: {},
   actions: {
-    fetchHomepageList({ commit }, params) {
-      wx.request({
-        url: "https://localhost:9527/rent/fetchList",
-        method: "get",
-        success: function(res) {
-          const { statusCode, data } = res
-          if (statusCode === 200) {
-            commit("homepageList", data)
-          } else {
-            commit("homepageList", [])
-          }
-          console.log("res::", res)
-        }
+    async getSession({ dispatch }, params = {}) {
+      const result = await request({
+        url: "/login/jscode2session",
+        data: { code: params.code }
       })
+      if (result.statusCode == 200) {
+        dispatch("saveUserInfo", { ...params, ...result.data })
+      }
     },
-    toggleDrawerVisible({ commit }, flag) {
-      commit("drawerVisible", flag)
+    async saveUserInfo(ctx, params) {
+      const result = request({
+        url: "/login/userInfo",
+        method: "POST",
+        data: { ...params }
+      })
+      console.log("result", result)
     }
   }
 })

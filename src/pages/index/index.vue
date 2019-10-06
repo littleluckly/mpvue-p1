@@ -71,6 +71,7 @@ import { mapActions, mapState } from "vuex"
 import calcCapsulePosi from "@/mixins/calcCapsulePosi"
 import SaleListItem from "@/components/SaleListItem"
 import Consult from "@/components/consult"
+import request from "@/utils/request"
 export default {
     mixins: [calcCapsulePosi],
     components: { SaleListItem, Consult },
@@ -119,15 +120,14 @@ export default {
         }),
         ...mapState("saleStore/", ["saleList"])
     },
+    onLoad() {},
     onShow() {
         // wx.pageScrollTo({
         //     scrollTop: 0
         // })
     },
     onHide() {},
-    created() {
-        this.fetchSaleList()
-    },
+    created() {},
     methods: {
         ...mapActions("saleStore/", ["fetchSaleList"]),
         handleChange({
@@ -178,7 +178,10 @@ export default {
             })
         }
     },
-    mounted() {},
+    mounted() {
+        console.log("222")
+        this.fetchSaleList()
+    },
     //页面滚动执行方式
     onPageScroll(event) {
         console.log("scroll")

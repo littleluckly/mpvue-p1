@@ -2,14 +2,12 @@
     <div class="personal">
         <div class="userInfo">
             <div class="avatar">
-                <img v-if="userInfo.avatar" :src="userInfo.avatar" alt />
+                <img v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" alt />
                 <img v-else src="/static/images/personal.png" alt />
             </div>
-            <div class="info" v-if="code">
-                <p>八块腹肌的坏蛋</p>
-            </div>
-            <div @click="handleLogin" v-else>
-                <p class="login">登录/注册</p>
+            <div class="info" v-if="hasLogin">{{userInfo.nickName}}</div>
+            <div v-else>
+                <button open-type="getUserInfo" @getuserinfo="getUserInfo">登录/注册</button>
                 <p class="loginTips">登录后可以拥有更多的服务</p>
             </div>
             <img
@@ -18,7 +16,6 @@
                 alt
             />
         </div>
-
         <div class="myservice">
             <div class="item sperator" @click="navigateTo('collection')">
                 <p>我的收藏</p>
@@ -61,32 +58,21 @@
                 </li>
             </ul>
         </div>
-        <div class="footer">退出登录</div>
-        <i-modal
-            :visible="loginModalVisible"
-            :actions="loginModalActions"
-            @click="handleClick3"
-            i-class="loginModal"
-        >
-            <div>蜗居深圳</div>
-            <p>蜗居深圳申请获取一下权限：</p>
-            <p>申请获取您的公开信息（头像、昵称等）</p>
-        </i-modal>
+        <!-- <div class="footer" @click="handleLogout">退出登录</div> -->
+
         <Consult />
     </div>
 </template>
 
 <script>
 import Consult from "@/components/consult"
+import { mapActions } from "vuex"
 export default {
     components: { Consult },
     data() {
         return {
-            userInfo: {
-                avatar:
-                    "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2884107401,3797902000&fm=27&gp=0.jpg"
-            },
-            code: "",
+            userInfo: {},
+            hasLogin: false,
             loginModalVisible: false,
             loginModalActions: [
                 {
@@ -100,45 +86,93 @@ export default {
         }
     },
     computed: {},
-    created() {
-        // wx.getStorage({
-        //     key: "code",
-        //     success: res => {
-        //         console.log("getCode", res.data)
-        //         this.code = res.data
-        //     }
-        // })
-        // wx.login({
-        //     success: res => {
-        //         wx.setStorage({
-        //             key: "code",
-        //             data: res.code
-        //         })
-        //     }
-        // })
+    onLoad() {
+        const that = this
+
+        wx.checkSession({
+            success() {
+                wx.getStorage({
+                    key: "userInfo",
+                    success(res) {
+                        if (!res.data) {
+                            return
+                        }
+                        that.userInfo = res.data
+                        that.hasLogin = true
+                    }
+                })
+            },
+            fail() {
+                wx.removeStorage({
+                    key: "userInfo"
+                })
+            }
+        })
     },
     methods: {
+        ...mapActions(["getSession", "saveUserInfo"]),
+        getUserInfo(e) {
+            const that = this
+            const { userInfo } = e.mp.detail
+            if (!userInfo) {
+                that.hasLogin = false
+                wx.clearStorage()
+                return
+            }
+            wx.checkSession({
+                success() {
+                    //session_key 未过期，并且在本生命周期一直有效
+                    that.hasLogin = true
+                    that.userInfo = { ...userInfo }
+
+                    wx.setStorage({
+                        key: "userInfo",
+                        data: userInfo
+                    })
+                    console.log(userInfo)
+                },
+                fail() {
+                    that.hasLogin = false
+                    // session_key 已经失效，需要重新执行登录流程
+                    wx.login({
+                        success: async res => {
+                            if (res.code) {
+                                const result = await that.getSession({
+                                    ...userInfo,
+                                    code: res.code
+                                })
+                                that.hasLogin = true
+                                that.userInfo = { ...userInfo }
+
+                                wx.setStorage({
+                                    key: "userInfo",
+                                    data: userInfo
+                                })
+                            } else {
+                                console.log("登录失败！" + res.errMsg)
+                            }
+                        }
+                    })
+                }
+            })
+        },
+        handleLogout() {
+            console.log("退出登录")
+            this.userInfo = {}
+            this.hasLogin = false
+            wx.clearStorage()
+            wx.login({
+                success(res) {
+                    console.log(res)
+                    that.getSession({ code: res.data })
+                }
+            })
+        },
         navigateTo(page) {
             wx.navigateTo({ url: `../${page}/main` })
         },
         linkTo() {
             wx.navigateTo({ url: `./publishNewHouse/main` })
-        },
-        handleClick3(a) {
-            // const index = detail.index
-            console.log(a)
-
-            // if (index === 0) {
-            //     console.log("aa")
-            // } else if (index === 1) {
-            //     console.log("bbb")
-            // }
-
-            this.loginModalVisible = false
-        },
-        handleLogin() {
-            console.log("llll")
-            this.loginModalVisible = true
         }
     },
     mounted() {}
@@ -176,15 +210,25 @@ export default {
                 border-radius: 50%;
             }
         }
-        .login {
-            margin-bottom: 10px;
+        // .login {
+        //     margin-bottom: 10px;
+        //     color: #fff;
+        button {
+            background: @primaryBg;
             color: #fff;
+            border: none;
+            &::after {
+                border: none;
+            }
         }
+        // }
         .loginTips {
             color: #fff;
         }
         .info {
             flex: 1;
+            font-size: 18px;
+            color: #fff;
         }
         .wave {
             position: absolute;
