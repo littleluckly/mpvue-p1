@@ -120,45 +120,14 @@ export default {
         }),
         ...mapState("saleStore/", ["saleList"])
     },
-    onLoad() {
-        wx.checkSession({
-            success() {
-                //session_key 未过期，并且在本生命周期一直有效
-            },
-            fail() {
-                // session_key 已经失效，需要重新执行登录流程
-                wx.login({
-                    success(res) {
-                        if (res.code) {
-                            //发起网络请求
-                            request({
-                                url: "/login/jscode2session",
-                                data: {
-                                    code: res.code
-                                }
-                            }).then(res => {
-                                wx.setStorage({
-                                    key: "loginIfo",
-                                    data: res.data
-                                })
-                            })
-                        } else {
-                            console.log("登录失败！" + res.errMsg)
-                        }
-                    }
-                })
-            }
-        })
-    },
+    onLoad() {},
     onShow() {
         // wx.pageScrollTo({
         //     scrollTop: 0
         // })
     },
     onHide() {},
-    created() {
-        this.fetchSaleList()
-    },
+    created() {},
     methods: {
         ...mapActions("saleStore/", ["fetchSaleList"]),
         handleChange({
@@ -209,7 +178,10 @@ export default {
             })
         }
     },
-    mounted() {},
+    mounted() {
+        console.log("222")
+        this.fetchSaleList()
+    },
     //页面滚动执行方式
     onPageScroll(event) {
         console.log("scroll")

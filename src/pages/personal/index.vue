@@ -58,7 +58,7 @@
                 </li>
             </ul>
         </div>
-        <div class="footer">退出登录</div>
+        <!-- <div class="footer" @click="handleLogout">退出登录</div> -->
 
         <Consult />
     </div>
@@ -94,6 +94,9 @@ export default {
                 wx.getStorage({
                     key: "userInfo",
                     success(res) {
+                        if (!res.data) {
+                            return
+                        }
                         that.userInfo = res.data
                         that.hasLogin = true
                     }
@@ -109,8 +112,13 @@ export default {
     methods: {
         ...mapActions(["getSession", "saveUserInfo"]),
         getUserInfo(e) {
-            const { userInfo } = e.mp.detail
             const that = this
+            const { userInfo } = e.mp.detail
+            if (!userInfo) {
+                that.hasLogin = false
+                wx.clearStorage()
+                return
+            }
             wx.checkSession({
                 success() {
                     //session_key 未过期，并且在本生命周期一直有效
@@ -124,6 +132,7 @@ export default {
                     console.log(userInfo)
                 },
                 fail() {
+                    that.hasLogin = false
                     // session_key 已经失效，需要重新执行登录流程
                     wx.login({
                         success: async res => {
@@ -144,6 +153,18 @@ export default {
                             }
                         }
                     })
+                }
+            })
+        },
+        handleLogout() {
+            console.log("退出登录")
+            this.userInfo = {}
+            this.hasLogin = false
+            wx.clearStorage()
+            wx.login({
+                success(res) {
+                    console.log(res)
+                    that.getSession({ code: res.data })
                 }
             })
         },
