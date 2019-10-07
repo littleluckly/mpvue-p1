@@ -37,7 +37,7 @@
                 </block>
             </swiper>
             <div>
-                <p class="title">6号线坂雪岗站，精装修，拎包入住，舒适干净整洁，随时入住</p>
+                <p class="title">{{saleDetail.name}}</p>
 
                 <div class="tagsWrap">
                     <p class="tags">
@@ -49,8 +49,16 @@
                             color="red"
                         >{{tag}}</i-tag>
                     </p>
-                    <span class="icon">
-                        <i-icon type="collection" size="22" />收藏
+                    <span
+                        class="icon"
+                        :class="{focus:saleDetail.focus==1}"
+                        @click="handleFocusSale({focus:!(saleDetail.focus==1), id:saleDetail.id})"
+                    >
+                        <i-icon
+                            :type="saleDetail.focus==1?'collection_fill':'collection'"
+                            :color="saleDetail.focus==1?'#eb5f00':'#999'"
+                            size="22"
+                        />收藏
                     </span>
                 </div>
             </div>
@@ -116,6 +124,7 @@
 import calcCapsulePosi from "@/mixins/calcCapsulePosi"
 import Consult from "@/components/consult"
 import QQMapWX from "../../../utils/qqmap-wx-jssdk.min.js"
+import { mapActions, mapState } from "vuex"
 // 实例化API核心类
 var qqmapsdk = new QQMapWX({
     key: "IHIBZ-EPZRS-A7VOO-6OXF6-BEVN7-7EFMU" // 必填
@@ -172,111 +181,35 @@ export default {
                 {
                     id: 1,
                     latitude: 23.099994,
-                    longitude: 113.32452,
-                    name: "T.I.T 创意园"
+                    longitude: 113.32452
                 }
             ]
-            // covers: [
-            //     {
-            //         latitude: 23.099994,
-            //         longitude: 113.34452,
-            //         iconPath: "/static/images/phone.png"
-            //     },
-            //     {
-            //         latitude: 23.099994,
-            //         longitude: 113.30452,
-            //         iconPath: "/static/images/phone.png"
-            //     }
-            // ]
         }
     },
-    onLoad() {
+    onLoad(query = {}) {
         var that = this
-        wx.showLoading({
-            title: "定位中",
-            mask: true
-        })
-
-        wx.getLocation({
-            type: "wgs84",
-            //定位成功，更新定位结果
-            success: function(res) {
-                var latitude = res.latitude
-                var longitude = res.longitude
-                var speed = res.speed
-                var accuracy = res.accuracy
-                //经纬度转化为地址
-                // that.getLocal(latitude, longitude)
-                // that.longitude = 22.524117
-                // that.latitude = 113.92358
-                that.longitude = 113.92358
-                that.latitude = 22.524117
-                that.markers = [
-                    {
-                        id: 1,
-                        latitude: 22.524117,
-                        longitude: 113.92358
-                    }
-                ]
-                that.speed = speed
-                that.accuracy = accuracy
-                console.log("res999999", res)
-            },
-            //定位失败回调
-            fail: function() {
-                wx.showToast({
-                    title: "定位失败",
-                    icon: "none"
-                })
-            },
-
-            complete: function() {
-                //隐藏定位中信息进度
-                wx.hideLoading()
+        const { id } = query
+        console.log("id", id)
+        wx.getStorage({
+            key: "userInfo",
+            success(res) {
+                const { openid } = res.data
+                that.fetchSaleDetail({ id, open_id: openid })
             }
         })
     },
-    computed: {},
+    computed: {
+        ...mapState("saleStore/", ["saleDetail"])
+    },
     methods: {
-        includePoints: function() {
-            this.mapCtx.includePoints({
-                padding: [10],
-                points: [
-                    {
-                        latitude: 23.10229,
-                        longitude: 113.3345211
-                    },
-                    {
-                        latitude: 23.00229,
-                        longitude: 113.3345211
-                    }
-                ]
-            })
-        },
-        getLocal: function(latitude, longitude) {
-            let vm = this
-            qqmapsdk.reverseGeocoder({
-                location: {
-                    latitude: latitude,
-                    longitude: longitude
-                },
-                success: function(res) {
-                    let province = res.result.ad_info.province
-                    let city = res.result.ad_info.city
-                    let district = res.result.ad_info.district
-                    this.district = district
-                    console.log("district", district)
-                    // vm.setData({
-                    //     province: province, //省
-                    //     city: city, //市
-                    //     district: district //区
-                    // });
-                },
-                fail: function(res) {
-                    console.log(res)
-                },
-                complete: function(res) {
-                    // console.log(res);
+        ...mapActions("saleStore/", ["fetchSaleDetail", "focusSale"]),
+        handleFocusSale({ focus, id }) {
+            const that = this
+            wx.getStorage({
+                key: "userInfo",
+                success(res) {
+                    const { openid } = res.data
+                    that.focusSale({ focus, id, open_id: openid })
                 }
             })
         }
@@ -342,6 +275,9 @@ page {
                 width: 60px;
                 margin-right: 10px;
                 color: @grayIcon;
+                &.focus {
+                    color: @primary;
+                }
             }
         }
         .swiperItem {

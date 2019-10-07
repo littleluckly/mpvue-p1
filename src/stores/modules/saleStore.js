@@ -4,11 +4,15 @@ export default {
   namespaced: true,
   state: {
     saleList: [],
-    searchList: []
+    searchList: [],
+    saleDetail: {}
   },
   mutations: {
     saleList(state, payload) {
       state.saleList = payload
+    },
+    saleDetail(state, payload) {
+      state.saleDetail = payload
     },
     searchList(state, payload) {
       state.searchList = payload
@@ -33,7 +37,32 @@ export default {
       } else {
         commit("saleList", [])
       }
+    },
+    async fetchSaleDetail({ commit }, params = {}) {
+      const result = await request({
+        url: "/sales/detail",
+        method: "get",
+        data: { ...params }
+      })
+      const { statusCode, data } = result
+      if (statusCode === 200) {
+        commit("saleDetail", data ? data[0] : {})
+      } else {
+        commit("saleDetail", {})
+      }
       console.log("saleList::", res)
+    },
+    async focusSale({ commit, dispatch }, params = {}) {
+      const result = await request({
+        url: "/sales/focus",
+        method: "POST",
+        data: { ...params }
+      })
+      const { statusCode } = result
+      console.log("result", result)
+      if (statusCode === 200) {
+        dispatch("fetchSaleDetail", { ...params })
+      }
     },
     searchSaleList({ commit }, params = {}) {},
     async fetchSearchHistory({ commit }, params = {}) {
