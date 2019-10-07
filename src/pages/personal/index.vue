@@ -97,6 +97,7 @@ export default {
                         if (!res.data) {
                             return
                         }
+                        console.log("wx.checkSession", res)
                         that.userInfo = res.data
                         that.hasLogin = true
                     }
@@ -127,9 +128,10 @@ export default {
 
                     wx.setStorage({
                         key: "userInfo",
-                        data: userInfo
+                        data: {
+                            ...userInfo
+                        }
                     })
-                    console.log(userInfo)
                 },
                 fail() {
                     that.hasLogin = false
@@ -146,7 +148,7 @@ export default {
 
                                 wx.setStorage({
                                     key: "userInfo",
-                                    data: userInfo
+                                    data: { ...userInfo, ...result }
                                 })
                             } else {
                                 console.log("登录失败！" + res.errMsg)

@@ -150,7 +150,9 @@ export default {
         },
         linkToDetail(data) {
             console.log("data", data)
-            wx.navigateTo({ url: `./detail/main` })
+            wx.navigateTo({
+                url: `./detail/main?id=${data.id}`
+            })
         },
         showHouseDetail(item) {
             console.log("item", item, 2233)
@@ -179,7 +181,6 @@ export default {
         }
     },
     mounted() {
-        console.log("222")
         this.fetchSaleList()
     },
     //页面滚动执行方式
