@@ -37,11 +37,14 @@
             </span>
         </div>
         <div class="searchHistory">
-            <p>搜索历史</p>
+            <p>搜索历史 {{JSON.stringify(searchHistoryList)}}</p>
             <div class="itemWrap" :class="{showMore:history}">
-                <span class="item">一房一厅</span>
-                <span class="item">一房一厅</span>
-                <span class="item">单间</span>
+                <span
+                    v-for="(item,idx) in searchHistoryList"
+                    :key="idx"
+                    class="item"
+                    @click="handleClickSearch(item.search)"
+                >{{item.search}}</span>
                 <div class="showMoreBtn" @click="showMore('history')">
                     显示更多
                     <i-icon type="unfold"></i-icon>
@@ -65,6 +68,7 @@
 </template>
 <script>
 import calcCapsulePosi from "@/mixins/calcCapsulePosi"
+import { mapActions, mapState } from "vuex"
 export default {
     mixins: [calcCapsulePosi],
     data() {
@@ -74,15 +78,70 @@ export default {
             searchval: ""
         }
     },
+    onLoad() {
+        const that = this
+        // 处于登陆状态要保存搜索记录
+        wx.checkSession({
+            success(res) {
+                console.log("res", res)
+                var userInfo = wx.getStorageSync("userInfo")
+                if (userInfo) {
+                    that.fetchSearchHistory({
+                        open_id: userInfo.openid
+                    })
+                }
+            }
+        })
+    },
+    onShow() {
+        const that = this
+        // 处于登陆状态要保存搜索记录
+        wx.checkSession({
+            success(res) {
+                console.log("res", res)
+                var userInfo = wx.getStorageSync("userInfo")
+                if (userInfo) {
+                    that.fetchSearchHistory({
+                        open_id: userInfo.openid
+                    })
+                }
+            }
+        })
+    },
+    computed: {
+        ...mapState("saleStore/", ["searchHistoryList"])
+    },
     methods: {
+        ...mapActions("saleStore/", ["saveSearch", "fetchSearchHistory"]),
         showMore(type) {
             this[type] = true
+        },
+        handleClickSearch(searchval) {
+            wx.navigateTo({
+                url: `./searchList/main?searchVal=${searchval}`
+            })
         },
         handleChange(e) {
             this.searchval = e.mp.detail.value
         },
         handleSearch() {
-            // console.log(999, this.searchval)
+            if (!this.searchval) {
+                return
+            }
+            const that = this
+            // 处于登陆状态要保存搜索记录
+            wx.checkSession({
+                success(res) {
+                    console.log("res", res)
+                    var userInfo = wx.getStorageSync("userInfo")
+                    if (userInfo) {
+                        that.saveSearch({
+                            search: that.searchval,
+                            open_id: userInfo.openid
+                        })
+                    }
+                }
+            })
             wx.navigateTo({
                 url: `./searchList/main?searchVal=${this.searchval}`
             })
@@ -147,7 +206,7 @@ export default {
             padding: 10px 0;
         }
         .itemWrap {
-            max-height: 100px;
+            max-height: 120px;
             overflow: hidden;
             position: relative;
             &.showMore {
@@ -168,8 +227,9 @@ export default {
             }
             .showMoreBtn {
                 position: absolute;
+                padding: 10px 0;
                 background: #fff;
-                top: 84px;
+                top: 65px;
                 width: 100%;
                 text-align: center;
                 line-height: 18px;
