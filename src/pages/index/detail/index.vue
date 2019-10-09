@@ -37,12 +37,12 @@
                 </block>
             </swiper>
             <div>
-                <p class="title">{{saleDetail.name}}</p>
+                <p class="title">{{saleDetail.name}}{{saleDetail.tags_name}}</p>
 
                 <div class="tagsWrap">
                     <p class="tags">
                         <i-tag
-                            v-for="tag in houseInfo.tags"
+                            v-for="tag in tags"
                             :key="tag"
                             class="i-tags"
                             type="border"
@@ -163,18 +163,6 @@ export default {
                         "https://pic4.58cdn.com.cn/anjuke_58/749a8fafd17d5a7791bcda127ee8a4f2?w=640&h=480&crop=1"
                 }
             ],
-            houseInfo: {
-                tags: [
-                    "带花园",
-                    "停车场",
-                    "使用率高",
-                    "使用率高",
-                    "使用率高",
-                    "使用率高",
-                    "使用率高",
-                    "使用率高"
-                ]
-            },
             latitude: 23.099994,
             longitude: 113.32452,
             markers: [
@@ -199,7 +187,12 @@ export default {
         })
     },
     computed: {
-        ...mapState("saleStore/", ["saleDetail"])
+        ...mapState("saleStore/", ["saleDetail"]),
+        tags() {
+            return this.saleDetail.tags_name
+                ? this.saleDetail.tags_name.split(",")
+                : []
+        }
     },
     methods: {
         ...mapActions("saleStore/", ["fetchSaleDetail", "focusSale"]),
