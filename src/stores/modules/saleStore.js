@@ -5,6 +5,7 @@ export default {
   state: {
     saleList: [],
     searchList: [],
+    searchHistoryList: [],
     saleDetail: {}
   },
   mutations: {
@@ -25,6 +26,7 @@ export default {
     }
   },
   actions: {
+    //   获取房源列表
     async fetchSaleList({ commit }, params = {}) {
       const result = await request({
         url: "/sales/fetchList",
@@ -38,6 +40,8 @@ export default {
         commit("saleList", [])
       }
     },
+
+    // 获取房源详情
     async fetchSaleDetail({ commit }, params = {}) {
       const result = await request({
         url: "/sales/detail",
@@ -52,6 +56,7 @@ export default {
       }
       console.log("saleList::", res)
     },
+    // 关注房源
     async focusSale({ commit, dispatch }, params = {}) {
       const result = await request({
         url: "/sales/focus",
@@ -59,12 +64,23 @@ export default {
         data: { ...params }
       })
       const { statusCode } = result
-      console.log("result", result)
+      console.log("/sales/focus", result)
       if (statusCode === 200) {
         dispatch("fetchSaleDetail", { ...params })
       }
     },
-    searchSaleList({ commit }, params = {}) {},
+
+    // 保存搜索记录
+    async saveSearch({ commit }, params = {}) {
+      const result = await request({
+        url: "/sales/saveSearch",
+        method: "POST",
+        data: { ...params }
+      })
+      console.log("/sales/saveSearch", result)
+    },
+
+    // 获取搜索记录
     async fetchSearchHistory({ commit }, params = {}) {
       const result = await request({
         url: "/sales/searchHistory",
@@ -72,12 +88,14 @@ export default {
         data: { ...params }
       })
       const { statusCode, data } = result
-      if (statusCode === 200) {
+      if (statusCode == 200) {
         commit("searchHistoryList", data)
       } else {
         commit("searchHistoryList", [])
       }
-      console.log("searchHistoryList::", res)
-    }
+      console.log("searchHistoryList::", result.data)
+    },
+
+    searchSaleList({ commit }, params = {}) {}
   }
 }

@@ -3,6 +3,7 @@
         <!-- 首页普通内容 -->
         <div class="normalWrap">
             <div class="topBg">
+                <!-- http://a3.qpic.cn/psb?/V10roI243u0y8c/ddehqkdpUBzJLY4cs.JsZJ8beLjHqUaSs.AtDPm8.rc!/m/dAYBAAAAAAAAnull&bo=NQQqAjUEKgIRCT4!&rf=photolist&t=5 -->
                 <img
                     src="http://a3.qpic.cn/psb?/V10roI243u0y8c/ddehqkdpUBzJLY4cs.JsZJ8beLjHqUaSs.AtDPm8.rc!/m/dAYBAAAAAAAAnull&bo=NQQqAjUEKgIRCT4!&rf=photolist&t=5"
                     height="180px"
@@ -13,6 +14,7 @@
                     src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif"
                     alt
                 />
+                <div v-bind:style="{ top: top+30 + 'px'}" class="logoText">来了就是深圳人</div>
                 <div
                     v-bind:style="{ textAlign:'center', color:'white',position:'absolute', fontSize:'14px',top: top + 'px', height:height+'px',width:'100%', lineHeight:height+'px' }"
                 >
@@ -235,6 +237,34 @@ export default {
                 mix-blend-mode: screen;
                 height: 50px;
             }
+            .logoText {
+                position: absolute;
+                width: 100%;
+                text-align: center;
+                color: white;
+                font-size: 22px;
+                font-weight: bold;
+                background-image: -webkit-linear-gradient(
+                    left,
+                    #fff5c3,
+                    #623aa2 15%,
+                    #fff5c3 50%,
+                    #623aa2 65%,
+                    #fff5c3
+                );
+                -webkit-text-fill-color: transparent;
+                -webkit-background-clip: text;
+                -webkit-background-size: 200% 100%;
+                -webkit-animation: maskedAnimation 4s infinite linear;
+            }
+            @keyframes maskedAnimation {
+                0% {
+                    background-position: 0 0;
+                }
+                100% {
+                    background-position: -100% 0;
+                }
+            }
         }
         .mask {
             display: none;
@@ -266,7 +296,6 @@ export default {
                 }
             }
         }
-
         .dailyRecommend {
             .dailyTitle {
                 position: relative;
@@ -367,7 +396,6 @@ export default {
             }
         }
     }
-
     .swiperWrap {
         margin-top: 10px;
         margin-bottom: 10px;

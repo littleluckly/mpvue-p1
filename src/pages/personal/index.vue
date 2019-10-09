@@ -88,7 +88,6 @@ export default {
     computed: {},
     onLoad() {
         const that = this
-
         wx.checkSession({
             success() {
                 wx.getStorage({
@@ -97,7 +96,13 @@ export default {
                         if (!res.data) {
                             return
                         }
-                        console.log("wx.checkSession", res)
+                        console.log("wx.checkSession ok")
+                        wx.getStorage({
+                            key: "userInfo",
+                            success(res) {
+                                console.log(res)
+                            }
+                        })
                         that.userInfo = res.data
                         that.hasLogin = true
                     }
@@ -112,6 +117,7 @@ export default {
     },
     methods: {
         ...mapActions(["getSession", "saveUserInfo"]),
+        // 调用微信授权弹框
         getUserInfo(e) {
             const that = this
             const { userInfo } = e.mp.detail
@@ -126,12 +132,12 @@ export default {
                     that.hasLogin = true
                     that.userInfo = { ...userInfo }
 
-                    wx.setStorage({
-                        key: "userInfo",
-                        data: {
-                            ...userInfo
-                        }
-                    })
+                    // wx.setStorage({
+                    //     key: "userInfo",
+                    //     data: {
+                    //         ...userInfo
+                    //     }
+                    // })
                 },
                 fail() {
                     that.hasLogin = false
