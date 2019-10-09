@@ -37,7 +37,7 @@
                 </block>
             </swiper>
             <div>
-                <p class="title">{{saleDetail.name}}{{saleDetail.tags_name}}</p>
+                <p class="title">{{saleDetail.name}}</p>
 
                 <div class="tagsWrap">
                     <p class="tags">
