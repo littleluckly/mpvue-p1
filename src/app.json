@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/main",
     "pages/index/detail/main",
+    "pages/index/map/main",
     "pages/search/main",
     "pages/search/searchList/main",
     "pages/docs/main",
