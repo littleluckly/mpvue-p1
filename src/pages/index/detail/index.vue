@@ -68,49 +68,82 @@
             <div class="importantInfo">
                 <div class="item">
                     <p class="label">户型</p>
-                    <p class="value">1室1厅1卫</p>
+                    <p class="value">{{saleDetail.layout}}</p>
                 </div>
                 <div class="item">
                     <p class="label">总价</p>
-                    <p class="value">135万</p>
+                    <p class="value">{{saleDetail.price}}万</p>
+                </div>
+                <div class="item">
+                    <p class="label">类型</p>
+                    <p class="value">{{saleDetail.type}}</p>
                 </div>
             </div>
             <div class="info">
-                <div class="infoItem">
+                <!-- <div class="infoItem">
                     <p class="label">小区：</p>
-                    <p class="value">宝安花园</p>
-                </div>
+                    <p class="value">{{saleDetail.layout}}</p>
+                </div>-->
                 <div class="infoItem">
-                    <p class="label">面积：</p>
+                    <p class="label">单价：</p>
                     <p class="value">
-                        约55
+                        {{saleDetail.unit_price}} /
                         <span class="square"></span>
                     </p>
                 </div>
                 <div class="infoItem">
-                    <p class="label">楼层：</p>
-                    <p class="value">2层/总30层</p>
+                    <p class="label">面积：</p>
+                    <p class="value">
+                        {{saleDetail.area}}
+                        <span class="square"></span>
+                    </p>
                 </div>
                 <div class="infoItem">
+                    <p class="label">装修：</p>
+                    <p class="value">{{saleDetail.decoration}}</p>
+                </div>
+                <div class="infoItem">
+                    <p class="label">电梯：</p>
+                    <p class="value">{{saleDetail.elevator?"有":"无"}}</p>
+                </div>
+                <div class="infoItem">
+                    <p class="label">朝向：</p>
+                    <p class="value">{{saleDetail.orientation}}</p>
+                </div>
+                <div class="infoItem">
+                    <p class="label">年代：</p>
+                    <p class="value">{{saleDetail.year}}年</p>
+                </div>
+                <div class="infoItem">
+                    <p class="label">楼层：</p>
+                    <p class="value">{{saleDetail.floor}}/{{saleDetail.floor_total}}</p>
+                </div>
+                <!-- <div class="infoItem">
                     <p class="label">付款：</p>
                     <p class="value">押一付一</p>
-                </div>
+                </div>-->
             </div>
         </div>
         <div class="mapWrap">
-            <p class="mapTitle">地理位置</p>
+            <p class="mapTitle">
+                地理位置
+                <span
+                    style="font-weight:normal;font-size:12px;color:#999;"
+                >实际位置可能存在细微偏差，请联系客服实地看房</span>
+            </p>
 
             <map
                 id="myMap"
                 style="width: 100%; height: 200px;"
-                :latitude="latitude"
-                :longitude="longitude"
+                :latitude="saleDetail.latitude"
+                :longitude="saleDetail.longitude"
                 :markers="markers"
                 show-location
+                @click="handleClickMap"
             ></map>
             <!-- :covers="covers" -->
 
-            <i-button @click="includePoints">缩放</i-button>
+            <!-- <i-button @click="includePoints">缩放</i-button> -->
         </div>
         <Consult />
         <!-- <cover-view class="consult">
@@ -162,22 +195,12 @@ export default {
                     src:
                         "https://pic4.58cdn.com.cn/anjuke_58/749a8fafd17d5a7791bcda127ee8a4f2?w=640&h=480&crop=1"
                 }
-            ],
-            latitude: 23.099994,
-            longitude: 113.32452,
-            markers: [
-                {
-                    id: 1,
-                    latitude: 23.099994,
-                    longitude: 113.32452
-                }
             ]
         }
     },
     onLoad(query = {}) {
         var that = this
         const { id } = query
-        console.log("id", id)
         wx.getStorage({
             key: "userInfo",
             success(res) {
@@ -192,6 +215,16 @@ export default {
             return this.saleDetail.tags_name
                 ? this.saleDetail.tags_name.split(",")
                 : []
+        },
+        markers() {
+            const { latitude, longitude } = this.saleDetail
+            return [
+                {
+                    id: 1,
+                    latitude,
+                    longitude
+                }
+            ]
         }
     },
     methods: {
@@ -204,6 +237,13 @@ export default {
                     const { openid } = res.data
                     that.focusSale({ focus, id, open_id: openid })
                 }
+            })
+        },
+        handleClickMap() {
+            console.log("map")
+            const { latitude, longitude } = this.saleDetail
+            wx.navigateTo({
+                url: `../map/main?latitude=${latitude}&longitude=${longitude}`
             })
         }
     },
@@ -319,6 +359,9 @@ page {
                 display: flex;
                 vertical-align: top;
                 box-sizing: border-box;
+                border-bottom: 1px solid #f9f9f9;
+                padding-bottom: 5px;
+                margin-bottom: 5px;
                 .label {
                     color: #666;
                     width: 50px;
