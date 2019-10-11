@@ -1,27 +1,5 @@
 <template>
     <div class="rentSearchList">
-        <!-- <CustomTopBar :top="top" :height="height" :title="searchVal" /> -->
-        <!-- <div class="topWrap" v-bind:style="{ paddingTop: top + 'px',height: height + 'px' }">
-            <div class="back" @click="backTo">
-                <i-icon type="return" size="24" color="#fff;" @click="backTo"></i-icon>
-            </div>
-            <div class="title">{{searchVal}}</div>
-        </div>-->
-        <!-- <div class="searchInputWrap">
-            <input
-                :value="searchVal"
-                @input="handleInputChange"
-                @confirm="handleSearch"
-                @focus="currSubType=''"
-                class="searchInput"
-                placeholder="请输入小区名称、地址、户型等"
-                confirm-type="search"
-                maxlength="200"
-            />
-            <span @click="handleSearch" class="searchIcon">
-                <i-icon type="search" size="18" />
-            </span>
-        </div>-->
         <div class="topBg">
             <img
                 src="http://a4.qpic.cn/psb?/V10roI243u0y8c/9io9I1EObRQJpAWahel8RNPSUEfwPBBxvFOzC*3Xf0Q!/m/dL8AAAAAAAAAnull&bo=OAStAjgErQIRCT4!&rf=photolist&t=5"
@@ -229,14 +207,7 @@ export default {
         })
     },
     methods: {
-        ...mapActions("saleStore/", ["searchSaleList"]),
-        backTo() {
-            wx.switchTab({ url: "../main" })
-            // wx.navigateBack({
-            //     delta: 1
-            // })
-            // wx.reLaunch({ url: "../main" })
-        },
+        ...mapActions("saleStore/", ["searchSaleList", "saveBrowseHistory"]),
         handleInputChange(e) {
             console.log(this.searchVal, e)
         },
@@ -261,12 +232,21 @@ export default {
                 type: rentType
             })
         },
-        linkToDetail(item) {
-            console.log("item", item)
+        linkToDetail(data) {
+            const that = this
+            // 保存浏览记录
+            wx.getStorage({
+                key: "userInfo",
+                success(res) {
+                    that.saveBrowseHistory({
+                        sale_id: data.id,
+                        open_id: res.data.openid
+                    })
+                }
+            })
+
             wx.navigateTo({
-                url: `../houseDetail/main?id=${item._id}&name=${
-                    item.house_name
-                }`
+                url: `../../index/detail/main?id=${data.id}`
             })
         }
     }
