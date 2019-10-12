@@ -131,17 +131,7 @@ export default {
     onHide() {},
     created() {},
     methods: {
-        ...mapActions("saleStore/", ["fetchSaleList"]),
-        handleChange({
-            map: {
-                target: {
-                    detail: { value }
-                }
-            }
-        }) {
-            console.log(value)
-            this.searchVal = value
-        },
+        ...mapActions("saleStore/", ["fetchSaleList", "saveBrowseHistory"]),
         linkToSearch() {
             wx.navigateTo({
                 url: "../search/main"
@@ -151,17 +141,19 @@ export default {
             wx.navigateTo({ url: "../welcome/main" })
         },
         linkToDetail(data) {
-            console.log("data", data)
+            const that = this
+            // 保存浏览记录
+            wx.getStorage({
+                key: "userInfo",
+                success(res) {
+                    that.saveBrowseHistory({
+                        sale_id: data.id,
+                        open_id: res.data.openid
+                    })
+                }
+            })
             wx.navigateTo({
                 url: `./detail/main?id=${data.id}`
-            })
-        },
-        showHouseDetail(item) {
-            console.log("item", item, 2233)
-            wx.navigateTo({
-                url: `./houseDetail/main?id=${
-                    item._id
-                }&name=${item.house_name || ""}`
             })
         },
         handleSearch(e) {

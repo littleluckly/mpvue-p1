@@ -96,6 +96,15 @@ export default {
       console.log("searchHistoryList::", result.data)
     },
 
+    // 保存浏览记录
+    async saveBrowseHistory(ctx, params = {}) {
+      const result = await request({
+        url: "/sales/saveBrowseHistory",
+        method: "post",
+        data: { ...params }
+      })
+    },
+
     searchSaleList({ commit }, params = {}) {}
   }
 }
