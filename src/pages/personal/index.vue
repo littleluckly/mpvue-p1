@@ -23,7 +23,7 @@
                     <span class="itemIcon">
                         <i-icon type="collection" size="18" />
                     </span>
-                    <span class="value">0</span>
+                    <span class="value">{{summaryInfo.collect_total||0}}</span>
                 </p>
             </div>
             <div class="item" @click="navigateTo('history')">
@@ -32,7 +32,7 @@
                     <span class="itemIcon">
                         <i-icon type="time" size="18" />
                     </span>
-                    <span class="value">0</span>
+                    <span class="value">{{summaryInfo.history_total||0}}</span>
                 </p>
             </div>
         </div>
@@ -66,7 +66,7 @@
 
 <script>
 import Consult from "@/components/consult"
-import { mapActions } from "vuex"
+import { mapActions, mapState } from "vuex"
 export default {
     components: { Consult },
     data() {
@@ -85,9 +85,12 @@ export default {
             ]
         }
     },
-    computed: {},
-    onLoad() {
+    computed: {
+        ...mapState("personalStore/", ["summaryInfo"])
+    },
+    onShow() {
         const that = this
+        // 检查是否登陆状态
         wx.checkSession({
             success() {
                 wx.getStorage({
@@ -96,12 +99,8 @@ export default {
                         if (!res.data) {
                             return
                         }
-                        console.log("wx.checkSession ok")
-                        wx.getStorage({
-                            key: "userInfo",
-                            success(res) {
-                                console.log(res)
-                            }
+                        that.fetchSummaryInfo({
+                            open_id: res.data.openid
                         })
                         that.userInfo = res.data
                         that.hasLogin = true
@@ -117,6 +116,7 @@ export default {
     },
     methods: {
         ...mapActions(["getSession", "saveUserInfo"]),
+        ...mapActions("personalStore/", ["fetchSummaryInfo"]),
         // 调用微信授权弹框
         getUserInfo(e) {
             const that = this
@@ -164,18 +164,21 @@ export default {
                 }
             })
         },
-        handleLogout() {
-            console.log("退出登录")
-            this.userInfo = {}
-            this.hasLogin = false
-            wx.clearStorage()
-            wx.login({
-                success(res) {
-                    console.log(res)
-                    that.getSession({ code: res.data })
-                }
-            })
-        },
+        // 获取收藏数、浏览记录数统计信息
+        getSummaryInfo() {},
+        // 退出登录
+        // handleLogout() {
+        //     console.log("退出登录")
+        //     this.userInfo = {}
+        //     this.hasLogin = false
+        //     wx.clearStorage()
+        //     wx.login({
+        //         success(res) {
+        //             console.log(res)
+        //             that.getSession({ code: res.data })
+        //         }
+        //     })
+        // },
         navigateTo(page) {
             wx.navigateTo({ url: `../${page}/main` })
         },

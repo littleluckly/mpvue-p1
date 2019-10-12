@@ -4,12 +4,14 @@ import request from "@/utils/request"
 import MyDB from "@/utils/db"
 import saleStore from "./modules/saleStore"
 import rentStore from "./modules/rentStore"
+import personalStore from "./modules/personalStore"
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
   modules: {
     saleStore,
-    rentStore
+    rentStore,
+    personalStore
   },
   state: {},
   mutations: {},
