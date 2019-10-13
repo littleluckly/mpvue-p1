@@ -4,7 +4,8 @@ export default {
   namespaced: true,
   state: {
     historyList: [],
-    summaryInfo: {}
+    summaryInfo: {},
+    tags: []
   },
   mutations: {
     historyList(state, payload) {
@@ -12,6 +13,9 @@ export default {
     },
     summaryInfo(state, payload) {
       state.summaryInfo = payload
+    },
+    tags(state, payload) {
+      state.tags = payload
     }
   },
   actions: {
@@ -42,6 +46,20 @@ export default {
         commit("summaryInfo", data)
       } else {
         commit("summaryInfo", {})
+      }
+    },
+
+    //   统计信息：收藏总数、历史记录总数
+    async fetchTags({ commit }, params = {}) {
+      const result = await request({
+        url: "/personal/tags",
+        method: "get"
+      })
+      const { statusCode, data } = result
+      if (statusCode === 200) {
+        commit("tags", data)
+      } else {
+        commit("tags", [])
       }
     }
   }

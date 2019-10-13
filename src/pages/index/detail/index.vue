@@ -12,10 +12,13 @@
                 alt
             />
             <div
-                v-bind:style="{ textAlign:'center', color:'white',position:'absolute', fontSize:'14px',top: top + 'px', height:height+'px',width:'100%', lineHeight:height+'px' }"
+                v-bind:style="{ textAlign:'center', color:'white',position:'absolute', fontSize:'14px',top: top + 'px', height:height+'px',width:'100%', lineHeight:height+'px', fontWeight:'bold' }"
             >
-                <navigator open-type="navigateBack" style="float:left;padding:0 10px;">
-                    <i-icon type="return" size="18" />
+                <navigator
+                    open-type="navigateBack"
+                    style="float:left;padding:0 10px;font-weight:bold;background:rgba(0,0,0,0.1);"
+                >
+                    <i-icon type="return" size="20" />
                 </navigator>详情
             </div>
         </div>
@@ -29,10 +32,25 @@
             >
                 <block v-for="(item, index) in imgList" :key="index">
                     <swiper-item class="swiperItem">
-                        <image :src="item.src" class="slide-image" mode="aspectFill" />
-                        <div class="videoBtn" v-if="item.type=='video'">
+                        <video
+                            v-if="item.type=='video'"
+                            :initial-time="1"
+                            :enable-play-gesture="true"
+                            object-fit="contain"
+                            controls
+                            class="myVideo"
+                            src="http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400"
+                        ></video>
+                        <image
+                            v-else
+                            :src="item.src"
+                            class="slide-image"
+                            mode="aspectFill"
+                            @click="previewImg(item.src)"
+                        />
+                        <!-- <div class="videoBtn" v-if="item.type=='video'">
                             <i-icon type="playon" size="56"></i-icon>
-                        </div>
+                        </div>-->
                     </swiper-item>
                 </block>
             </swiper>
@@ -211,6 +229,9 @@ export default {
     },
     computed: {
         ...mapState("saleStore/", ["saleDetail"]),
+        imgSrcList() {
+            return this.imgList.map(item => item.src)
+        },
         tags() {
             return this.saleDetail.tags_name
                 ? this.saleDetail.tags_name.split(",")
@@ -229,6 +250,12 @@ export default {
     },
     methods: {
         ...mapActions("saleStore/", ["fetchSaleDetail", "focusSale"]),
+        previewImg(src) {
+            wx.previewImage({
+                current: src,
+                urls: this.imgSrcList
+            })
+        },
         handleFocusSale({ focus, id }) {
             const that = this
             wx.getStorage({
@@ -283,6 +310,10 @@ page {
         margin-bottom: 10px;
         padding-bottom: 10px;
         background: #ffffff;
+        .myVideo {
+            width: 100%;
+            height: 100%;
+        }
         .slide-image {
             width: 100%;
         }
