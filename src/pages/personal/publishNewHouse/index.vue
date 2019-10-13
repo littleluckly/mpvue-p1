@@ -38,7 +38,8 @@
             <view class="formItem section section_gap">
                 <view class="section__title">
                     <span class="requireIcon">*</span>
-                    面积:
+                    面积(
+                    <span class="square"></span>):
                     <div v-if="validateErrData.area" class="errText">{{validateErrData.area.msg}}</div>
                 </view>
                 <input
@@ -122,7 +123,7 @@
             </view>
             <view class="formItem section section_gap">
                 <view class="section__title">
-                    所在楼层:
+                    楼层:
                     <div v-if="validateErrData.floor" class="errText">{{validateErrData.floor.msg}}</div>
                 </view>
                 <input
@@ -130,23 +131,8 @@
                     v-model="formData.floor"
                     class="formVal"
                     name="floor"
-                    placeholder="请输入房源所在楼层"
+                    placeholder="请输入房源所属楼层和总楼层"
                 />
-            </view>
-            <view class="formItem section section_gap">
-                <view class="section__title">
-                    家电情况:
-                    <div
-                        v-if="validateErrData.electro"
-                        class="errText"
-                    >{{validateErrData.electro.msg}}</div>
-                </view>
-                <checkbox-group name="electro">
-                    <label class="electroCheckbox" v-for="item in electroList" :key="item.label">
-                        <checkbox :value="item.value" />
-                        {{item.label}}
-                    </label>
-                </checkbox-group>
             </view>
             <view class="formItem section section_gap">
                 <view class="section__title">
@@ -157,7 +143,7 @@
                     >{{validateErrData.feature.msg}}</div>
                 </view>
                 <checkbox-group name="electro">
-                    <label class="electroCheckbox" v-for="item in featureList" :key="item.label">
+                    <label class="electroCheckbox" v-for="item in tags" :key="item.value">
                         <checkbox :value="item.value" />
                         {{item.label}}
                     </label>
@@ -172,6 +158,7 @@
 </template>
 <script>
 import WxValidate from "@/utils/validate"
+import { mapState, mapActions } from "vuex"
 export default {
     data() {
         return {
@@ -187,32 +174,6 @@ export default {
                 "龙华区",
                 "盐田区",
                 "坪山区"
-            ],
-            electroList: [
-                { label: "空调", value: "空调" },
-                { label: "床", value: "床" },
-                { label: "衣柜", value: "衣柜" },
-                { label: "洗衣机", value: "洗衣机" },
-                { label: "梳妆台", value: "梳妆台" },
-                { label: "电冰箱", value: "电冰箱" },
-                { label: "沙发", value: "沙发" },
-                { label: "椅子", value: "椅子" },
-                { label: "餐桌", value: "餐桌" },
-                { label: "热水器", value: "热水器" }
-            ],
-            featureList: [
-                { label: "邻地铁", value: "邻地铁" },
-                { label: "大阳台", value: "大阳台" },
-                { label: "采光好", value: "采光好" },
-                { label: "有电梯", value: "有电梯" },
-                { label: "大单间", value: "大单间" },
-                { label: "安静", value: "安静" },
-                { label: "配套齐全", value: "配套齐全" },
-                { label: "精装修", value: "精装修" },
-                { label: "邻公园", value: "邻公园" },
-                { label: "停车场", value: "停车场" },
-                { label: "带花园", value: "带花园" },
-                { label: "使用率高", value: "使用率高" }
             ],
             regionIndex: null,
             rentTypeOptions: ["整租", "合租"],
@@ -234,6 +195,9 @@ export default {
             latitude: 0
         }
     },
+    computed: {
+        ...mapState("personalStore/", ["tags"])
+    },
     onShow(options) {
         const { geo = "", address = "" } = wx.getStorageSync("geo") || {}
         this.formData = {
@@ -252,6 +216,7 @@ export default {
     },
     onLoad(query) {
         this.initValidate()
+        this.fetchTags()
         const { longitude = 0, latitude = 0, address = "" } = query
         this.longitude = longitude
         this.latitude = latitude
@@ -269,6 +234,7 @@ export default {
         }
     },
     methods: {
+        ...mapActions("personalStore", ["fetchTags"]),
         formSubmit: function(e) {
             const params = e.mp.detail.value
             console.log("form发生了submit事件，携带数据为：", params)
