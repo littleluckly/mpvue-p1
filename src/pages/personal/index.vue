@@ -198,6 +198,9 @@ export default {
     height: 100vh;
     background: @graylightBg;
     font-size: 14px;
+    .i-icon {
+        font-weight: bold;
+    }
     .userInfo {
         // margin-bottom: 10px;
         background: #fff;
