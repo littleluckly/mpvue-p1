@@ -53,6 +53,21 @@
             </view>
             <view class="formItem section section_gap">
                 <view class="section__title">
+                    <span class="requireIcon">*</span>
+                    房源类型:
+                    <div v-if="validateErrData.type" class="errText">{{validateErrData.type.msg}}</div>
+                </view>
+                <picker
+                    range-key="label"
+                    @change="handleSelectType"
+                    :value="formData.type"
+                    :range="typeList"
+                >
+                    <view class="picker">当前选择：{{currType}}</view>
+                </picker>
+            </view>
+            <view class="formItem section section_gap">
+                <view class="section__title">
                     <span class="requireIcon">*</span>户型:
                     <div
                         v-if="validateErrData.layout"
@@ -162,8 +177,13 @@ import { mapState, mapActions } from "vuex"
 export default {
     data() {
         return {
+            typeList: [
+                { label: "村委房", value: 1 },
+                { label: "集资房", value: 2 },
+                { label: "军产房", value: 3 }
+            ],
+            currType: "",
             array: ["出租", "出售"],
-            houseTypeIndex: null,
             region: "",
             regionList: [
                 "罗湖区",
@@ -259,6 +279,13 @@ export default {
                 this.validateErrData = {}
             }
         },
+        handleSelectType(e) {
+            const value = e.mp.detail.value
+            this.formData.type = value
+            const target = this.typeList[Number(value)]
+            this.currType = target.label
+            console.log(target, this.formData.type)
+        },
         handleFormChange(e, name) {
             console.log(e.mp.detail.value, name)
             // this.validateErrData[name] = null;
@@ -348,10 +375,6 @@ export default {
             }
             this.validateErrData = {}
             console.log("form发生了reset事件")
-        },
-        handleSelectHouseType(e) {
-            this.formData.houseTypeIndex = Number(e.mp.detail.value)
-            this.validateErrData["houseType"] = null
         },
         handleSelectRegion(e) {
             this.formData.regionIndex = Number(e.mp.detail.value)
