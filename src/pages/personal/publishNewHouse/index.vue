@@ -186,6 +186,15 @@
                 <button form-type="submit" type="primary" style="margin-bottom:15px;">发布</button>
                 <!-- <button form-type="reset" type="warn">重置</button> -->
             </view>
+            <div class="infoType">
+                <div class="divider"></div>
+                <div class="infoTitle">视频/图片</div>
+                <div class="divider"></div>
+            </div>
+            <view class="formItem section section_gap">
+                <view class="section__title">图片:</view>
+                <button type="primary" style="margin-bottom:15px;" @click="handleUploadFile">选择图片/视频</button>
+            </view>
         </form>
     </div>
 </template>
@@ -252,7 +261,7 @@ export default {
         this.latitude = latitude
     },
     methods: {
-        ...mapActions("personalStore", ["fetchTags"]),
+        ...mapActions("personalStore", ["fetchTags", "uploadFile"]),
         formSubmit: function(e) {
             const params = e.mp.detail.value
             console.log("form发生了submit事件，携带数据为：", params)
@@ -276,6 +285,19 @@ export default {
                 // 校验成功，清除错误消息
                 this.validateErrData = {}
             }
+        },
+        handleUploadFile() {
+            console.log()
+            const that = this
+            that.uploadFile({})
+            // wx.chooseImage({
+            //     count: 1, // 默认9
+            //     sizeType: ["original"], // 可以指定是原图还是压缩图，默认用原图
+            //     sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+            //     success: function(res) {
+            //         that.uploadFile(res.tempFiles[0].path)
+            //     }
+            // })
         },
         handleSelectType(e) {
             const value = e.mp.detail.value
