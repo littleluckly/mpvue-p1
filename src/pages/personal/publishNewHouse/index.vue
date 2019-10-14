@@ -32,7 +32,7 @@
                     type="digit"
                     class="formVal"
                     name="price"
-                    :placeholder="publishType=='出租'?'请输入租金':'请输入总价'"
+                    placeholder="请输入总价"
                 />
             </view>
             <view class="formItem section section_gap">
@@ -150,6 +150,24 @@
                 />
             </view>
             <view class="formItem section section_gap">
+                <view class="section__title">产权期限:</view>
+                <input
+                    v-model="formData.copyrightYear"
+                    class="formVal"
+                    name="copyrightYear"
+                    placeholder="请输入房源的产权期限"
+                />
+            </view>
+            <view class="formItem section section_gap">
+                <view class="section__title">朝向:</view>
+                <input
+                    v-model="formData.orientation"
+                    class="formVal"
+                    name="orientation"
+                    placeholder="请输入房源的朝向"
+                />
+            </view>
+            <view class="formItem section section_gap">
                 <view class="section__title">
                     房源特点:
                     <div
@@ -184,7 +202,6 @@ export default {
             ],
             currType: "",
             array: ["出租", "出售"],
-            region: "",
             regionList: [
                 "罗湖区",
                 "福田区",
@@ -195,22 +212,15 @@ export default {
                 "盐田区",
                 "坪山区"
             ],
-            regionIndex: null,
-            rentTypeOptions: ["整租", "合租"],
             formData: {
+                copyrightYear: "70年",
                 house_name: "",
-                houseTypeIndex: null,
-                regionIndex: null,
                 price: null,
                 area: null,
-                rentTypeIndex: 0,
                 title: null,
                 address: ""
             },
             validateErrData: {},
-            publishType: "出租",
-            rentType: "整租",
-            payType: "押一付一",
             longitude: 0,
             latitude: 0
         }
@@ -240,18 +250,6 @@ export default {
         const { longitude = 0, latitude = 0, address = "" } = query
         this.longitude = longitude
         this.latitude = latitude
-        let regionIndex = 0
-        this.regionList.forEach((item, idx) => {
-            if (address.includes(item.slice(0, -1))) {
-                regionIndex = idx
-            }
-        })
-        this.region = this.regionList[regionIndex]
-        this.formData = {
-            ...this.formData,
-            geo: longitude != 0 ? `纬度：${latitude}, 经度：${longitude}` : "",
-            address
-        }
     },
     methods: {
         ...mapActions("personalStore", ["fetchTags"]),
@@ -281,10 +279,9 @@ export default {
         },
         handleSelectType(e) {
             const value = e.mp.detail.value
-            this.formData.type = value
+            this.formData.type = Number(value)
             const target = this.typeList[Number(value)]
             this.currType = target.label
-            console.log(target, this.formData.type)
         },
         handleFormChange(e, name) {
             console.log(e.mp.detail.value, name)
@@ -376,15 +373,11 @@ export default {
             this.validateErrData = {}
             console.log("form发生了reset事件")
         },
-        handleSelectRegion(e) {
-            this.formData.regionIndex = Number(e.mp.detail.value)
-        },
         handleSelectRentType(e) {},
         handleSelect(e, type) {
             this.formData[type + "Index"] = Number(e.mp.detail.value)
             this.validateErrData[type] = null
         },
-        rentTypeOptions(e) {},
         initValidate() {
             let rules = {
                 // houseType: {
@@ -444,12 +437,6 @@ export default {
             }
             //实例化当前的验证规则和提示消息
             this.WxValidate = new WxValidate(rules, message)
-        },
-        handleChangeRadio(e) {
-            const value = e.mp.detail.value
-            console.log(value)
-            this.formData.publishType = value
-            this.publishType = value
         }
     }
 }
