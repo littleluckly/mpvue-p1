@@ -3,6 +3,43 @@
         <form @submit="formSubmit" @reset="formReset">
             <div class="infoType">
                 <div class="divider"></div>
+                <div class="infoTitle">视频/图片信息</div>
+                <div class="divider"></div>
+            </div>
+            <view class="formItem section section_gap">
+                <button
+                    type="primary"
+                    style="margin-bottom:15px;"
+                    size="small"
+                    @click="handleUploadFile"
+                >选择图片/视频</button>
+                <ul class="previewWrap">
+                    <li
+                        v-for="(img,idx) in previewList"
+                        :key="idx"
+                        class="previewItem"
+                        :class="{finshed:uploadProgress[img.src]==100}"
+                    >
+                        <div class="progressWrap">
+                            <i-progress
+                                :percent="uploadProgress[img.src]||0"
+                                status="active"
+                                i-class="progress"
+                            ></i-progress>
+                        </div>
+                        <span class="delete" @click="handleDelFile(img.src)">x</span>
+                        <image
+                            mode="scaleToFill"
+                            :src="img.src"
+                            alt
+                            srcset
+                            @click="previewImg(img.src)"
+                        />
+                    </li>
+                </ul>
+            </view>
+            <div class="infoType">
+                <div class="divider"></div>
                 <div class="infoTitle">基本信息</div>
                 <div class="divider"></div>
             </div>
@@ -186,15 +223,6 @@
                 <button form-type="submit" type="primary" style="margin-bottom:15px;">发布</button>
                 <!-- <button form-type="reset" type="warn">重置</button> -->
             </view>
-            <div class="infoType">
-                <div class="divider"></div>
-                <div class="infoTitle">视频/图片</div>
-                <div class="divider"></div>
-            </div>
-            <view class="formItem section section_gap">
-                <view class="section__title">图片:</view>
-                <button type="primary" style="margin-bottom:15px;" @click="handleUploadFile">选择图片/视频</button>
-            </view>
         </form>
     </div>
 </template>
@@ -221,6 +249,7 @@ export default {
                 "盐田区",
                 "坪山区"
             ],
+            previewList: [],
             formData: {
                 copyrightYear: "70年",
                 house_name: "",
@@ -235,7 +264,7 @@ export default {
         }
     },
     computed: {
-        ...mapState("personalStore/", ["tags"])
+        ...mapState("personalStore/", ["tags", "uploadProgress"])
     },
     onShow(options) {
         const { geo = "", address = "" } = wx.getStorageSync("geo") || {}
@@ -261,7 +290,7 @@ export default {
         this.latitude = latitude
     },
     methods: {
-        ...mapActions("personalStore", ["fetchTags", "uploadFile"]),
+        ...mapActions("personalStore", ["fetchTags", "uploadFile", "delFile"]),
         formSubmit: function(e) {
             const params = e.mp.detail.value
             console.log("form发生了submit事件，携带数据为：", params)
@@ -289,15 +318,32 @@ export default {
         handleUploadFile() {
             console.log()
             const that = this
-            that.uploadFile({})
-            // wx.chooseImage({
-            //     count: 1, // 默认9
-            //     sizeType: ["original"], // 可以指定是原图还是压缩图，默认用原图
-            //     sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
-            //     success: function(res) {
-            //         that.uploadFile(res.tempFiles[0].path)
-            //     }
-            // })
+            // that.uploadFile({})
+            wx.chooseImage({
+                count: 9, // 默认9
+                sizeType: ["original"], // 可以指定是原图还是压缩图，默认用原图
+                sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+                success: function(res) {
+                    // const filePath = res.tempFiles[0].path
+                    // that.previewList.push({ src: filePath })
+                    // that.uploadFile({ filePath })
+                    that.previewList = that.previewList.concat(
+                        res.tempFiles.map(file => ({ src: file.path }))
+                    )
+                    that.uploadFile({ files: res.tempFiles })
+                }
+            })
+        },
+        handleDelFile(src) {
+            this.previewList = this.previewList.filter(item => item.src !== src)
+            this.delFile(src)
+        },
+
+        previewImg(src) {
+            wx.previewImage({
+                current: src,
+                urls: this.previewList.map(item => item.src)
+            })
         },
         handleSelectType(e) {
             const value = e.mp.detail.value
@@ -463,7 +509,7 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 @import "../../../style/common.less";
 .publishNewHouseWrap {
     padding: 10px;
@@ -515,6 +561,55 @@ export default {
             display: inline-block;
             width: 95px;
             margin-top: 8px;
+        }
+    }
+
+    .previewWrap {
+        display: flex;
+        flex-wrap: wrap;
+        .previewItem {
+            flex: 1;
+            position: relative;
+            min-width: 50%;
+            padding: 5px;
+            box-sizing: border-box;
+            &.finshed {
+                img {
+                    filter: none;
+                }
+                .progressWrap {
+                    display: none;
+                }
+                .delete {
+                    display: block;
+                    position: absolute;
+                    top: 10px;
+                    left: 10px;
+                    padding: 0 9px;
+                    color: red;
+                    font-size: 20px;
+                    border-radius: 50%;
+                    background: rgba(0, 0, 0, 0.3);
+                }
+            }
+            img {
+                width: 100%;
+                filter: blur(5px);
+            }
+            .progressWrap {
+                position: absolute;
+                top: 50%;
+                left: 10px;
+                right: 10px;
+                width: 100%;
+                z-index: 10;
+            }
+            .delete {
+                display: none;
+            }
+            .progress {
+                color: #2db7f5;
+            }
         }
     }
 }

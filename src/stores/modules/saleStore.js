@@ -31,7 +31,8 @@ export default {
       const result = await request({
         url: "/sales/fetchList",
         method: "get",
-        data: { ...params }
+        data: { ...params },
+        showLoading: true
       })
       const { statusCode, data } = result
       if (statusCode === 200) {
@@ -46,7 +47,8 @@ export default {
       const result = await request({
         url: "/sales/detail",
         method: "get",
-        data: { ...params }
+        data: { ...params },
+        showLoading: true
       })
       const { statusCode, data } = result
       if (statusCode === 200) {
