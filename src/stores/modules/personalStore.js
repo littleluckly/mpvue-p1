@@ -1,13 +1,24 @@
 import request from "@/utils/request"
 // const CosAuth = require("../../utils/cos-auth")
 import CosAuth from "../../utils/cos-auth"
+// 对更多字符编码的 url encode 格式
+const camSafeUrlEncode = function(str) {
+  return encodeURIComponent(str)
+    .replace(/!/g, "%21")
+    .replace(/'/g, "%27")
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29")
+    .replace(/\*/g, "%2A")
+}
 export default {
   name: "personalStore",
   namespaced: true,
   state: {
     historyList: [],
     summaryInfo: {},
-    tags: []
+    tags: [],
+    uploadProgress: {},
+    uploadFiles: []
   },
   mutations: {
     historyList(state, payload) {
@@ -16,8 +27,18 @@ export default {
     summaryInfo(state, payload) {
       state.summaryInfo = payload
     },
+    uploadProgress(state, payload) {
+      state.uploadProgress = {
+        ...state.uploadProgress,
+        ...payload
+      }
+      console.log("state.uploadProgress", state.uploadProgress)
+    },
     tags(state, payload) {
       state.tags = payload
+    },
+    uploadFiles(state, payload) {
+      state.uploadFiles = [...state.uploadFiles, payload]
     }
   },
   actions: {
@@ -88,7 +109,6 @@ export default {
     // 上传文件
     async uploadFile({ commit, dispatch }, { filePath = "" }) {
       const data = await dispatch("getAuthorization")
-      console.log("data", data)
       const { credentials } = data
       const AuthData = {
         XCosSecurityToken: credentials.sessionToken,
@@ -99,9 +119,7 @@ export default {
           Pathname: "/"
         })
       }
-      console.log("签名AuthData", AuthData)
       const Key = filePath.substr(filePath.lastIndexOf("/") + 1) // 这里指定上传的文件名
-      console.log("wx.uploadFile", wx.uploadFile)
 
       const Bucket = "shuifenzi-1259799060"
       const Region = "ap-chengdu"
@@ -119,28 +137,38 @@ export default {
           "Content-Type": ""
         },
         success: function(res) {
+          // 上传后的文件路径url
           const url = prefix + camSafeUrlEncode(Key).replace(/%2F/g, "/")
           if (res.statusCode === 200) {
-            wx.showModal({ title: "上传成功", content: url, showCancel: false })
+            commit("uploadFiles", url)
+            wx.showToast({ title: "上传成功", duration: 1000 })
           } else {
-            wx.showModal({
+            wx.showToast({
               title: "上传失败",
-              content: JSON.stringify(res),
-              showCancel: false
+              duration: 1000
             })
           }
-          console.log(res.statusCode)
-          console.log(url)
         },
         fail: function(res) {
-          console.log("errrrr", res)
-          wx.showModal({
-            title: "上传失败",
-            content: JSON.stringify(res),
-            showCancel: false
+          wx.showToast({
+            title: "上传失败"
           })
         }
       })
+      requestTask.onProgressUpdate(function(res) {
+        console.log("正在进度:", res)
+        console.log("filePath:", filePath)
+        commit("uploadProgress", { [filePath]: res.progress })
+      })
+    },
+    delFile(
+      {
+        commit,
+        state: { uploadFiles }
+      },
+      src
+    ) {
+      commit("uploadFiles", uploadFiles.filter(item => item !== src))
     }
   }
 }
