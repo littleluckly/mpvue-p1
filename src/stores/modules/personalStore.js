@@ -106,8 +106,8 @@ export default {
         }
       })
     },
-    // 上传文件
-    async uploadFile({ commit, dispatch }, { filePath = "" }) {
+    async uploadFile({ commit, dispatch }, { files = [] }) {
+      let percent = 0
       const data = await dispatch("getAuthorization")
       const { credentials } = data
       const AuthData = {
@@ -119,46 +119,50 @@ export default {
           Pathname: "/"
         })
       }
-      const Key = filePath.substr(filePath.lastIndexOf("/") + 1) // 这里指定上传的文件名
 
       const Bucket = "shuifenzi-1259799060"
       const Region = "ap-chengdu"
       // 文件上传地址
       const prefix = "https://" + Bucket + ".cos." + Region + ".myqcloud.com/"
-      const requestTask = wx.uploadFile({
-        url: prefix,
-        name: "file",
-        filePath: filePath,
-        formData: {
-          key: Key,
-          success_action_status: 200,
-          Signature: AuthData.Authorization,
-          "x-cos-security-token": AuthData.XCosSecurityToken,
-          "Content-Type": ""
-        },
-        success: function(res) {
-          // 上传后的文件路径url
-          const url = prefix + camSafeUrlEncode(Key).replace(/%2F/g, "/")
-          if (res.statusCode === 200) {
-            commit("uploadFiles", url)
-            wx.showToast({ title: "上传成功", duration: 1000 })
-          } else {
+      files.forEach(file => {
+        const Key = file.path.substr(file.path.lastIndexOf("/") + 1) // 这里指定上传的文件名
+        const requestTask = wx.uploadFile({
+          url: prefix,
+          name: "file",
+          filePath: file.path,
+          formData: {
+            key: Key,
+            success_action_status: 200,
+            Signature: AuthData.Authorization,
+            "x-cos-security-token": AuthData.XCosSecurityToken,
+            "Content-Type": ""
+          },
+          success: function(res) {
+            // 上传后的文件路径url
+            const url = prefix + camSafeUrlEncode(Key).replace(/%2F/g, "/")
+            if (res.statusCode === 200) {
+              commit("uploadFiles", url)
+              percent += 1
+              percent == files.length &&
+                wx.showToast({ title: "上传成功", duration: 1000 })
+            } else {
+              wx.showToast({
+                title: "上传失败",
+                duration: 1000
+              })
+            }
+          },
+          fail: function(res) {
             wx.showToast({
-              title: "上传失败",
-              duration: 1000
+              title: "上传失败"
             })
           }
-        },
-        fail: function(res) {
-          wx.showToast({
-            title: "上传失败"
-          })
-        }
-      })
-      requestTask.onProgressUpdate(function(res) {
-        console.log("正在进度:", res)
-        console.log("filePath:", filePath)
-        commit("uploadProgress", { [filePath]: res.progress })
+        })
+        requestTask.onProgressUpdate(function(res) {
+          console.log("正在进度:", res)
+          console.log("filePath:", file.path)
+          commit("uploadProgress", { [file.path]: res.progress })
+        })
       })
     },
     delFile(

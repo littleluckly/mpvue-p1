@@ -190,7 +190,6 @@ export default {
             autoplay: false,
             interval: 3000,
             duration: 500,
-            value1: "",
             imgList: [
                 {
                     src:

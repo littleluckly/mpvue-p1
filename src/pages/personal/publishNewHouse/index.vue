@@ -28,7 +28,13 @@
                             ></i-progress>
                         </div>
                         <span class="delete" @click="handleDelFile(img.src)">x</span>
-                        <img :src="img.src" alt srcset />
+                        <image
+                            mode="scaleToFill"
+                            :src="img.src"
+                            alt
+                            srcset
+                            @click="previewImg(img.src)"
+                        />
                     </li>
                 </ul>
             </view>
@@ -314,19 +320,30 @@ export default {
             const that = this
             // that.uploadFile({})
             wx.chooseImage({
-                count: 1, // 默认9
+                count: 9, // 默认9
                 sizeType: ["original"], // 可以指定是原图还是压缩图，默认用原图
                 sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
                 success: function(res) {
-                    const filePath = res.tempFiles[0].path
-                    that.previewList.push({ src: filePath })
-                    that.uploadFile({ filePath })
+                    // const filePath = res.tempFiles[0].path
+                    // that.previewList.push({ src: filePath })
+                    // that.uploadFile({ filePath })
+                    that.previewList = that.previewList.concat(
+                        res.tempFiles.map(file => ({ src: file.path }))
+                    )
+                    that.uploadFile({ files: res.tempFiles })
                 }
             })
         },
         handleDelFile(src) {
             this.previewList = this.previewList.filter(item => item.src !== src)
             this.delFile(src)
+        },
+
+        previewImg(src) {
+            wx.previewImage({
+                current: src,
+                urls: this.previewList.map(item => item.src)
+            })
         },
         handleSelectType(e) {
             const value = e.mp.detail.value
@@ -567,7 +584,7 @@ export default {
                     display: block;
                     position: absolute;
                     top: 10px;
-                    right: 10px;
+                    left: 10px;
                     padding: 0 9px;
                     color: red;
                     font-size: 20px;
