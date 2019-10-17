@@ -17,8 +17,10 @@ export default {
     historyList: [],
     summaryInfo: {},
     tags: [],
-    uploadProgress: {},
-    uploadFiles: []
+    uploadImgProgress: {},
+    uploadVideoProgress: 0,
+    uploadFiles: [],
+    uploadVideos: []
   },
   mutations: {
     historyList(state, payload) {
@@ -27,18 +29,27 @@ export default {
     summaryInfo(state, payload) {
       state.summaryInfo = payload
     },
-    uploadProgress(state, payload) {
-      state.uploadProgress = {
-        ...state.uploadProgress,
+    uploadImgProgress(state, payload) {
+      state.uploadImgProgress = {
+        ...state.uploadImgProgress,
         ...payload
       }
-      console.log("state.uploadProgress", state.uploadProgress)
+      console.log("state.uploadImgProgress", state.uploadImgProgress)
+    },
+    uploadVideoProgress(state, payload = 0) {
+      state.uploadVideoProgress = {
+        ...state.uploadVideoProgress,
+        ...payload
+      }
     },
     tags(state, payload) {
       state.tags = payload
     },
     uploadFiles(state, payload) {
       state.uploadFiles = [...state.uploadFiles, payload]
+    },
+    uploadVideos(state, payload) {
+      state.uploadVideos = [...state.uploadVideos, payload]
     }
   },
   actions: {
@@ -106,7 +117,7 @@ export default {
         }
       })
     },
-    async uploadFile({ commit, dispatch }, { files = [] }) {
+    async uploadImg({ commit, dispatch }, { files = [] }) {
       let percent = 0
       const data = await dispatch("getAuthorization")
       const { credentials } = data
@@ -161,8 +172,61 @@ export default {
         requestTask.onProgressUpdate(function(res) {
           console.log("正在进度:", res)
           console.log("filePath:", file.path)
-          commit("uploadProgress", { [file.path]: res.progress })
+          commit("uploadImgProgress", { [file.path]: res.progress })
         })
+      })
+    },
+    async uploadVideo({ commit, dispatch }, { filePath }) {
+      const data = await dispatch("getAuthorization")
+      const { credentials } = data
+      const AuthData = {
+        XCosSecurityToken: credentials.sessionToken,
+        Authorization: CosAuth({
+          SecretId: credentials.tmpSecretId,
+          SecretKey: credentials.tmpSecretKey,
+          Method: "POST",
+          Pathname: "/"
+        })
+      }
+
+      const Bucket = "shuifenzi-1259799060"
+      const Region = "ap-chengdu"
+      // 文件上传地址
+      const prefix = "https://" + Bucket + ".cos." + Region + ".myqcloud.com/"
+      const Key = filePath.substr(filePath.lastIndexOf("/") + 1) // 这里指定上传的文件名
+      const requestTask = wx.uploadFile({
+        url: prefix,
+        name: "file",
+        filePath: filePath,
+        formData: {
+          key: Key,
+          success_action_status: 200,
+          Signature: AuthData.Authorization,
+          "x-cos-security-token": AuthData.XCosSecurityToken,
+          "Content-Type": ""
+        },
+        success: function(res) {
+          // 上传后的文件路径url
+          const url = prefix + camSafeUrlEncode(Key).replace(/%2F/g, "/")
+          if (res.statusCode === 200) {
+            commit("uploadVideos", url)
+            wx.showToast({ title: "上传成功", duration: 1000 })
+          } else {
+            wx.showToast({
+              title: "上传失败",
+              duration: 1000
+            })
+          }
+        },
+        fail: function(res) {
+          wx.showToast({
+            title: "上传失败"
+          })
+        }
+      })
+      requestTask.onProgressUpdate(function(res) {
+        console.log("正在进度:", res)
+        commit("uploadVideoProgress", { [filePath]: res.progress })
       })
     },
     delFile(
