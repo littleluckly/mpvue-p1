@@ -3,7 +3,7 @@
         <form @submit="formSubmit" @reset="formReset">
             <div class="infoType">
                 <div class="divider"></div>
-                <div class="infoTitle">视频/图片信息</div>
+                <div class="infoTitle">图片信息</div>
                 <div class="divider"></div>
             </div>
             <view class="formItem section section_gap">
@@ -12,17 +12,17 @@
                     style="margin-bottom:15px;"
                     size="small"
                     @click="handleUploadFile"
-                >选择图片/视频</button>
+                >选择图片</button>
                 <ul class="previewWrap">
                     <li
-                        v-for="(img,idx) in previewList"
+                        v-for="(img,idx) in perviewImgList"
                         :key="idx"
                         class="previewItem"
-                        :class="{finshed:uploadProgress[img.src]==100}"
+                        :class="{finshed:uploadImgProgress[img.src]==100}"
                     >
                         <div class="progressWrap">
                             <i-progress
-                                :percent="uploadProgress[img.src]||0"
+                                :percent="uploadImgProgress[img.src]||0"
                                 status="active"
                                 i-class="progress"
                             ></i-progress>
@@ -34,6 +34,42 @@
                             alt
                             srcset
                             @click="previewImg(img.src)"
+                        />
+                    </li>
+                </ul>
+            </view>
+            <div class="infoType">
+                <div class="divider"></div>
+                <div class="infoTitle">视频信息</div>
+                <div class="divider"></div>
+            </div>
+            <view class="formItem section section_gap">
+                <button
+                    type="primary"
+                    style="margin-bottom:15px;"
+                    size="small"
+                    @click="handleUploadVideo"
+                >选择视频</button>
+                <ul class="previewWrap">
+                    <li
+                        v-for="(video,idx) in perviewVideoList"
+                        :key="idx"
+                        class="previewItem"
+                        :class="{finshed:uploadVideoProgress[video.src]==100}"
+                    >
+                        <div class="progressWrap">
+                            <i-progress
+                                :percent="uploadVideoProgress[video.src]||0"
+                                status="active"
+                                i-class="progress"
+                            ></i-progress>
+                        </div>
+                        <span class="delete" @click="handleDelVideo(video.src)">x</span>
+                        <video
+                            :src="uploadVideoProgress[video.src]==100?uploadVideos[idx]:video.thumbTempFilePath"
+                            alt
+                            srcset
+                            object-fit="fill"
                         />
                     </li>
                 </ul>
@@ -249,7 +285,8 @@ export default {
                 "盐田区",
                 "坪山区"
             ],
-            previewList: [],
+            perviewImgList: [],
+            perviewVideoList: [],
             formData: {
                 copyrightYear: "70年",
                 house_name: "",
@@ -264,7 +301,12 @@ export default {
         }
     },
     computed: {
-        ...mapState("personalStore/", ["tags", "uploadProgress"])
+        ...mapState("personalStore/", [
+            "tags",
+            "uploadImgProgress",
+            "uploadVideoProgress",
+            "uploadVideos"
+        ])
     },
     onShow(options) {
         const { geo = "", address = "" } = wx.getStorageSync("geo") || {}
@@ -290,7 +332,12 @@ export default {
         this.latitude = latitude
     },
     methods: {
-        ...mapActions("personalStore", ["fetchTags", "uploadFile", "delFile"]),
+        ...mapActions("personalStore", [
+            "fetchTags",
+            "uploadImg",
+            "uploadVideo",
+            "delFile"
+        ]),
         formSubmit: function(e) {
             const params = e.mp.detail.value
             console.log("form发生了submit事件，携带数据为：", params)
@@ -316,33 +363,49 @@ export default {
             }
         },
         handleUploadFile() {
-            console.log()
             const that = this
-            // that.uploadFile({})
             wx.chooseImage({
                 count: 9, // 默认9
                 sizeType: ["original"], // 可以指定是原图还是压缩图，默认用原图
                 sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
                 success: function(res) {
-                    // const filePath = res.tempFiles[0].path
-                    // that.previewList.push({ src: filePath })
-                    // that.uploadFile({ filePath })
-                    that.previewList = that.previewList.concat(
+                    that.perviewImgList = that.perviewImgList.concat(
                         res.tempFiles.map(file => ({ src: file.path }))
                     )
-                    that.uploadFile({ files: res.tempFiles })
+                    that.uploadImg({ files: res.tempFiles })
+                }
+            })
+        },
+        handleUploadVideo() {
+            const that = this
+            wx.chooseVideo({
+                maxDuration: 5 * 60,
+                success: function(res) {
+                    console.log(res)
+                    that.perviewVideoList = [
+                        ...that.perviewVideoList,
+                        {
+                            src: res.tempFilePath,
+                            thumbTempFilePath: res.thumbTempFilePath
+                        }
+                    ]
+                    that.uploadVideo({
+                        filePath: res.tempFilePath
+                    })
                 }
             })
         },
         handleDelFile(src) {
-            this.previewList = this.previewList.filter(item => item.src !== src)
+            this.perviewImgList = this.perviewImgList.filter(
+                item => item.src !== src
+            )
             this.delFile(src)
         },
 
         previewImg(src) {
             wx.previewImage({
                 current: src,
-                urls: this.previewList.map(item => item.src)
+                urls: this.perviewImgList.map(item => item.src)
             })
         },
         handleSelectType(e) {
@@ -595,6 +658,9 @@ export default {
             img {
                 width: 100%;
                 filter: blur(5px);
+            }
+            video {
+                width: 100%;
             }
             .progressWrap {
                 position: absolute;
