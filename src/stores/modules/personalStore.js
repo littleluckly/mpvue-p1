@@ -98,11 +98,12 @@ export default {
     },
 
     // 获取上传临时密钥
-    getAuthorization() {
+    getAuthorization(ctx, allowPrefix = "*") {
       return new Promise(async (resolve, reject) => {
         const result = await request({
           url: "/upload/getCredential",
-          method: "post"
+          method: "post",
+          data: { allowPrefix }
         })
         const credentials = result.data.credentials
         if (credentials) {
@@ -119,7 +120,8 @@ export default {
     },
     async uploadImg({ commit, dispatch }, { files = [] }) {
       let percent = 0
-      const data = await dispatch("getAuthorization")
+      let allowPrefix = "wojushenzhen/images/*"
+      const data = await dispatch("getAuthorization", allowPrefix)
       const { credentials } = data
       const AuthData = {
         XCosSecurityToken: credentials.sessionToken,
@@ -136,7 +138,9 @@ export default {
       // 文件上传地址
       const prefix = "https://" + Bucket + ".cos." + Region + ".myqcloud.com/"
       files.forEach(file => {
-        const Key = file.path.substr(file.path.lastIndexOf("/") + 1) // 这里指定上传的文件名
+        const Key =
+          allowPrefix.slice(0, -1) +
+          file.path.substr(file.path.lastIndexOf("/") + 1) // 这里指定上传的文件名
         const requestTask = wx.uploadFile({
           url: prefix,
           name: "file",
@@ -159,7 +163,8 @@ export default {
             } else {
               wx.showToast({
                 title: "上传失败",
-                duration: 1000
+                duration: 1600,
+                image: "../../../static/images/error.png"
               })
             }
           },
@@ -167,17 +172,19 @@ export default {
             wx.showToast({
               title: "上传失败"
             })
+          },
+          complete(a) {
+            console.log(a, "asdflsdkjf")
           }
         })
         requestTask.onProgressUpdate(function(res) {
-          console.log("正在进度:", res)
-          console.log("filePath:", file.path)
           commit("uploadImgProgress", { [file.path]: res.progress })
         })
       })
     },
     async uploadVideo({ commit, dispatch }, { filePath }) {
-      const data = await dispatch("getAuthorization")
+      let allowPrefix = "wojushenzhen/video/*"
+      const data = await dispatch("getAuthorization", allowPrefix)
       const { credentials } = data
       const AuthData = {
         XCosSecurityToken: credentials.sessionToken,
@@ -193,7 +200,9 @@ export default {
       const Region = "ap-chengdu"
       // 文件上传地址
       const prefix = "https://" + Bucket + ".cos." + Region + ".myqcloud.com/"
-      const Key = filePath.substr(filePath.lastIndexOf("/") + 1) // 这里指定上传的文件名
+      const Key =
+        allowPrefix.slice(0, -1) +
+        filePath.substr(filePath.lastIndexOf("/") + 1) // 这里指定上传的文件名
       const requestTask = wx.uploadFile({
         url: prefix,
         name: "file",
@@ -214,7 +223,8 @@ export default {
           } else {
             wx.showToast({
               title: "上传失败",
-              duration: 1000
+              duration: 1600,
+              image: "../../../static/images/error.png"
             })
           }
         },
