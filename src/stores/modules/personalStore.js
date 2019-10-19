@@ -1,6 +1,9 @@
 import request from "@/utils/request"
 // const CosAuth = require("../../utils/cos-auth")
 import CosAuth from "../../utils/cos-auth"
+// var COS = require("../../../node_modules/cos-wx-sdk-v5")
+// import COS from "cos-wx-sdk-v5"
+var COS = require("cos-wx-sdk-v5")
 // 对更多字符编码的 url encode 格式
 const camSafeUrlEncode = function(str) {
   return encodeURIComponent(str)
@@ -19,7 +22,7 @@ export default {
     tags: [],
     uploadImgProgress: {},
     uploadVideoProgress: 0,
-    uploadFiles: [],
+    uploadedFiles: [],
     uploadVideos: []
   },
   mutations: {
@@ -45,8 +48,8 @@ export default {
     tags(state, payload) {
       state.tags = payload
     },
-    uploadFiles(state, payload) {
-      state.uploadFiles = [...state.uploadFiles, payload]
+    uploadedFiles(state, payload) {
+      state.uploadedFiles = [...state.uploadedFiles, payload]
     },
     uploadVideos(state, payload) {
       state.uploadVideos = [...state.uploadVideos, payload]
@@ -118,68 +121,106 @@ export default {
         }
       })
     },
-    async uploadImg({ commit, dispatch }, { files = [] }) {
-      let percent = 0
-      let allowPrefix = "wojushenzhen/images/*"
-      const data = await dispatch("getAuthorization", allowPrefix)
-      const { credentials } = data
-      const AuthData = {
-        XCosSecurityToken: credentials.sessionToken,
-        Authorization: CosAuth({
-          SecretId: credentials.tmpSecretId,
-          SecretKey: credentials.tmpSecretKey,
-          Method: "POST",
-          Pathname: "/"
-        })
-      }
-
-      const Bucket = "shuifenzi-1259799060"
-      const Region = "ap-chengdu"
-      // 文件上传地址
-      const prefix = "https://" + Bucket + ".cos." + Region + ".myqcloud.com/"
-      files.forEach(file => {
-        const Key =
-          allowPrefix.slice(0, -1) +
-          file.path.substr(file.path.lastIndexOf("/") + 1) // 这里指定上传的文件名
-        const requestTask = wx.uploadFile({
-          url: prefix,
-          name: "file",
-          filePath: file.path,
-          formData: {
-            key: Key,
-            success_action_status: 200,
-            Signature: AuthData.Authorization,
-            "x-cos-security-token": AuthData.XCosSecurityToken,
-            "Content-Type": ""
-          },
-          success: function(res) {
-            // 上传后的文件路径url
-            const url = prefix + camSafeUrlEncode(Key).replace(/%2F/g, "/")
-            if (res.statusCode === 200) {
-              commit("uploadFiles", url)
-              percent += 1
-              percent == files.length &&
-                wx.showToast({ title: "上传成功", duration: 1000 })
-            } else {
-              wx.showToast({
-                title: "上传失败",
-                duration: 1600,
-                image: "../../../static/images/error.png"
-              })
-            }
-          },
-          fail: function(res) {
-            wx.showToast({
-              title: "上传失败"
+    uploadImg({ commit, dispatch }, { files = [] }) {
+      return new Promise((resolve, reject) => {
+        // 初始化实例
+        const Bucket = "shuifenzi-1259799060"
+        const Region = "ap-chengdu"
+        const allowPrefix = "/wojushenzhen/images/*"
+        const cos = new COS({
+          getAuthorization: async function(options, callback) {
+            // 异步获取签名
+            const result = await request({
+              url: "/upload/getCredential",
+              method: "post",
+              data: { allowPrefix }
             })
-          },
-          complete(a) {
-            console.log(a, "asdflsdkjf")
+            var data = result.data
+            callback({
+              TmpSecretId: data.credentials && data.credentials.tmpSecretId,
+              TmpSecretKey: data.credentials && data.credentials.tmpSecretKey,
+              XCosSecurityToken:
+                data.credentials && data.credentials.sessionToken,
+              ExpiredTime: data.expiredTime
+            })
           }
         })
-        requestTask.onProgressUpdate(function(res) {
-          commit("uploadImgProgress", { [file.path]: res.progress })
+        files.forEach(file => {
+          const Key =
+            allowPrefix.slice(0, -1) +
+            file.path.substr(file.path.lastIndexOf("/") + 1) // 这里指定上传的文件名
+          cos.postObject(
+            {
+              Bucket: Bucket,
+              Region: Region,
+              Key: Key,
+              FilePath: file.path,
+              onProgress: function(info) {
+                console.log("上传", JSON.stringify(info))
+                commit("uploadImgProgress", {
+                  [file.path]: Math.floor(info.percent * 100)
+                })
+              }
+            },
+            function(err, data) {
+              if (!err) {
+                resolve(data)
+              }
+              console.log(err || data)
+            }
+          )
         })
+      })
+    },
+    deleteRemoteImg(
+      {
+        commit,
+        state: { uploadedFiles }
+      },
+      src
+    ) {
+      return new Promise((resolve, reject) => {
+        // 初始化实例
+        const Bucket = "shuifenzi-1259799060"
+        const Region = "ap-chengdu"
+        const Key = `wojushenzhen/images/${src.substr(
+          src.lastIndexOf("/") + 1
+        )}`
+        console.log("Key", Key)
+        const cos = new COS({
+          getAuthorization: async function(options, callback) {
+            // 异步获取签名
+            const result = await request({
+              url: "/upload/getCredential",
+              method: "post",
+              data: { allowPrefix: Key }
+            })
+            var data = result.data
+            callback({
+              TmpSecretId: data.credentials && data.credentials.tmpSecretId,
+              TmpSecretKey: data.credentials && data.credentials.tmpSecretKey,
+              XCosSecurityToken:
+                data.credentials && data.credentials.sessionToken,
+              ExpiredTime: data.expiredTime
+            })
+          }
+        })
+        cos.deleteObject(
+          {
+            Bucket,
+            Region,
+            Key: Key
+          },
+          function(err, data) {
+            if (!err) {
+              commit(
+                "uploadedFiles",
+                uploadedFiles.filter(item => item !== src)
+              )
+            }
+            console.log("shanchu", err || data)
+          }
+        )
       })
     },
     async uploadVideo({ commit, dispatch }, { filePath }) {
@@ -242,11 +283,11 @@ export default {
     delFile(
       {
         commit,
-        state: { uploadFiles }
+        state: { uploadedFiles }
       },
       src
     ) {
-      commit("uploadFiles", uploadFiles.filter(item => item !== src))
+      commit("uploadedFiles", uploadedFiles.filter(item => item !== src))
     }
   }
 }

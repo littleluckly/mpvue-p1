@@ -332,11 +332,12 @@ export default {
         this.latitude = latitude
     },
     methods: {
-        ...mapActions("personalStore", [
+        ...mapActions("personalStore/", [
             "fetchTags",
             "uploadImg",
             "uploadVideo",
-            "delFile"
+            "delFile",
+            "deleteRemoteImg"
         ]),
         formSubmit: function(e) {
             const params = e.mp.detail.value
@@ -362,7 +363,10 @@ export default {
                 this.validateErrData = {}
             }
         },
-        handleUploadFile() {
+        async handleUploadFile() {
+            // this.uploadImg()
+            // const res = await this.uploadImg()
+            // console.log("res", res)
             const that = this
             wx.chooseImage({
                 count: 9, // 默认9
@@ -399,7 +403,7 @@ export default {
             this.perviewImgList = this.perviewImgList.filter(
                 item => item.src !== src
             )
-            this.delFile(src)
+            this.deleteRemoteImg(src)
         },
 
         previewImg(src) {
