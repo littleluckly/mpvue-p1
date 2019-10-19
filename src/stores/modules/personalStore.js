@@ -101,49 +101,33 @@ export default {
 
     // 获取上传临时密钥
     getAuthorization(ctx, allowPrefix = "*") {
-      return new Promise(async (resolve, reject) => {
-        const result = await request({
-          url: "/upload/getCredential",
-          method: "post",
-          data: { allowPrefix }
-        })
-        const credentials = result.data.credentials
-        if (credentials) {
-          resolve(result.data)
-        } else {
-          wx.showModal({
-            title: "临时密钥获取失败",
-            content: JSON.stringify(result),
-            showCancel: false
+      console.log("allowprefix", allowPrefix)
+      return new COS({
+        getAuthorization: async function(options, callback) {
+          // 异步获取签名
+          const result = await request({
+            url: "/upload/getCredential",
+            method: "post",
+            data: { allowPrefix }
           })
-          resolve({})
+          var data = result.data
+          callback({
+            TmpSecretId: data.credentials && data.credentials.tmpSecretId,
+            TmpSecretKey: data.credentials && data.credentials.tmpSecretKey,
+            XCosSecurityToken:
+              data.credentials && data.credentials.sessionToken,
+            ExpiredTime: data.expiredTime
+          })
         }
       })
     },
     uploadImg({ commit, dispatch }, { files = [] }) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         // 初始化实例
         const Bucket = "shuifenzi-1259799060"
         const Region = "ap-chengdu"
         const allowPrefix = "wojushenzhen/images/*"
-        const cos = new COS({
-          getAuthorization: async function(options, callback) {
-            // 异步获取签名
-            const result = await request({
-              url: "/upload/getCredential",
-              method: "post",
-              data: { allowPrefix }
-            })
-            var data = result.data
-            callback({
-              TmpSecretId: data.credentials && data.credentials.tmpSecretId,
-              TmpSecretKey: data.credentials && data.credentials.tmpSecretKey,
-              XCosSecurityToken:
-                data.credentials && data.credentials.sessionToken,
-              ExpiredTime: data.expiredTime
-            })
-          }
-        })
+        const cos = await dispatch("getAuthorization", allowPrefix)
         files.forEach(file => {
           const Key =
             allowPrefix.slice(0, -1) +
@@ -177,85 +161,13 @@ export default {
         })
       })
     },
-    deleteRemoteImg(
-      {
-        commit,
-        state: { uploadedFiles }
-      },
-      src
-    ) {
-      return new Promise((resolve, reject) => {
-        // 初始化实例
-        const Bucket = "shuifenzi-1259799060"
-        const Region = "ap-chengdu"
-        const Key = `wojushenzhen/images/${src.substr(
-          src.lastIndexOf("/") + 1
-        )}`
-        const cos = new COS({
-          getAuthorization: async function(options, callback) {
-            // 异步获取签名
-            const result = await request({
-              url: "/upload/getCredential",
-              method: "post",
-              data: { allowPrefix: Key }
-            })
-            var data = result.data
-            callback({
-              TmpSecretId: data.credentials && data.credentials.tmpSecretId,
-              TmpSecretKey: data.credentials && data.credentials.tmpSecretKey,
-              XCosSecurityToken:
-                data.credentials && data.credentials.sessionToken,
-              ExpiredTime: data.expiredTime
-            })
-          }
-        })
-        cos.deleteObject(
-          {
-            Bucket,
-            Region,
-            Key: Key
-          },
-          function(err, data) {
-            if (!err) {
-              commit(
-                "uploadedFiles",
-                uploadedFiles.filter(item => item !== src)
-              )
-            } else {
-              wx.showToast({
-                title: "删除失败",
-                duration: 1600,
-                image: "../../../static/images/error.png"
-              })
-            }
-          }
-        )
-      })
-    },
-    async uploadVideo({ commit, dispatch }, { filePath }) {
-      return new Promise((resolve, reject) => {
+    uploadVideo({ commit, dispatch }, { filePath }) {
+      return new Promise(async (resolve, reject) => {
         // 初始化实例
         const Bucket = "shuifenzi-1259799060"
         const Region = "ap-chengdu"
         const allowPrefix = "wojushenzhen/video/*"
-        const cos = new COS({
-          getAuthorization: async function(options, callback) {
-            // 异步获取签名
-            const result = await request({
-              url: "/upload/getCredential",
-              method: "post",
-              data: { allowPrefix }
-            })
-            var data = result.data
-            callback({
-              TmpSecretId: data.credentials && data.credentials.tmpSecretId,
-              TmpSecretKey: data.credentials && data.credentials.tmpSecretKey,
-              XCosSecurityToken:
-                data.credentials && data.credentials.sessionToken,
-              ExpiredTime: data.expiredTime
-            })
-          }
-        })
+        const cos = await dispatch("getAuthorization", allowPrefix)
         const Key =
           allowPrefix.slice(0, -1) +
           filePath.substr(filePath.lastIndexOf("/") + 1) // 这里指定上传的文件名
@@ -289,36 +201,22 @@ export default {
         )
       })
     },
-    deleteRemoteVideo(
+    deleteRemoteFile(
       {
         commit,
-        state: { uploadedVideos }
+        dispatch,
+        state: { uploadedVideos, uploadedFiles }
       },
-      src
+      { src, type }
     ) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         // 初始化实例
         const Bucket = "shuifenzi-1259799060"
         const Region = "ap-chengdu"
-        const Key = `wojushenzhen/video/${src.substr(src.lastIndexOf("/") + 1)}`
-        const cos = new COS({
-          getAuthorization: async function(options, callback) {
-            // 异步获取签名
-            const result = await request({
-              url: "/upload/getCredential",
-              method: "post",
-              data: { allowPrefix: Key }
-            })
-            var data = result.data
-            callback({
-              TmpSecretId: data.credentials && data.credentials.tmpSecretId,
-              TmpSecretKey: data.credentials && data.credentials.tmpSecretKey,
-              XCosSecurityToken:
-                data.credentials && data.credentials.sessionToken,
-              ExpiredTime: data.expiredTime
-            })
-          }
-        })
+        const Key = `wojushenzhen/${type}/${src.substr(
+          src.lastIndexOf("/") + 1
+        )}`
+        const cos = await dispatch("getAuthorization", Key)
         cos.deleteObject(
           {
             Bucket,
@@ -327,10 +225,17 @@ export default {
           },
           function(err, data) {
             if (!err) {
-              commit(
-                "uploadedVideos",
-                uploadedVideos.filter(item => item !== src)
-              )
+              if (type === "images") {
+                commit(
+                  "uploadedFiles",
+                  uploadedFiles.filter(item => item !== src)
+                )
+              } else {
+                commit(
+                  "uploadedVideos",
+                  uploadedVideos.filter(item => item !== src)
+                )
+              }
             } else {
               wx.showToast({
                 title: "删除失败",

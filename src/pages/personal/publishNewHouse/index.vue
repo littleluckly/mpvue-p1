@@ -337,7 +337,8 @@ export default {
             "uploadImg",
             "uploadVideo",
             "deleteRemoteVideo",
-            "deleteRemoteImg"
+            "deleteRemoteImg",
+            "deleteRemoteFile"
         ]),
         formSubmit: function(e) {
             const params = e.mp.detail.value
@@ -400,13 +401,13 @@ export default {
             this.perviewImgList = this.perviewImgList.filter(
                 item => item.src !== src
             )
-            this.deleteRemoteImg(src)
+            this.deleteRemoteFile({ src, type: "images" })
         },
         handleDelVideo(src) {
             this.perviewVideoList = this.perviewVideoList.filter(
                 item => item.src !== src
             )
-            this.deleteRemoteVideo(src)
+            this.deleteRemoteFile({ src, type: "video" })
         },
         previewImg(src) {
             wx.previewImage({
