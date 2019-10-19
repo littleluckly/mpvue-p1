@@ -1,9 +1,9 @@
 export default function request(config) {
   const isDev = process.env.NODE_ENV == "development"
-  //   const baseUrl = isDev
-  //     ? "https://luck.frpgz1.idcfengye.com"
-  //     : "https://mp.dongguanshuifenzi.com"
-  const baseUrl = "https://mp.dongguanshuifenzi.com"
+  const baseUrl = isDev
+    ? "https://luck.vipgz2.idcfengye.com"
+    : "https://mp.dongguanshuifenzi.com"
+  //   const baseUrl = "https://mp.dongguanshuifenzi.com"
   // 定义方法返回Promise参数,obj 为wx.request 方法中所需参数
   return new Promise(function(resolve, reject) {
     config.showLoading &&

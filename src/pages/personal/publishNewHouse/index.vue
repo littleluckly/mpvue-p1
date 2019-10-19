@@ -28,7 +28,7 @@
                             ></i-progress>
                         </div>
                         <span class="delete" @click="handleDelFile(img.src)">x</span>
-                        <image
+                        <img
                             mode="scaleToFill"
                             :src="img.src"
                             alt
@@ -66,7 +66,7 @@
                         </div>
                         <span class="delete" @click="handleDelVideo(video.src)">x</span>
                         <video
-                            :src="uploadVideoProgress[video.src]==100?uploadVideos[idx]:video.thumbTempFilePath"
+                            :src="uploadVideoProgress[video.src]==100?uploadedVideos[idx]:video.thumbTempFilePath"
                             alt
                             srcset
                             object-fit="fill"
@@ -305,7 +305,7 @@ export default {
             "tags",
             "uploadImgProgress",
             "uploadVideoProgress",
-            "uploadVideos"
+            "uploadedVideos"
         ])
     },
     onShow(options) {
@@ -332,11 +332,13 @@ export default {
         this.latitude = latitude
     },
     methods: {
-        ...mapActions("personalStore", [
+        ...mapActions("personalStore/", [
             "fetchTags",
             "uploadImg",
             "uploadVideo",
-            "delFile"
+            "deleteRemoteVideo",
+            "deleteRemoteImg",
+            "deleteRemoteFile"
         ]),
         formSubmit: function(e) {
             const params = e.mp.detail.value
@@ -362,7 +364,7 @@ export default {
                 this.validateErrData = {}
             }
         },
-        handleUploadFile() {
+        async handleUploadFile() {
             const that = this
             wx.chooseImage({
                 count: 9, // 默认9
@@ -399,9 +401,14 @@ export default {
             this.perviewImgList = this.perviewImgList.filter(
                 item => item.src !== src
             )
-            this.delFile(src)
+            this.deleteRemoteFile({ src, type: "images" })
         },
-
+        handleDelVideo(src) {
+            this.perviewVideoList = this.perviewVideoList.filter(
+                item => item.src !== src
+            )
+            this.deleteRemoteFile({ src, type: "video" })
+        },
         previewImg(src) {
             wx.previewImage({
                 current: src,
@@ -653,6 +660,7 @@ export default {
                     font-size: 20px;
                     border-radius: 50%;
                     background: rgba(0, 0, 0, 0.3);
+                    z-index: 2;
                 }
             }
             img {
