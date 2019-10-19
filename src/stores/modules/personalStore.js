@@ -23,7 +23,7 @@ export default {
     uploadImgProgress: {},
     uploadVideoProgress: 0,
     uploadedFiles: [],
-    uploadVideos: []
+    uploadedVideos: []
   },
   mutations: {
     historyList(state, payload) {
@@ -37,7 +37,6 @@ export default {
         ...state.uploadImgProgress,
         ...payload
       }
-      console.log("state.uploadImgProgress", state.uploadImgProgress)
     },
     uploadVideoProgress(state, payload = 0) {
       state.uploadVideoProgress = {
@@ -51,8 +50,8 @@ export default {
     uploadedFiles(state, payload) {
       state.uploadedFiles = [...state.uploadedFiles, payload]
     },
-    uploadVideos(state, payload) {
-      state.uploadVideos = [...state.uploadVideos, payload]
+    uploadedVideos(state, payload) {
+      state.uploadedVideos = [...state.uploadedVideos, payload]
     }
   },
   actions: {
@@ -126,7 +125,7 @@ export default {
         // 初始化实例
         const Bucket = "shuifenzi-1259799060"
         const Region = "ap-chengdu"
-        const allowPrefix = "/wojushenzhen/images/*"
+        const allowPrefix = "wojushenzhen/images/*"
         const cos = new COS({
           getAuthorization: async function(options, callback) {
             // 异步获取签名
@@ -165,6 +164,12 @@ export default {
             function(err, data) {
               if (!err) {
                 resolve(data)
+              } else {
+                wx.showToast({
+                  title: "上传失败",
+                  duration: 1600,
+                  image: "../../../static/images/error.png"
+                })
               }
               console.log(err || data)
             }
@@ -186,7 +191,6 @@ export default {
         const Key = `wojushenzhen/images/${src.substr(
           src.lastIndexOf("/") + 1
         )}`
-        console.log("Key", Key)
         const cos = new COS({
           getAuthorization: async function(options, callback) {
             // 异步获取签名
@@ -217,77 +221,126 @@ export default {
                 "uploadedFiles",
                 uploadedFiles.filter(item => item !== src)
               )
+            } else {
+              wx.showToast({
+                title: "删除失败",
+                duration: 1600,
+                image: "../../../static/images/error.png"
+              })
             }
-            console.log("shanchu", err || data)
           }
         )
       })
     },
     async uploadVideo({ commit, dispatch }, { filePath }) {
-      let allowPrefix = "wojushenzhen/video/*"
-      const data = await dispatch("getAuthorization", allowPrefix)
-      const { credentials } = data
-      const AuthData = {
-        XCosSecurityToken: credentials.sessionToken,
-        Authorization: CosAuth({
-          SecretId: credentials.tmpSecretId,
-          SecretKey: credentials.tmpSecretKey,
-          Method: "POST",
-          Pathname: "/"
-        })
-      }
-
-      const Bucket = "shuifenzi-1259799060"
-      const Region = "ap-chengdu"
-      // 文件上传地址
-      const prefix = "https://" + Bucket + ".cos." + Region + ".myqcloud.com/"
-      const Key =
-        allowPrefix.slice(0, -1) +
-        filePath.substr(filePath.lastIndexOf("/") + 1) // 这里指定上传的文件名
-      const requestTask = wx.uploadFile({
-        url: prefix,
-        name: "file",
-        filePath: filePath,
-        formData: {
-          key: Key,
-          success_action_status: 200,
-          Signature: AuthData.Authorization,
-          "x-cos-security-token": AuthData.XCosSecurityToken,
-          "Content-Type": ""
-        },
-        success: function(res) {
-          // 上传后的文件路径url
-          const url = prefix + camSafeUrlEncode(Key).replace(/%2F/g, "/")
-          if (res.statusCode === 200) {
-            commit("uploadVideos", url)
-            wx.showToast({ title: "上传成功", duration: 1000 })
-          } else {
-            wx.showToast({
-              title: "上传失败",
-              duration: 1600,
-              image: "../../../static/images/error.png"
+      return new Promise((resolve, reject) => {
+        // 初始化实例
+        const Bucket = "shuifenzi-1259799060"
+        const Region = "ap-chengdu"
+        const allowPrefix = "wojushenzhen/video/*"
+        const cos = new COS({
+          getAuthorization: async function(options, callback) {
+            // 异步获取签名
+            const result = await request({
+              url: "/upload/getCredential",
+              method: "post",
+              data: { allowPrefix }
+            })
+            var data = result.data
+            callback({
+              TmpSecretId: data.credentials && data.credentials.tmpSecretId,
+              TmpSecretKey: data.credentials && data.credentials.tmpSecretKey,
+              XCosSecurityToken:
+                data.credentials && data.credentials.sessionToken,
+              ExpiredTime: data.expiredTime
             })
           }
-        },
-        fail: function(res) {
-          wx.showToast({
-            title: "上传失败"
-          })
-        }
-      })
-      requestTask.onProgressUpdate(function(res) {
-        console.log("正在进度:", res)
-        commit("uploadVideoProgress", { [filePath]: res.progress })
+        })
+        const Key =
+          allowPrefix.slice(0, -1) +
+          filePath.substr(filePath.lastIndexOf("/") + 1) // 这里指定上传的文件名
+        cos.postObject(
+          {
+            Bucket: Bucket,
+            Region: Region,
+            Key: Key,
+            FilePath: filePath,
+            onProgress: function(info) {
+              console.log("上传", JSON.stringify(info))
+              commit("uploadVideoProgress", {
+                [filePath]: Math.floor(info.percent * 100)
+              })
+            }
+          },
+          function(err, data) {
+            if (!err) {
+              console.log("data")
+              commit("uploadedVideos", "https://" + data.Location)
+              resolve(data)
+            } else {
+              wx.showToast({
+                title: "上传失败",
+                duration: 1600,
+                image: "../../../static/images/error.png"
+              })
+            }
+            console.log(err || data)
+          }
+        )
       })
     },
-    delFile(
+    deleteRemoteVideo(
       {
         commit,
-        state: { uploadedFiles }
+        state: { uploadedVideos }
       },
       src
     ) {
-      commit("uploadedFiles", uploadedFiles.filter(item => item !== src))
+      return new Promise((resolve, reject) => {
+        // 初始化实例
+        const Bucket = "shuifenzi-1259799060"
+        const Region = "ap-chengdu"
+        const Key = `wojushenzhen/video/${src.substr(src.lastIndexOf("/") + 1)}`
+        const cos = new COS({
+          getAuthorization: async function(options, callback) {
+            // 异步获取签名
+            const result = await request({
+              url: "/upload/getCredential",
+              method: "post",
+              data: { allowPrefix: Key }
+            })
+            var data = result.data
+            callback({
+              TmpSecretId: data.credentials && data.credentials.tmpSecretId,
+              TmpSecretKey: data.credentials && data.credentials.tmpSecretKey,
+              XCosSecurityToken:
+                data.credentials && data.credentials.sessionToken,
+              ExpiredTime: data.expiredTime
+            })
+          }
+        })
+        cos.deleteObject(
+          {
+            Bucket,
+            Region,
+            Key: Key
+          },
+          function(err, data) {
+            if (!err) {
+              commit(
+                "uploadedVideos",
+                uploadedVideos.filter(item => item !== src)
+              )
+            } else {
+              wx.showToast({
+                title: "删除失败",
+                duration: 1600,
+                image: "../../../static/images/error.png"
+              })
+            }
+          }
+        )
+      })
     }
   }
 }

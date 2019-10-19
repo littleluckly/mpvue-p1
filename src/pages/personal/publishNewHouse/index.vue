@@ -28,7 +28,7 @@
                             ></i-progress>
                         </div>
                         <span class="delete" @click="handleDelFile(img.src)">x</span>
-                        <image
+                        <img
                             mode="scaleToFill"
                             :src="img.src"
                             alt
@@ -66,7 +66,7 @@
                         </div>
                         <span class="delete" @click="handleDelVideo(video.src)">x</span>
                         <video
-                            :src="uploadVideoProgress[video.src]==100?uploadVideos[idx]:video.thumbTempFilePath"
+                            :src="uploadVideoProgress[video.src]==100?uploadedVideos[idx]:video.thumbTempFilePath"
                             alt
                             srcset
                             object-fit="fill"
@@ -305,7 +305,7 @@ export default {
             "tags",
             "uploadImgProgress",
             "uploadVideoProgress",
-            "uploadVideos"
+            "uploadedVideos"
         ])
     },
     onShow(options) {
@@ -336,7 +336,7 @@ export default {
             "fetchTags",
             "uploadImg",
             "uploadVideo",
-            "delFile",
+            "deleteRemoteVideo",
             "deleteRemoteImg"
         ]),
         formSubmit: function(e) {
@@ -364,9 +364,6 @@ export default {
             }
         },
         async handleUploadFile() {
-            // this.uploadImg()
-            // const res = await this.uploadImg()
-            // console.log("res", res)
             const that = this
             wx.chooseImage({
                 count: 9, // 默认9
@@ -405,7 +402,12 @@ export default {
             )
             this.deleteRemoteImg(src)
         },
-
+        handleDelVideo(src) {
+            this.perviewVideoList = this.perviewVideoList.filter(
+                item => item.src !== src
+            )
+            this.deleteRemoteVideo(src)
+        },
         previewImg(src) {
             wx.previewImage({
                 current: src,
@@ -657,6 +659,7 @@ export default {
                     font-size: 20px;
                     border-radius: 50%;
                     background: rgba(0, 0, 0, 0.3);
+                    z-index: 2;
                 }
             }
             img {
