@@ -101,7 +101,6 @@ export default {
 
     // 获取上传临时密钥
     getAuthorization(ctx, allowPrefix = "*") {
-      console.log("allowprefix", allowPrefix)
       return new COS({
         getAuthorization: async function(options, callback) {
           // 异步获取签名
@@ -186,7 +185,6 @@ export default {
           },
           function(err, data) {
             if (!err) {
-              console.log("data")
               commit("uploadedVideos", "https://" + data.Location)
               resolve(data)
             } else {
