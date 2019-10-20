@@ -150,6 +150,7 @@
                 <!-- @input="(e)=>handleFormChange(e,'layout')" -->
                 <input
                     v-model="formData.layout"
+                    @input="handleFormChange"
                     class="formVal"
                     name="layout"
                     placeholder="请输入房源的户型"
@@ -162,6 +163,7 @@
                 </view>
                 <input
                     @click="handleSelectMapLoca"
+                    @input="handleFormChange"
                     v-model="formData.geo"
                     readonly
                     disabled
@@ -179,7 +181,7 @@
                     >{{validateErrData.address.msg}}</div>
                 </view>
                 <textarea
-                    @input="(e)=>handleFormChange(e,'address')"
+                    @input="handleFormChange"
                     v-model="formData.address"
                     class="formVal"
                     name="address"
@@ -195,14 +197,14 @@
             </div>
             <view class="formItem section section_gap">
                 <view class="section__title">
-                    <span class="requireIcon">*</span>小区名称:
+                    <!-- <span class="requireIcon">*</span> -->
+                    小区名称:
                     <div
                         v-if="validateErrData.house_name"
                         class="errText"
                     >{{validateErrData.house_name.msg}}</div>
                 </view>
                 <input
-                    @input="(e)=>handleFormChange(e,'house_name')"
                     v-model="formData.house_name"
                     class="formVal"
                     name="house_name"
@@ -223,13 +225,8 @@
                 />
             </view>
             <view class="formItem section section_gap">
-                <view class="section__title">产权期限:</view>
-                <input
-                    v-model="formData.copyrightYear"
-                    class="formVal"
-                    name="copyrightYear"
-                    placeholder="请输入房源的产权期限"
-                />
+                <view class="section__title">年代:</view>
+                <input v-model="formData.year" class="formVal" name="year" placeholder="请输入房源的年代" />
             </view>
             <view class="formItem section section_gap">
                 <view class="section__title">朝向:</view>
@@ -288,7 +285,7 @@ export default {
             perviewImgList: [],
             perviewVideoList: [],
             formData: {
-                copyrightYear: "70年",
+                year: "70年",
                 house_name: "",
                 price: null,
                 area: null,
@@ -315,6 +312,7 @@ export default {
             address,
             geo
         }
+        geo && this.validateForm()
     },
     onUnload() {
         wx.removeStorage({
@@ -323,6 +321,7 @@ export default {
                 console.log("remove")
             }
         })
+        this.validateErrData = {}
     },
     onLoad(query) {
         this.initValidate()
@@ -340,30 +339,6 @@ export default {
             "deleteRemoteImg",
             "deleteRemoteFile"
         ]),
-        formSubmit: function(e) {
-            const params = e.mp.detail.value
-            console.log("form发生了submit事件，携带数据为：", params)
-            this.validateErrData = {}
-            if (!this.WxValidate.checkForm(params)) {
-                //表单元素验证不通过，此处给出相应提示
-                console.log(
-                    "this.WxValidate.errorList",
-                    this.WxValidate.errorList
-                )
-                let error = this.WxValidate.errorList[0]
-                const errorList = this.WxValidate.errorList
-                console.log("error", error)
-                if (errorList) {
-                    errorList.forEach(item => {
-                        this.validateErrData[item.param] = { ...item }
-                    })
-                    console.log(this.validateErrData, "this.validateErrData")
-                }
-            } else {
-                // 校验成功，清除错误消息
-                this.validateErrData = {}
-            }
-        },
         async handleUploadFile() {
             const that = this
             wx.chooseImage({
@@ -420,14 +395,30 @@ export default {
             this.formData.type = Number(value)
             const target = this.typeList[Number(value)]
             this.currType = target.label
+            this.handleFormChange()
         },
-        handleFormChange(e, name) {
-            console.log(e.mp.detail.value, name)
-            // this.validateErrData[name] = null;
-            // console.log(this.validateErrData);
-            // this.validateErrData = {};
-            // name !== '' && delete this.validateErrData[name];
-            // console.log('this.validateErrData', this.validateErrData);
+        handleFormChange() {
+            this.validateForm()
+        },
+        validateForm() {
+            this.validateErrData = {}
+            if (this.WxValidate.checkForm(this.formData)) {
+                return true
+            } else {
+                this.validateErrData = {}
+                const errorList = this.WxValidate.errorList || []
+                errorList.forEach(item => {
+                    this.validateErrData[item.param] = { ...item }
+                })
+                return false
+            }
+        },
+        formSubmit: function(e) {
+            const hasValidate = this.validateForm()
+            if (!hasValidate) {
+                return
+            }
+            console.log("提交", this.formData)
         },
         handleSelectMapLoca() {
             const that = this
@@ -518,13 +509,13 @@ export default {
         },
         initValidate() {
             let rules = {
-                // houseType: {
-                //     required: true
-                // },
-                house_name: {
-                    required: true,
-                    maxlength: 10
+                type: {
+                    required: true
                 },
+                // house_name: {
+                //     required: true,
+                //     maxlength: 10
+                // },
                 title: {
                     required: true
                 },
@@ -546,13 +537,13 @@ export default {
             }
 
             let message = {
-                houseType: {
+                type: {
                     required: "请选择房源类型"
                 },
-                house_name: {
-                    required: "请输入小区名称",
-                    maxlength: "名称不能超过10个字"
-                },
+                // house_name: {
+                //     required: "请输入小区名称",
+                //     maxlength: "名称不能超过10个字"
+                // },
                 title: {
                     required: "请输入标题"
                 },
