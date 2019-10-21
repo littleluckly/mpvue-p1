@@ -124,9 +124,7 @@ export default {
     },
     onLoad() {},
     onShow() {
-        // wx.pageScrollTo({
-        //     scrollTop: 0
-        // })
+        this.fetchSaleList()
     },
     onHide() {},
     created() {},
@@ -174,9 +172,7 @@ export default {
             })
         }
     },
-    mounted() {
-        this.fetchSaleList()
-    },
+    mounted() {},
     //页面滚动执行方式
     onPageScroll(event) {
         console.log("scroll")
