@@ -82,13 +82,13 @@
             <view class="formItem section section_gap">
                 <view class="section__title">
                     <span class="requireIcon">*</span>标题:
-                    <div v-if="validateErrData.title" class="errText">{{validateErrData.title.msg}}</div>
+                    <div v-if="validateErrData.name" class="errText">{{validateErrData.name.msg}}</div>
                 </view>
                 <input
-                    @input="(e)=>handleFormChange(e,'title')"
-                    v-model="formData.title"
+                    @input="(e)=>handleFormChange(e,'name')"
+                    v-model="formData.name"
                     class="formVal"
-                    name="title"
+                    name="name"
                     placeholder="请输入标题"
                 />
             </view>
@@ -127,14 +127,32 @@
             <view class="formItem section section_gap">
                 <view class="section__title">
                     <span class="requireIcon">*</span>
+                    装修:
+                    <div
+                        v-if="validateErrData.decoration"
+                        class="errText"
+                    >{{validateErrData.decoration.msg}}</div>
+                </view>
+                <input
+                    @input="handleFormChange"
+                    v-model="formData.decoration"
+                    type="digit"
+                    class="formVal"
+                    name="decoration"
+                    placeholder="请输入装修情况"
+                />
+            </view>
+            <view class="formItem section section_gap">
+                <view class="section__title">
+                    <span class="requireIcon">*</span>
                     房源类型:
                     <div v-if="validateErrData.type" class="errText">{{validateErrData.type.msg}}</div>
                 </view>
                 <picker
-                    range-key="label"
+                    range-key="name"
                     @change="handleSelectType"
                     :value="formData.type"
-                    :range="typeList"
+                    :range="houseTypeList"
                 >
                     <view class="picker">当前选择：{{currType}}</view>
                 </picker>
@@ -245,7 +263,7 @@
                         class="errText"
                     >{{validateErrData.feature.msg}}</div>
                 </view>
-                <checkbox-group name="electro">
+                <checkbox-group name="tags" @change="handleSelectTags">
                     <label class="electroCheckbox" v-for="item in tags" :key="item.value">
                         <checkbox :value="item.value" />
                         {{item.label}}
@@ -284,12 +302,12 @@ export default {
             ],
             perviewImgList: [],
             perviewVideoList: [],
+            selectedTags: "",
             formData: {
-                year: "70年",
+                year: 70,
                 house_name: "",
                 price: null,
                 area: null,
-                title: null,
                 address: ""
             },
             validateErrData: {},
@@ -300,13 +318,18 @@ export default {
     computed: {
         ...mapState("personalStore/", [
             "tags",
+            "houseTypeList",
             "uploadImgProgress",
             "uploadVideoProgress",
-            "uploadedVideos"
+            "uploadedVideos",
+            "uploadedFiles"
         ])
     },
     onShow(options) {
-        const { geo = "", address = "" } = wx.getStorageSync("geo") || {}
+        const { geo = "", address = "", longitude, latitude } =
+            wx.getStorageSync("geo") || {}
+        this.latitude = latitude
+        this.longitude = longitude
         this.formData = {
             ...this.formData,
             address,
@@ -321,23 +344,30 @@ export default {
                 console.log("remove")
             }
         })
+        this.formData = {}
         this.validateErrData = {}
+        this.perviewVideoList = []
+        this.perviewImgList = []
+        this.resetFiles()
     },
     onLoad(query) {
         this.initValidate()
-        this.fetchTags()
+        this.fetchDict({ dict: "tags" })
+        this.fetchDict({ dict: "house_type" })
         const { longitude = 0, latitude = 0, address = "" } = query
         this.longitude = longitude
         this.latitude = latitude
     },
     methods: {
         ...mapActions("personalStore/", [
-            "fetchTags",
+            "fetchDict",
             "uploadImg",
             "uploadVideo",
             "deleteRemoteVideo",
             "deleteRemoteImg",
-            "deleteRemoteFile"
+            "deleteRemoteFile",
+            "publishNewHouse",
+            "resetFiles"
         ]),
         async handleUploadFile() {
             const that = this
@@ -358,7 +388,6 @@ export default {
             wx.chooseVideo({
                 maxDuration: 5 * 60,
                 success: function(res) {
-                    console.log(res)
                     that.perviewVideoList = [
                         ...that.perviewVideoList,
                         {
@@ -393,9 +422,13 @@ export default {
         handleSelectType(e) {
             const value = e.mp.detail.value
             this.formData.type = Number(value)
-            const target = this.typeList[Number(value)]
-            this.currType = target.label
+            const target = this.houseTypeList[Number(value)]
+            this.currType = target.name
             this.handleFormChange()
+        },
+        handleSelectTags(e) {
+            const tags = e.mp.detail.value || []
+            this.selectedTags = tags.join(",")
         },
         handleFormChange() {
             this.validateForm()
@@ -413,12 +446,31 @@ export default {
                 return false
             }
         },
-        formSubmit: function(e) {
+        async formSubmit() {
             const hasValidate = this.validateForm()
             if (!hasValidate) {
                 return
             }
-            console.log("提交", this.formData)
+            const res = await this.publishNewHouse({
+                ...this.formData,
+                tags: this.selectedTags,
+                type: this.currType,
+                longitude: this.longitude,
+                latitude: this.latitude
+            })
+            if (res && res.status === true) {
+                const that = this
+                wx.showToast({
+                    title: "房源发布成功!",
+                    duration: 1000,
+                    success: function() {
+                        const timer = setTimeout(() => {
+                            wx.navigateBack()
+                            clearTimeout(timer)
+                        }, 1000)
+                    }
+                })
+            }
         },
         handleSelectMapLoca() {
             const that = this
@@ -512,17 +564,16 @@ export default {
                 type: {
                     required: true
                 },
-                // house_name: {
-                //     required: true,
-                //     maxlength: 10
-                // },
-                title: {
+                name: {
                     required: true
                 },
                 price: {
                     required: true
                 },
                 area: {
+                    required: true
+                },
+                decoration: {
                     required: true
                 },
                 geo: {
@@ -540,11 +591,7 @@ export default {
                 type: {
                     required: "请选择房源类型"
                 },
-                // house_name: {
-                //     required: "请输入小区名称",
-                //     maxlength: "名称不能超过10个字"
-                // },
-                title: {
+                name: {
                     required: "请输入标题"
                 },
                 price: {
@@ -553,7 +600,9 @@ export default {
                 area: {
                     required: "请输入面积"
                 },
-
+                decoration: {
+                    required: "请输入装修情况"
+                },
                 geo: {
                     required: "请选择地图位置"
                 },

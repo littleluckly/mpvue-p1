@@ -1,8 +1,4 @@
 import request from "@/utils/request"
-// const CosAuth = require("../../utils/cos-auth")
-import CosAuth from "../../utils/cos-auth"
-// var COS = require("../../../node_modules/cos-wx-sdk-v5")
-// import COS from "cos-wx-sdk-v5"
 var COS = require("cos-wx-sdk-v5")
 // 对更多字符编码的 url encode 格式
 const camSafeUrlEncode = function(str) {
@@ -20,6 +16,7 @@ export default {
     historyList: [],
     summaryInfo: {},
     tags: [],
+    houseTypeList: [],
     uploadImgProgress: {},
     uploadVideoProgress: 0,
     uploadedFiles: [],
@@ -33,28 +30,31 @@ export default {
       state.summaryInfo = payload
     },
     uploadImgProgress(state, payload) {
-      state.uploadImgProgress = {
-        ...state.uploadImgProgress,
-        ...payload
-      }
+      state.uploadImgProgress = payload
     },
     uploadVideoProgress(state, payload = 0) {
-      state.uploadVideoProgress = {
-        ...state.uploadVideoProgress,
-        ...payload
-      }
+      state.uploadVideoProgress = payload
     },
     tags(state, payload) {
       state.tags = payload
     },
+    houseTypeList(state, payload) {
+      state.houseTypeList = payload
+    },
     uploadedFiles(state, payload) {
-      state.uploadedFiles = [...state.uploadedFiles, payload]
+      state.uploadedFiles = payload
     },
     uploadedVideos(state, payload) {
-      state.uploadedVideos = [...state.uploadedVideos, payload]
+      state.uploadedVideos = payload
     }
   },
   actions: {
+    resetFiles({ commit }) {
+      commit("uploadedVideos", [])
+      commit("uploadedFiles", [])
+      commit("uploadVideoProgress", {})
+      commit("uploadImgProgress", {})
+    },
     //   浏览记录
     async fetchBrowseHistoryList({ commit }, params = {}) {
       const result = await request({
@@ -64,7 +64,7 @@ export default {
       })
       const { statusCode, data } = result
       if (statusCode === 200) {
-        commit("historyList", data)
+        commit("historyList", data.filter(item => item.id))
       } else {
         commit("historyList", [])
       }
@@ -86,16 +86,21 @@ export default {
     },
 
     //   统计信息：收藏总数、历史记录总数
-    async fetchTags({ commit }, params = {}) {
+    async fetchDict({ commit }, { dict }) {
       const result = await request({
-        url: "/personal/tags",
-        method: "get"
+        url: "/dict",
+        method: "get",
+        data: { dict }
       })
       const { statusCode, data } = result
       if (statusCode === 200) {
-        commit("tags", data)
+        const dictMap = new Map([
+          ["tags", "tags"],
+          ["house_type", "houseTypeList"]
+        ])
+        commit(dictMap.get(dict), data)
       } else {
-        commit("tags", [])
+        commit(dict, [])
       }
     },
 
@@ -120,7 +125,16 @@ export default {
         }
       })
     },
-    uploadImg({ commit, dispatch }, { files = [] }) {
+
+    // 上传图片
+    uploadImg(
+      {
+        commit,
+        dispatch,
+        state: { uploadedFiles = [], uploadImgProgress = {} }
+      },
+      { files = [] }
+    ) {
       return new Promise(async (resolve, reject) => {
         // 初始化实例
         const Bucket = "shuifenzi-1259799060"
@@ -138,14 +152,18 @@ export default {
               Key: Key,
               FilePath: file.path,
               onProgress: function(info) {
-                console.log("上传", JSON.stringify(info))
                 commit("uploadImgProgress", {
+                  ...uploadImgProgress,
                   [file.path]: Math.floor(info.percent * 100)
                 })
               }
             },
             function(err, data) {
               if (!err) {
+                commit("uploadedFiles", [
+                  ...uploadedFiles,
+                  "https://" + data.Location
+                ])
                 resolve(data)
               } else {
                 wx.showToast({
@@ -154,13 +172,21 @@ export default {
                   image: "../../../static/images/error.png"
                 })
               }
-              console.log(err || data)
             }
           )
         })
       })
     },
-    uploadVideo({ commit, dispatch }, { filePath }) {
+
+    // 上传视频
+    uploadVideo(
+      {
+        commit,
+        dispatch,
+        state: { uploadedVideos = [], uploadVideoProgress = {} }
+      },
+      { filePath }
+    ) {
       return new Promise(async (resolve, reject) => {
         // 初始化实例
         const Bucket = "shuifenzi-1259799060"
@@ -177,15 +203,18 @@ export default {
             Key: Key,
             FilePath: filePath,
             onProgress: function(info) {
-              console.log("上传", JSON.stringify(info))
               commit("uploadVideoProgress", {
+                ...uploadVideoProgress,
                 [filePath]: Math.floor(info.percent * 100)
               })
             }
           },
           function(err, data) {
             if (!err) {
-              commit("uploadedVideos", "https://" + data.Location)
+              commit("uploadedVideos", [
+                ...uploadedVideos,
+                "https://" + data.Location
+              ])
               resolve(data)
             } else {
               wx.showToast({
@@ -199,6 +228,8 @@ export default {
         )
       })
     },
+
+    // 删除图片/视频
     deleteRemoteFile(
       {
         commit,
@@ -243,6 +274,27 @@ export default {
             }
           }
         )
+      })
+    },
+
+    // 发布新房源
+    publishNewHouse(
+      {
+        state: { uploadedFiles, uploadedVideos }
+      },
+      formData
+    ) {
+      return new Promise(async (resolve, reject) => {
+        const result = await request({
+          url: "/sales/publish",
+          method: "post",
+          data: {
+            ...formData,
+            uploadedFiles,
+            uploadedVideos
+          }
+        })
+        resolve(result.data)
       })
     }
   }
