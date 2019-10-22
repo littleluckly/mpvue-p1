@@ -14,6 +14,7 @@ export default {
   namespaced: true,
   state: {
     historyList: [],
+    collectionList: [],
     summaryInfo: {},
     tags: [],
     houseTypeList: [],
@@ -25,6 +26,9 @@ export default {
   mutations: {
     historyList(state, payload) {
       state.historyList = payload
+    },
+    collectionList(state, payload) {
+      state.collectionList = payload
     },
     summaryInfo(state, payload) {
       state.summaryInfo = payload
@@ -70,6 +74,20 @@ export default {
       }
     },
 
+    // 我的收藏
+    async fetchCollectionList({ commit }, params = {}) {
+      const result = await request({
+        url: "/personal/collectionList",
+        method: "get",
+        data: { ...params }
+      })
+      const { statusCode, data } = result
+      if (statusCode === 200) {
+        commit("collectionList", data.filter(item => item.id))
+      } else {
+        commit("collectionList", [])
+      }
+    },
     //   统计信息：收藏总数、历史记录总数
     async fetchSummaryInfo({ commit }, params = {}) {
       const result = await request({

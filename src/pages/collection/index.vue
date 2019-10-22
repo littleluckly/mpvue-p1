@@ -1,36 +1,113 @@
 <template>
     <div class="collection">
-        <p class="back" v-bind:style="{ top: top + 'px' }">
-            <i-icon type="return" size="24" color="#fff;" @click="backTo"></i-icon>
-        </p>
-        <h3>收藏</h3>
+        <div class="listWrap">
+            <div class="resultWrap">
+                <SaleListItem
+                    @linkTo="linkToDetail(item)"
+                    v-for="(item,idx) in collectionList"
+                    :key="item.name+idx"
+                    :data="item"
+                />
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import calcCapsulePosi from "@/mixins/calcCapsulePosi"
+import SaleListItem from "@/components/SaleListItem"
+import { mapActions, mapState } from "vuex"
 export default {
-    mixins: [calcCapsulePosi],
+    components: { SaleListItem },
     data() {
         return {}
     },
-    created() {},
+    onLoad() {
+        const that = this
+        wx.getStorage({
+            key: "userInfo",
+            success(res) {
+                that.fetchCollectionList({ open_id: res.data.openid })
+            }
+        })
+    },
+    computed: {
+        ...mapState("personalStore/", ["collectionList"])
+    },
     methods: {
-        backTo() {
-            wx.switchTab({ url: "../personal/main" })
+        ...mapActions("personalStore/", ["fetchCollectionList"]),
+        ...mapActions("saleStore/", ["saveBrowseHistory"]),
+        linkToDetail(data) {
+            const that = this
+            // 保存浏览记录
+            wx.getStorage({
+                key: "userInfo",
+                success(res) {
+                    that.saveBrowseHistory({
+                        sale_id: data.id,
+                        open_id: res.data.openid
+                    })
+                }
+            })
+            wx.navigateTo({
+                url: `../index/detail/main?id=${data.id}`
+            })
         }
     }
 }
 </script>
  
-<style lang="less">
-@import "../../style/common.less";
-.back {
-    position: absolute;
-    padding: 0 10px;
-    left: 0;
-    width: 60px;
-    height: 30px;
-    background: @primaryBg;
+ <style lang="less" scoped>
+@import "../../style/common";
+.listWrap {
+    padding: 10px;
+    .listTitle {
+        font-size: 18px;
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .listItem {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+        // height: 165px;
+        .thumbImg {
+            width: 112px;
+            margin-right: 20px;
+            img {
+                width: 100%;
+                height: 80px;
+            }
+        }
+        .itemDesc {
+            flex: 1;
+            color: #666;
+            // 配合.address文字超长省略
+            overflow: hidden;
+            .mainDesc {
+                font-size: 14px;
+                color: #333;
+                margin-bottom: 2px;
+            }
+            .houseName {
+                font-size: 16px;
+                margin-bottom: 1px;
+            }
+            .priceDesc {
+                .price {
+                    font-size: 18px;
+                    color: @primary;
+                    line-height: 15px;
+                }
+                .unit {
+                    margin-right: 10px;
+                    color: @primary;
+                }
+            }
+            .address {
+                .textOverflow;
+            }
+        }
+    }
 }
 </style>
