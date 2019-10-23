@@ -1,69 +1,75 @@
 <template>
     <div class="homepage">
-        <!-- 首页普通内容 -->
-        <div class="normalWrap">
-            <div class="topBg">
-                <!-- http://a3.qpic.cn/psb?/V10roI243u0y8c/ddehqkdpUBzJLY4cs.JsZJ8beLjHqUaSs.AtDPm8.rc!/m/dAYBAAAAAAAAnull&bo=NQQqAjUEKgIRCT4!&rf=photolist&t=5 -->
-                <img
-                    src="http://a3.qpic.cn/psb?/V10roI243u0y8c/ddehqkdpUBzJLY4cs.JsZJ8beLjHqUaSs.AtDPm8.rc!/m/dAYBAAAAAAAAnull&bo=NQQqAjUEKgIRCT4!&rf=photolist&t=5"
-                    height="180px"
-                    alt
-                />
-                <img
-                    class="wave"
-                    src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif"
-                    alt
-                />
-                <div v-bind:style="{ top: top+30 + 'px'}" class="logoText">来了就是深圳人</div>
-                <div
-                    v-bind:style="{ textAlign:'center', color:'white',position:'absolute', fontSize:'14px',top: top + 'px', height:height+'px',width:'100%', lineHeight:height+'px' }"
-                >
-                    <i-icon type="homepage" />首页
-                </div>
-            </div>
-            <div class="topWrap">
-                <!-- <span @click="linkToWelcome" class="logo">
-                    <img src="/static/images/logo.png" alt />
-                </span>-->
-                <p
-                    @click="linkToSearch"
-                    style="flex:1;height:30px;line-height:30px;border:1px solid #f2f2f2;color:#666;border-radius:30px;padding-left:10px;background:#fff;"
-                >搜索好房</p>
-                <span @click="handleSearch" class="searchIcon">
-                    <i-icon type="search" size="18" color="#666" />
-                </span>
-            </div>
-
-            <div class="swiperWrap">
-                <swiper
-                    v-if="imgUrls.length > 0"
-                    :indicator-dots="indicatorDots"
-                    :autoplay="autoplay"
-                    :interval="interval"
-                    :duration="duration"
-                >
-                    <block v-for="(item, index) in imgUrls" :key="index">
-                        <swiper-item class="swiperItem">
-                            <img :src="item.src" mode="scaleToFill" />
-                            <p class="text">{{item.text}}</p>
-                        </swiper-item>
-                    </block>
-                </swiper>
-            </div>
-            <div class="listWrap">
-                <div class="resultWrap">
-                    <p class="listTitle">精选好房</p>
-
-                    <SaleListItem
-                        @linkTo="linkToDetail(item)"
-                        v-for="(item,idx) in saleList"
-                        :key="item.name+idx"
-                        :data="item"
+        <scroll-view
+            scroll-y="true"
+            :style="{height:windowHeight+'px'}"
+            @scrolltolower="handleScroll"
+        >
+            <!-- 首页普通内容 -->
+            <div class="normalWrap">
+                <div class="topBg">
+                    <!-- http://a3.qpic.cn/psb?/V10roI243u0y8c/ddehqkdpUBzJLY4cs.JsZJ8beLjHqUaSs.AtDPm8.rc!/m/dAYBAAAAAAAAnull&bo=NQQqAjUEKgIRCT4!&rf=photolist&t=5 -->
+                    <img
+                        src="http://a3.qpic.cn/psb?/V10roI243u0y8c/ddehqkdpUBzJLY4cs.JsZJ8beLjHqUaSs.AtDPm8.rc!/m/dAYBAAAAAAAAnull&bo=NQQqAjUEKgIRCT4!&rf=photolist&t=5"
+                        height="180px"
+                        alt
                     />
+                    <img
+                        class="wave"
+                        src="https://raw.githubusercontent.com/weilanwl/ColorUI/master/demo/images/wave.gif"
+                        alt
+                    />
+                    <div v-bind:style="{ top: top+30 + 'px'}" class="logoText">来了就是深圳人</div>
+                    <div
+                        v-bind:style="{ textAlign:'center', color:'white',position:'absolute', fontSize:'14px',top: top + 'px', height:height+'px',width:'100%', lineHeight:height+'px' }"
+                    >
+                        <i-icon type="homepage" />首页
+                    </div>
+                </div>
+                <div class="topWrap">
+                    <!-- <span @click="linkToWelcome" class="logo">
+                    <img src="/static/images/logo.png" alt />
+                    </span>-->
+                    <p
+                        @click="linkToSearch"
+                        style="flex:1;height:30px;line-height:30px;border:1px solid #f2f2f2;color:#666;border-radius:30px;padding-left:10px;background:#fff;"
+                    >搜索好房</p>
+                    <span @click="handleSearch" class="searchIcon">
+                        <i-icon type="search" size="18" color="#666" />
+                    </span>
+                </div>
+
+                <div class="swiperWrap">
+                    <swiper
+                        v-if="imgUrls.length > 0"
+                        :indicator-dots="indicatorDots"
+                        :autoplay="autoplay"
+                        :interval="interval"
+                        :duration="duration"
+                    >
+                        <block v-for="(item, index) in imgUrls" :key="index">
+                            <swiper-item class="swiperItem">
+                                <img :src="item.src" mode="scaleToFill" />
+                                <p class="text">{{item.text}}</p>
+                            </swiper-item>
+                        </block>
+                    </swiper>
+                </div>
+                <div class="listWrap">
+                    <div class="resultWrap">
+                        <p class="listTitle">精选好房</p>
+
+                        <SaleListItem
+                            @linkTo="linkToDetail(item)"
+                            v-for="(item,idx) in saleList"
+                            :key="item.name+idx"
+                            :data="item"
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
-        <Consult />
+            <Consult />
+        </scroll-view>
     </div>
 </template>
 
@@ -79,6 +85,7 @@ export default {
     components: { SaleListItem, Consult },
     data() {
         return {
+            windowHeight: "",
             searchVal: "",
             history: false,
             hotSearch: false,
@@ -117,19 +124,27 @@ export default {
         }
     },
     computed: {
-        ...mapState({
-            rentRecommendList: state => state.rentStore.rentRecommendList
-        }),
-        ...mapState("saleStore/", ["saleList"])
+        ...mapState("saleStore/", ["saleList", "pagination"])
     },
-    onLoad() {},
+    onLoad() {
+        wx.getSystemInfo({
+            success: res => {
+                this.windowHeight = res.windowHeight
+                console.log("res.windowHeight", this.windowHeight)
+            }
+        })
+    },
     onShow() {
-        this.fetchSaleList()
+        this.fetchSaleList({ pageNo: 1 })
     },
     onHide() {},
     created() {},
     methods: {
         ...mapActions("saleStore/", ["fetchSaleList", "saveBrowseHistory"]),
+        handleScroll() {
+            console.log("加载更多...")
+            this.fetchSaleList({ pageNo: this.pagination.pageNo + 1 })
+        },
         linkToSearch() {
             wx.navigateTo({
                 url: "../search/main"
@@ -172,12 +187,12 @@ export default {
             })
         }
     },
-    mounted() {},
+    mounted() {}
     //页面滚动执行方式
-    onPageScroll(event) {
-        console.log("scroll")
-        this.scrollTop = event.scrollTop
-    }
+    // onPageScroll(event) {
+    //     console.log("scroll")
+    //     this.scrollTop = event.scrollTop
+    // }
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
     <div class="item" @click="$emit('linkTo')">
         <div class="thumb">
-            <img :src="data.src" alt />
+            <img :src="data.srcList[0]" alt />
         </div>
         <div class="info">
             <p class="name">{{data.name}}</p>
@@ -47,6 +47,7 @@ export default {
     margin-bottom: 8px;
     padding-bottom: 5px;
     border-bottom: 1px dashed @graylightBg;
+    height: 500px;
     &:last-child {
         border-color: transparent;
     }

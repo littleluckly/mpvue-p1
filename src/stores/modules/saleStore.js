@@ -6,9 +6,20 @@ export default {
     saleList: [],
     searchList: [],
     searchHistoryList: [],
-    saleDetail: {}
+    saleDetail: {},
+    pagination: {
+      pageNo: 1,
+      pageSize: 1,
+      total: 0
+    }
   },
   mutations: {
+    pagination(state, payload) {
+      state.pagination = {
+        ...state.pagination,
+        ...payload
+      }
+    },
     saleList(state, payload) {
       state.saleList = payload
     },
@@ -27,16 +38,21 @@ export default {
   },
   actions: {
     //   获取房源列表
-    async fetchSaleList({ commit }, params = {}) {
+    async fetchSaleList({ commit, state }, params = {}) {
+      const { pageNo, pageSize } = state.pagination
       const result = await request({
         url: "/sales/fetchList",
         method: "get",
-        data: { ...params },
+        data: { pageNo, pageSize, ...params },
         showLoading: true
       })
       const { statusCode, data } = result
       if (statusCode === 200) {
-        commit("saleList", data)
+        commit("saleList", [...state.saleList, ...data])
+        commit("pagination", {
+          pageNo: params.pageNo || pageNo,
+          total: 100
+        })
       } else {
         commit("saleList", [])
       }
@@ -56,7 +72,6 @@ export default {
       } else {
         commit("saleDetail", {})
       }
-      console.log("saleList::", res)
     },
     // 关注房源
     async focusSale({ commit, dispatch }, params = {}) {
