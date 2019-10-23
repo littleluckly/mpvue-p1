@@ -1,7 +1,7 @@
 <template>
     <div class="item" @click="$emit('linkTo')">
         <div class="thumb">
-            <img :src="data.src" alt />
+            <img :src="data.srcList[0]" alt />
         </div>
         <div class="info">
             <p class="name">{{data.name}}</p>

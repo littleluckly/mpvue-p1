@@ -178,9 +178,10 @@ export default {
             },
             function(err, data) {
               if (!err) {
+                console.log(`https://${Bucket}.cos.ap-${data.Location}`)
                 commit("uploadedFiles", [
                   ...uploadedFiles,
-                  "https://" + data.Location
+                  `https://${data.Location}`
                 ])
                 resolve(data)
               } else {

@@ -39,18 +39,15 @@
                             object-fit="contain"
                             controls
                             class="myVideo"
-                            src="http://wxsnsdy.tc.qq.com/105/20210/snsdyvideodownload?filekey=30280201010421301f0201690402534804102ca905ce620b1241b726bc41dcff44e00204012882540400&bizid=1023&hy=SH&fileparam=302c020101042530230204136ffd93020457e3c4ff02024ef202031e8d7f02030f42400204045a320a0201000400"
+                            :src="item.src"
                         ></video>
                         <image
                             v-else
                             :src="item.src"
                             class="slide-image"
-                            mode="aspectFill"
+                            mode="scaleToFill"
                             @click="previewImg(item.src)"
                         />
-                        <!-- <div class="videoBtn" v-if="item.type=='video'">
-                            <i-icon type="playon" size="56"></i-icon>
-                        </div>-->
                     </swiper-item>
                 </block>
             </swiper>
@@ -159,15 +156,8 @@
                 show-location
                 @click="handleClickMap"
             ></map>
-            <!-- :covers="covers" -->
-
-            <!-- <i-button @click="includePoints">缩放</i-button> -->
         </div>
         <Consult />
-        <!-- <cover-view class="consult">
-            <cover-image class="img" src="/static/images/consult.png" />
-            <button open-type="contact" class="consultBtn">客服</button>
-        </cover-view>-->
     </div>
 </template>
 
@@ -189,30 +179,7 @@ export default {
             indicatorDots: true,
             autoplay: false,
             interval: 3000,
-            duration: 500,
-            imgList: [
-                {
-                    src:
-                        "https://pic5.58cdn.com.cn/anjuke_58/cc29706ea6857b65dab56f9f67add4c6?w=640&h=480&crop=1",
-                    type: "video"
-                },
-                {
-                    src:
-                        "https://pic6.58cdn.com.cn/anjuke_58/599bef62e817176cfe7fd42014da45ca?w=640&h=480&crop=1"
-                },
-                {
-                    src:
-                        "https://pic5.58cdn.com.cn/anjuke_58/22eec5a3cf94ff9593e17b9c5124ba84?w=640&h=480&crop=1"
-                },
-                {
-                    src:
-                        "https://pic6.58cdn.com.cn/anjuke_58/0dc0ee4030643470a6247063823ab639?w=640&h=480&crop=1"
-                },
-                {
-                    src:
-                        "https://pic4.58cdn.com.cn/anjuke_58/749a8fafd17d5a7791bcda127ee8a4f2?w=640&h=480&crop=1"
-                }
-            ]
+            duration: 500
         }
     },
     onLoad(query = {}) {
@@ -229,7 +196,18 @@ export default {
     computed: {
         ...mapState("saleStore/", ["saleDetail"]),
         imgSrcList() {
-            return this.imgList.map(item => item.src)
+            return this.imgList
+                .filter(item => item.type != "video")
+                .map(item => item.src)
+        },
+        imgList() {
+            const { srcList = [], videoList = [] } = this.saleDetail
+            const newList = videoList
+                .map(src => ({ src, type: "video" }))
+                .concat(srcList.map(src => ({ src, type: "image" })))
+            console.log("this.saleDetail", this.saleDetail)
+            console.log("newList", newList)
+            return newList
         },
         tags() {
             return this.saleDetail.tags_name
@@ -315,6 +293,7 @@ page {
         }
         .slide-image {
             width: 100%;
+            height: 100%;
         }
         .title {
             padding: 10px;
