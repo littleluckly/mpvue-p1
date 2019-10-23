@@ -47,6 +47,7 @@ export default {
     margin-bottom: 8px;
     padding-bottom: 5px;
     border-bottom: 1px dashed @graylightBg;
+    height: 500px;
     &:last-child {
         border-color: transparent;
     }

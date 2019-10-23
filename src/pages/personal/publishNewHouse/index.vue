@@ -18,7 +18,7 @@
                         v-for="(img,idx) in perviewImgList"
                         :key="idx"
                         class="previewItem"
-                        :class="{finshed:uploadImgProgress[img.src]==100}"
+                        :class="{finshed:uploadImgProgress[img.src]>=100}"
                     >
                         <div class="progressWrap">
                             <i-progress

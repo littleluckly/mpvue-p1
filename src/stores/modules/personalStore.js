@@ -54,6 +54,7 @@ export default {
   },
   actions: {
     resetFiles({ commit }) {
+      console.log("reset")
       commit("uploadedVideos", [])
       commit("uploadedFiles", [])
       commit("uploadVideoProgress", {})
@@ -103,7 +104,7 @@ export default {
       }
     },
 
-    //   统计信息：收藏总数、历史记录总数
+    //   字典查询：tags、house_type
     async fetchDict({ commit }, { dict }) {
       const result = await request({
         url: "/dict",
@@ -145,14 +146,7 @@ export default {
     },
 
     // 上传图片
-    uploadImg(
-      {
-        commit,
-        dispatch,
-        state: { uploadedFiles = [], uploadImgProgress = {} }
-      },
-      { files = [] }
-    ) {
+    uploadImg({ commit, dispatch, state }, { files = [] }) {
       return new Promise(async (resolve, reject) => {
         // 初始化实例
         const Bucket = "shuifenzi-1259799060"
@@ -171,16 +165,15 @@ export default {
               FilePath: file.path,
               onProgress: function(info) {
                 commit("uploadImgProgress", {
-                  ...uploadImgProgress,
+                  ...state.uploadImgProgress,
                   [file.path]: Math.floor(info.percent * 100)
                 })
               }
             },
             function(err, data) {
               if (!err) {
-                console.log(`https://${Bucket}.cos.ap-${data.Location}`)
                 commit("uploadedFiles", [
-                  ...uploadedFiles,
+                  ...state.uploadedFiles,
                   `https://${data.Location}`
                 ])
                 resolve(data)
@@ -198,14 +191,7 @@ export default {
     },
 
     // 上传视频
-    uploadVideo(
-      {
-        commit,
-        dispatch,
-        state: { uploadedVideos = [], uploadVideoProgress = {} }
-      },
-      { filePath }
-    ) {
+    uploadVideo({ commit, dispatch, state }, { filePath }) {
       return new Promise(async (resolve, reject) => {
         // 初始化实例
         const Bucket = "shuifenzi-1259799060"
@@ -223,7 +209,7 @@ export default {
             FilePath: filePath,
             onProgress: function(info) {
               commit("uploadVideoProgress", {
-                ...uploadVideoProgress,
+                ...state.uploadVideoProgress,
                 [filePath]: Math.floor(info.percent * 100)
               })
             }
@@ -231,7 +217,7 @@ export default {
           function(err, data) {
             if (!err) {
               commit("uploadedVideos", [
-                ...uploadedVideos,
+                ...state.uploadedVideos,
                 "https://" + data.Location
               ])
               resolve(data)
