@@ -21,11 +21,33 @@ export default {
     uploadImgProgress: {},
     uploadVideoProgress: 0,
     uploadedFiles: [],
-    uploadedVideos: []
+    uploadedVideos: [],
+    historyPagination: {
+      pageNo: 1,
+      pageSize: 10,
+      total: 0
+    },
+    collectionPagination: {
+      pageNo: 1,
+      pageSize: 1,
+      total: 0
+    }
   },
   mutations: {
     historyList(state, payload) {
       state.historyList = payload
+    },
+    historyPagination(state, payload) {
+      state.historyPagination = {
+        ...state.historyPagination,
+        ...payload
+      }
+    },
+    collectionPagination(state, payload) {
+      state.collectionPagination = {
+        ...state.collectionPagination,
+        ...payload
+      }
     },
     collectionList(state, payload) {
       state.collectionList = payload
@@ -61,22 +83,28 @@ export default {
       commit("uploadImgProgress", {})
     },
     //   浏览记录
-    async fetchBrowseHistoryList({ commit }, params = {}) {
+    async fetchBrowseHistoryList({ commit, state }, params = {}) {
+      const { pageNo, pageSize } = state.historyPagination
       const result = await request({
         url: "/personal/historyList",
         method: "get",
-        data: { ...params }
+        data: { pageNo, pageSize, ...params }
       })
       const { statusCode, data } = result
       if (statusCode === 200) {
-        commit("historyList", data.filter(item => item.id))
+        commit("historyList", [...state.historyList, ...data])
+        commit("historyPagination", {
+          pageNo: params.pageNo || pageNo,
+          total: 100
+        })
       } else {
         commit("historyList", [])
       }
     },
 
     // 我的收藏
-    async fetchCollectionList({ commit }, params = {}) {
+    async fetchCollectionList({ commit, state }, params = {}) {
+      const { pageNo, pageSize } = state.collectionPagination
       const result = await request({
         url: "/personal/collectionList",
         method: "get",
@@ -84,7 +112,11 @@ export default {
       })
       const { statusCode, data } = result
       if (statusCode === 200) {
-        commit("collectionList", data.filter(item => item.id))
+        commit("collectionList", [...state.collectionList, ...data])
+        commit("collectionPagination", {
+          pageNo: params.pageNo || pageNo,
+          total: 0
+        })
       } else {
         commit("collectionList", [])
       }

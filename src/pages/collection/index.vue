@@ -1,16 +1,18 @@
 <template>
-    <div class="collection">
-        <div class="listWrap">
-            <div class="resultWrap">
-                <SaleListItem
-                    @linkTo="linkToDetail(item)"
-                    v-for="(item,idx) in collectionList"
-                    :key="item.name+idx"
-                    :data="item"
-                />
+    <scroll-view scroll-y="true" :style="{height:windowHeight+'px'}" @scrolltolower="handleScroll">
+        <div class="collection">
+            <div class="listWrap">
+                <div class="resultWrap">
+                    <SaleListItem
+                        @linkTo="linkToDetail(item)"
+                        v-for="(item,idx) in collectionList"
+                        :key="item.name+idx"
+                        :data="item"
+                    />
+                </div>
             </div>
         </div>
-    </div>
+    </scroll-view>
 </template>
 
 <script>
@@ -19,23 +21,42 @@ import { mapActions, mapState } from "vuex"
 export default {
     components: { SaleListItem },
     data() {
-        return {}
+        return {
+            windowHeight: "",
+            open_id: ""
+        }
     },
     onLoad() {
         const that = this
         wx.getStorage({
             key: "userInfo",
             success(res) {
+                that.open_id = res.data.openid
                 that.fetchCollectionList({ open_id: res.data.openid })
+            }
+        })
+
+        wx.getSystemInfo({
+            success: res => {
+                this.windowHeight = res.windowHeight
             }
         })
     },
     computed: {
-        ...mapState("personalStore/", ["collectionList"])
+        ...mapState("personalStore/", [
+            "collectionList",
+            "collectionPagination"
+        ])
     },
     methods: {
         ...mapActions("personalStore/", ["fetchCollectionList"]),
         ...mapActions("saleStore/", ["saveBrowseHistory"]),
+        handleScroll() {
+            this.fetchCollectionList({
+                open_id: this.open_id,
+                pageNo: this.collectionPagination.pageNo + 1
+            })
+        },
         linkToDetail(data) {
             const that = this
             // 保存浏览记录
