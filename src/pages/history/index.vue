@@ -1,16 +1,18 @@
 <template>
-    <div class="collection">
-        <div class="listWrap">
-            <div class="resultWrap">
-                <SaleListItem
-                    @linkTo="linkToDetail(item)"
-                    v-for="(item,idx) in historyList"
-                    :key="item.name+idx"
-                    :data="item"
-                />
+    <scroll-view scroll-y="true" :style="{height:windowHeight+'px'}" @scrolltolower="handleScroll">
+        <div class="collection">
+            <div class="listWrap">
+                <div class="resultWrap">
+                    <SaleListItem
+                        @linkTo="linkToDetail(item)"
+                        v-for="(item,idx) in historyList"
+                        :key="item.name+idx"
+                        :data="item"
+                    />
+                </div>
             </div>
         </div>
-    </div>
+    </scroll-view>
 </template>
 
 <script>
@@ -19,23 +21,43 @@ import { mapActions, mapState } from "vuex"
 export default {
     components: { SaleListItem },
     data() {
-        return {}
+        return {
+            windowHeight: "",
+            open_id: ""
+        }
     },
     onLoad() {
         const that = this
         wx.getStorage({
             key: "userInfo",
             success(res) {
-                that.fetchBrowseHistoryList({ open_id: res.data.openid })
+                that.open_id = res.data.openid
+                that.fetchBrowseHistoryList({
+                    open_id: res.data.openid,
+                    pageNo: 1
+                })
+            }
+        })
+
+        wx.getSystemInfo({
+            success: res => {
+                this.windowHeight = res.windowHeight
+                console.log("res.windowHeight", this.windowHeight)
             }
         })
     },
     computed: {
-        ...mapState("personalStore/", ["historyList"])
+        ...mapState("personalStore/", ["historyList", "historyPagination"])
     },
     methods: {
         ...mapActions("personalStore/", ["fetchBrowseHistoryList"]),
         ...mapActions("saleStore/", ["saveBrowseHistory"]),
+        handleScroll() {
+            this.fetchBrowseHistoryList({
+                open_id: this.open_id,
+                pageNo: this.historyPagination.pageNo + 1
+            })
+        },
         linkToDetail(data) {
             const that = this
             // 保存浏览记录
