@@ -9,9 +9,10 @@ export default {
     saleDetail: {},
     pagination: {
       pageNo: 1,
-      pageSize: 1,
+      pageSize: 10,
       total: 0
-    }
+    },
+    fetchSaleLoading: false
   },
   mutations: {
     pagination(state, payload) {
@@ -19,6 +20,9 @@ export default {
         ...state.pagination,
         ...payload
       }
+    },
+    fetchSaleLoading(state, payload) {
+      state.fetchSaleLoading = payload
     },
     saleList(state, payload) {
       state.saleList = payload
@@ -40,12 +44,14 @@ export default {
     //   获取房源列表
     async fetchSaleList({ commit, state }, params = {}) {
       const { pageNo, pageSize } = state.pagination
+      commit("fetchSaleLoading", true)
       const result = await request({
         url: "/sales/fetchList",
         method: "get",
         data: { pageNo, pageSize, ...params },
-        showLoading: true
+        loading: { show: params.pageNo == 1 && true, mask: false }
       })
+      commit("fetchSaleLoading", false)
       const { statusCode, data } = result
       if (statusCode === 200) {
         commit("saleList", [...state.saleList, ...data])
@@ -64,7 +70,7 @@ export default {
         url: "/sales/detail",
         method: "get",
         data: { ...params },
-        showLoading: true
+        loading: { show: true, mask: false }
       })
       const { statusCode, data } = result
       if (statusCode === 200) {

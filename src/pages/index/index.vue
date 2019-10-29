@@ -58,13 +58,21 @@
                 <div class="listWrap">
                     <div class="resultWrap">
                         <p class="listTitle">精选好房</p>
-
+                        <div v-if="fetchSaleLoading">
+                            <LoadingPlace v-for="idx in 6" :key="idx" />
+                        </div>
                         <SaleListItem
                             @linkTo="linkToDetail(item)"
                             v-for="(item,idx) in saleList"
                             :key="item.name+idx"
                             :data="item"
                         />
+                        <div v-if="pagination.pageNo!=1&&fetchSaleLoading">
+                            <i-spin custom>
+                                <i-icon type="refresh" size="20" i-class="icon-load"></i-icon>
+                                <view>正在拼命加载...</view>
+                            </i-spin>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -78,11 +86,12 @@
 import { mapActions, mapState } from "vuex"
 import calcCapsulePosi from "@/mixins/calcCapsulePosi"
 import SaleListItem from "@/components/SaleListItem"
+import LoadingPlace from "@/components/LoadingPlace"
 import Consult from "@/components/consult"
 import request from "@/utils/request"
 export default {
     mixins: [calcCapsulePosi],
-    components: { SaleListItem, Consult },
+    components: { SaleListItem, Consult, LoadingPlace },
     data() {
         return {
             windowHeight: "",
@@ -124,13 +133,16 @@ export default {
         }
     },
     computed: {
-        ...mapState("saleStore/", ["saleList", "pagination"])
+        ...mapState("saleStore/", [
+            "saleList",
+            "pagination",
+            "fetchSaleLoading"
+        ])
     },
     onLoad() {
         wx.getSystemInfo({
             success: res => {
                 this.windowHeight = res.windowHeight
-                console.log("res.windowHeight", this.windowHeight)
             }
         })
     },
@@ -204,7 +216,7 @@ export default {
     top: 0;
     bottom: -60px;
     height: 100vh;
-    background: linear-gradient(to bottom, #8fd3f4, #84fab0);
+    // background: linear-gradient(to bottom, #8fd3f4, #84fab0);
     .searchInputWrap {
         flex: 1;
         height: 35px;
@@ -425,6 +437,18 @@ export default {
                 transform: translateY(-12px);
             }
         }
+    }
+}
+.icon-load {
+    transform: rotate(0);
+    animation: loadingRotate 600ms infinite linear;
+}
+@keyframes loadingRotate {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
     }
 }
 </style>

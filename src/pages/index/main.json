@@ -9,6 +9,7 @@
     "i-sticky": "../../../static/iview/sticky/index",
     "i-sticky-item": "../../../static/iview/sticky-item/index",
     "i-row": "../../../static/iview/row/index",
-    "i-col": "../../../static/iview/col/index"
+    "i-col": "../../../static/iview/col/index",
+    "i-spin": "../../../static/iview/spin/index"
   }
 }
