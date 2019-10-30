@@ -16,14 +16,15 @@ const store = new Vuex.Store({
   state: {},
   mutations: {},
   actions: {
-    getSession({ dispatch }, params = {}) {
+    fetchSession({ dispatch }, params = {}) {
       return new Promise(async (resolve, reject) => {
         const result = await request({
           url: "/login/jscode2session",
           data: { code: params.code }
-        })
+        }).catch(err => console.log(err))
+        console.log("result", result)
         if (result.statusCode == 200) {
-          dispatch("saveUserInfo", { ...params, ...result.data })
+          //   dispatch("saveUserInfo", { ...params, ...result.data })
           resolve({ ...params, ...result.data })
         }
       })

@@ -76,11 +76,23 @@ export default {
   },
   actions: {
     resetFiles({ commit }) {
-      console.log("reset")
       commit("uploadedVideos", [])
       commit("uploadedFiles", [])
       commit("uploadVideoProgress", {})
       commit("uploadImgProgress", {})
+    },
+    async fetchSession({ dispatch }, params = {}) {
+      console.log("0000")
+      //   return new Promise(async (resolve, reject) => {
+      const result = await request({
+        url: "/login/jscode2session",
+        data: { code: params.code }
+      }).catch(err => console.log(err))
+      // if (result.statusCode == 200) {
+      //   dispatch("saveUserInfo", { ...params, ...result.data })
+      //   resolve({ ...params, ...result.data })
+      // }
+      //   })
     },
     //   浏览记录
     async fetchBrowseHistoryList({ commit, state }, params = {}) {

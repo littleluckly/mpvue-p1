@@ -5,7 +5,7 @@
                 <img v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" alt />
                 <img v-else src="/static/images/personal.png" alt />
             </div>
-            <div class="info" v-if="hasLogin">{{userInfo.nickName}}</div>
+            <div class="info" v-if="userInfo.nickName">{{userInfo.nickName}}</div>
             <div v-else>
                 <button open-type="getUserInfo" @getuserinfo="getUserInfo">登录/注册</button>
                 <p class="loginTips">登录后可以拥有更多的服务</p>
@@ -38,7 +38,7 @@
         </div>
         <div class="content">
             <ul>
-                <li class="item" @click="linkTo('./publishNewHouse/main')">
+                <li class="item" @click="publishNewHouse('./publishNewHouse/main')">
                     <span class="itemIcon">
                         <i-icon type="brush" size="24" />
                     </span>
@@ -92,10 +92,11 @@ export default {
         const that = this
         // 检查是否登陆状态
         wx.checkSession({
-            success() {
+            success(checkSessionResult) {
                 wx.getStorage({
                     key: "userInfo",
                     success(res) {
+                        console.log("res", res)
                         if (!res.data) {
                             return
                         }
@@ -104,6 +105,9 @@ export default {
                         })
                         that.userInfo = res.data
                         that.hasLogin = true
+                    },
+                    fail(err) {
+                        console.log("err", err)
                     }
                 })
             },
@@ -111,33 +115,51 @@ export default {
                 wx.removeStorage({
                     key: "userInfo"
                 })
-            }
+            },
+            complete(res) {}
         })
     },
     methods: {
-        ...mapActions(["getSession", "saveUserInfo"]),
+        ...mapActions(["saveUserInfo", "fetchSession"]),
         ...mapActions("personalStore/", ["fetchSummaryInfo"]),
         // 调用微信授权弹框
         getUserInfo(e) {
             const that = this
             const { userInfo } = e.mp.detail
             if (!userInfo) {
+                // 授权不通过
                 that.hasLogin = false
                 wx.clearStorage()
                 return
             }
+            // 授权通过
+            // 拿到用户头像、用户名、性别、省份城市信息
             wx.checkSession({
                 success() {
                     //session_key 未过期，并且在本生命周期一直有效
                     that.hasLogin = true
+                    that.$set(that.userInfo, "avatarUrl", userInfo.avatarUrl)
+                    that.$set(that.userInfo, "nickName", userInfo.nickName)
                     that.userInfo = { ...userInfo }
 
-                    // wx.setStorage({
-                    //     key: "userInfo",
-                    //     data: {
-                    //         ...userInfo
-                    //     }
-                    // })
+                    wx.login({
+                        success: async res => {
+                            if (res.code) {
+                                const result = await that.fetchSession({
+                                    ...userInfo,
+                                    code: res.code
+                                })
+                                that.hasLogin = true
+                                that.userInfo = { ...userInfo, ...result }
+                                wx.setStorage({
+                                    key: "userInfo",
+                                    data: { ...userInfo, ...result }
+                                })
+                            } else {
+                                console.log("登录失败！" + res.errMsg)
+                            }
+                        }
+                    })
                 },
                 fail() {
                     that.hasLogin = false
@@ -145,7 +167,7 @@ export default {
                     wx.login({
                         success: async res => {
                             if (res.code) {
-                                const result = await that.getSession({
+                                const result = await that.fetchSession({
                                     ...userInfo,
                                     code: res.code
                                 })
@@ -166,24 +188,31 @@ export default {
         },
         // 获取收藏数、浏览记录数统计信息
         getSummaryInfo() {},
-        // 退出登录
-        // handleLogout() {
-        //     console.log("退出登录")
-        //     this.userInfo = {}
-        //     this.hasLogin = false
-        //     wx.clearStorage()
-        //     wx.login({
-        //         success(res) {
-        //             console.log(res)
-        //             that.getSession({ code: res.data })
-        //         }
-        //     })
-        // },
         navigateTo(page) {
-            wx.navigateTo({ url: `../${page}/main` })
+            wx.checkSession({
+                success() {
+                    wx.navigateTo({ url: `../${page}/main` })
+                },
+                fail() {
+                    wx.showToast({
+                        title: "请先注册/登录!",
+                        icon: "none"
+                    })
+                }
+            })
         },
-        linkTo() {
-            wx.navigateTo({ url: `./publishNewHouse/main` })
+        publishNewHouse() {
+            wx.checkSession({
+                success() {
+                    wx.navigateTo({ url: `./publishNewHouse/main` })
+                },
+                fail() {
+                    wx.showToast({
+                        title: "请先注册/登录!",
+                        icon: "none"
+                    })
+                }
+            })
         }
     },
     mounted() {}

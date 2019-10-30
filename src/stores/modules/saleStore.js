@@ -50,14 +50,17 @@ export default {
         method: "get",
         data: { pageNo, pageSize, ...params },
         loading: { show: params.pageNo == 1 && true, mask: false }
-      })
+      }).catch(() => commit("fetchSaleLoading", false))
       commit("fetchSaleLoading", false)
       const { statusCode, data } = result
       if (statusCode === 200) {
-        commit("saleList", [...state.saleList, ...data])
+        commit(
+          "saleList",
+          params.first ? data.data : [...state.saleList, ...data.data]
+        )
         commit("pagination", {
           pageNo: params.pageNo || pageNo,
-          total: 100
+          total: data.total || state.pagination.total
         })
       } else {
         commit("saleList", [])

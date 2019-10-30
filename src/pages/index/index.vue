@@ -8,7 +8,6 @@
             <!-- 首页普通内容 -->
             <div class="normalWrap">
                 <div class="topBg">
-                    <!-- http://a3.qpic.cn/psb?/V10roI243u0y8c/ddehqkdpUBzJLY4cs.JsZJ8beLjHqUaSs.AtDPm8.rc!/m/dAYBAAAAAAAAnull&bo=NQQqAjUEKgIRCT4!&rf=photolist&t=5 -->
                     <img
                         src="http://a3.qpic.cn/psb?/V10roI243u0y8c/ddehqkdpUBzJLY4cs.JsZJ8beLjHqUaSs.AtDPm8.rc!/m/dAYBAAAAAAAAnull&bo=NQQqAjUEKgIRCT4!&rf=photolist&t=5"
                         height="180px"
@@ -147,15 +146,16 @@ export default {
         })
     },
     onShow() {
-        this.fetchSaleList({ pageNo: 1 })
+        this.fetchSaleList({ pageNo: 1, first: true })
     },
     onHide() {},
     created() {},
     methods: {
         ...mapActions("saleStore/", ["fetchSaleList", "saveBrowseHistory"]),
         handleScroll() {
-            console.log("加载更多...")
-            this.fetchSaleList({ pageNo: this.pagination.pageNo + 1 })
+            const { pageNo, pageSize, total } = this.pagination
+            pageNo * pageSize < total &&
+                this.fetchSaleList({ pageNo: this.pagination.pageNo + 1 })
         },
         linkToSearch() {
             wx.navigateTo({
